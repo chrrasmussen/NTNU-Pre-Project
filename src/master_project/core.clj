@@ -18,9 +18,17 @@
 ;;   (let [text (extract-text path)]
 ;;     (translate text callback)))
 
-;; (defn train
-;;   [path]
-;;   ())
+(defn train
+  []
+  (let [document-ch (chan)
+        insert-ch (chan)]
+    (go (>!! document-ch "abc"))
+    (go (let [values (<!! document-ch)
+              id "ID"
+              title "TITLE"
+              content "content"]
+          (solr/insert-document id title content #(>!! insert-ch))))
+    (go (println (<!! insert-ch)))))
 
 ;; (defn- search
 ;;   [words]

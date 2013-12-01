@@ -3,7 +3,16 @@
            [org.apache.tika.sax BodyContentHandler]
            [org.apache.tika.metadata Metadata]))
 
-(declare clean-whitespace)
+(declare extract-text)
+
+;; (println (extract-text "/Users/skohorn/Sites/Faginnhold/Faginnhold.txt"))
+
+
+;; Extract-text
+
+(defn- clean-whitespace
+  [text]
+  (clojure.string/replace text #"\s+" " "))
 
 (defn extract-text
   [path]
@@ -14,12 +23,3 @@
     (with-open [input (java.io.FileInputStream. file)]
       (.parse pdf-parser input content-handler metadata))
     (-> content-handler .toString clean-whitespace)))
-
-;; (println (extract-text "/Users/skohorn/Sites/Faginnhold/Faginnhold.txt"))
-
-
-;; Private
-
-(defn- clean-whitespace
-  [text]
-  (clojure.string/replace text #"\s+" " "))

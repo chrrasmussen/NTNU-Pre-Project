@@ -2,30 +2,16 @@
   (:require [org.httpkit.client :as http]
             [cheshire.core :as json]))
 
-(declare insert-document-request
-         get-popular-words-request
-         clear-database-request)
+(declare insert-document
+         get-popular-words
+         clear-database)
 
-(defn insert-document
-  [id title content callback]
-  (insert-document-request id title content callback #()))
+;; (println (insert-document "ID" "TITLE" "CONTENT"))
 
-;; (insert-document "ID" "TITLE" "CONTENT" println)
+;; (println (get-popular-words "ID"))
 
-(defn get-popular-words
-  [docid callback]
-  (get-popular-words-request docid callback #()))
+;; (println (clear-database))
 
-;; (get-popular-words "book2" println)
-
-(defn clear-database
-  [callback]
-  (clear-database-request callback #()))
-
-;; (clear-database println)
-
-
-;; Private
 
 ;; Insert document
 
@@ -39,19 +25,15 @@
   (let [status (get-in (json/parse-string body) ["responseHeader" "status"])]
     (zero? status)))
 
-(defn- insert-document-response-handler
-  [success failure]
-  (fn [{:keys [status headers body error]}]
-    (if-not error
-      (success (parse-insert-document-result body))
-      (failure error))))
-
-(defn- insert-document-request
-  [id title content success failure]
+(defn insert-document
+  [id title content]
   (let [url "http://localhost:8983/solr/update?commit=true"
         options {:headers {"Content-Type" "application/json"}
-                 :body (generate-insert-document-json-data id title content)}]
-    (http/post url options (insert-document-response-handler success failure))))
+                 :body (generate-insert-document-json-data id title content)}
+        {:keys [status headers body error]} @(http/post url options)]
+    (if-not error
+      [(parse-insert-document-result body) nil]
+      [nil error])))
 
 
 ;; Get popular words
@@ -74,25 +56,21 @@
         ;; => ("b" "a")
     (reverse sorted-words)))
 
-(defn- get-popular-words-response-handler
-  [success failure]
-  (fn [{:keys [status headers body error]}]
-    (if-not error
-      (success (parse-get-popular-words-result body))
-      (failure error))))
-
 (defn- construct-get-popular-words-url
   [id]
   (let [url-format "http://localhost:8983/solr/tvrh?q=id:%s&tv.tf_idf=true&wt=json"]
     (format url-format id)))
 
-(defn- get-popular-words-request
-  [docid success failure]
+(defn get-popular-words
+  [docid]
   (let [url "http://localhost:8983/solr/tvrh"
         options {:query-params {:q (str "id:" docid)
                                 :tv.tf_idf true
-                                :wt "json"}}]
-    (http/get url options (get-popular-words-response-handler success failure))))
+                                :wt "json"}}
+        {:keys [status headers body error]} @(http/post url options)]
+    (if-not error
+      [(parse-get-popular-words-result body) nil]
+      [nil error])))
 
 
 ;; Clear database
@@ -107,16 +85,12 @@
   (let [status (get-in (json/parse-string body) ["responseHeader" "status"])]
     (zero? status)))
 
-(defn- clear-database-response-handler
-  [success failure]
-  (fn [{:keys [status headers body error]}]
-    (if-not error
-      (success (parse-clear-database-result body))
-      (failure error))))
-
-(defn- clear-database-request
-  [success failure]
+(defn clear-database
+  []
   (let [url "http://localhost:8983/solr/update?commit=true"
         options {:headers {"Content-Type" "application/json"}
-                 :body (generate-clear-database-json-data)}]
-    (http/post url options (clear-database-response-handler success failure))))
+                 :body (generate-clear-database-json-data)}
+        {:keys [status headers body error]} @(http/post url options)]
+    (if-not error
+      [(parse-clear-database-result body) nil]
+      [nil error])))
