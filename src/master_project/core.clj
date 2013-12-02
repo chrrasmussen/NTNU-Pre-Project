@@ -9,11 +9,11 @@
 (declare get-links
          train)
 
-;; (println (get-links "Objekter og klasser.txt"))
+(println (get-links "Eclipse.txt"))
 
-(println (train "/Users/skohorn/Sites/Faginnhold/"))
+;; (println (train "data/documents/"))
 
-;; (println (insert-file (io/file "/Users/skohorn/Sites/Faginnhold/Faginnhold.txt")))
+;; (println (insert-file (io/file "data/documents/Faginnhold.txt")))
 
 ;; (println (solr/clear-database))
 
@@ -33,7 +33,7 @@
 
         docid filename
 
-        title-id (str filename "#title")
+        title-id (str path "#title")
         title (.substring filename 0 (.lastIndexOf filename "."))
         [translated-title _] (google-translate/translate title-id title)
 
@@ -55,9 +55,7 @@
 
 (defn get-links
   [docid]
-  (println (str "Finding links for docid: " docid))
   (let [[words _] (solr/get-popular-words docid)
         query (clojure.string/join " " (take 5 words))
         [links _] (google-search/search query)]
-    (println query)
     links))

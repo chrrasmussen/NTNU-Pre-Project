@@ -5,7 +5,7 @@
 
 (declare extract-text)
 
-;; (println (extract-text "/Users/skohorn/Sites/Faginnhold/Faginnhold.txt"))
+(println (extract-text "data/documents/Faginnhold.txt"))
 
 
 ;; Extract-text
