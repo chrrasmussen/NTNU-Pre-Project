@@ -18,7 +18,7 @@
 (defn- generate-insert-document-json-data
   [id title content]
   (let [data [{:id id, :title title, :content content}]]
-    (json/generate-string data {:escape-non-ascii false})))
+    (json/generate-string data)))
 
 (defn- parse-insert-document-result
   [body]

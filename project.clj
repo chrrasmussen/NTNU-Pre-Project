@@ -7,5 +7,6 @@
                  [org.clojure/core.async "0.1.256.0-1bf8cf-alpha"]
                  [http-kit "2.1.12"]
                  [cheshire "5.2.0"]
+                 [digest "1.4.3"]
                  [org.apache.tika/tika-core "1.4"]
                  [org.apache.tika/tika-parsers "1.4"]])

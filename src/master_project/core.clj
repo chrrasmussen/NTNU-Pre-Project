@@ -6,60 +6,58 @@
             [master-project.google-translate :as google-translate]
             [master-project.google-search :as google-search]))
 
-;; (defn get-text-files
-;;   [path]
-;;   (let [directory (io/file path)
-;;         files (file-seq directory)
-;;         text-file? #(-> % .getName (.endsWith ".txt"))]
-;;     (filter text-file? files)))
+(declare get-links
+         train)
 
-;; (defn translate-file-at-path
-;;   [path callback]
-;;   (let [text (extract-text path)]
-;;     (translate text callback)))
+;; (println (get-links "Objekter og klasser.txt"))
+
+(println (train "/Users/skohorn/Sites/Faginnhold/"))
+
+;; (println (insert-file (io/file "/Users/skohorn/Sites/Faginnhold/Faginnhold.txt")))
+
+;; (println (solr/clear-database))
+
+;; Train
+
+(defn- get-text-files
+  [path]
+  (let [directory (io/file path)
+        files (file-seq directory)
+        text-file? #(-> % .getName (.endsWith ".txt"))]
+    (filter text-file? files)))
+
+(defn- insert-file
+  [file]
+  (let [path (.getPath file)
+        filename (.getName file)
+
+        docid filename
+
+        title-id (str filename "#title")
+        title (.substring filename 0 (.lastIndexOf filename "."))
+        [translated-title _] (google-translate/translate title-id title)
+
+        text-id (str path "#content")
+        text (tika/extract-text (.getPath file))
+        [translated-text _] (google-translate/translate text-id text)
+
+        [success _] (solr/insert-document docid translated-title translated-text)]
+    success))
 
 (defn train
-  []
-  (let [document-ch (chan)
-        insert-ch (chan)]
-    (go (>!! document-ch "abc"))
-    (go (let [values (<!! document-ch)
-              id "ID"
-              title "TITLE"
-              content "content"]
-          (solr/insert-document id title content #(>!! insert-ch))))
-    (go (println (<!! insert-ch)))))
-
-;; (defn- search
-;;   [words]
-;;   (let [query (clojure.string/join " " words)]
-;;     (println (str "Searching for: " query))
-;;     (google-search/search query #(println (take 3 %)))))
+  [path]
+  (let [files (get-text-files path)
+        inserted-files (map insert-file files)]
+    inserted-files))
 
 
-;; (defn fn-with-callback
-;;   [value callback]
-;;   (callback value))
-
-;; (fn-with-callback "test" println)
-
-;; (let
-;;   [ch (chan)]
-;;   (go (fn-with-callback '("a" "b") #(>!! ch %)))
-;;   (go (println (<!! ch))))
+;; Get links
 
 (defn get-links
   [docid]
-  (let [words-ch (chan)
-        links-ch (chan)]
-    (println (str "Finding links for docid: " docid))
-    (go (solr/get-popular-words docid #(>!! words-ch %)))
-    (go (google-search/search (clojure.string/join " " (<!! words-ch)) #(>!! links-ch %)))
-    (go (println (take 3 (<!! links-ch))))))
-
-(get-links "book2")
-;; (get-links "book3")
-
-;; (println (get-text-files "/Users/skohorn/Sites/Faginnhold/"))
-
-;; (translate-file-at-path "/Users/skohorn/Sites/Faginnhold/Faginnhold.txt" #(println %))
+  (println (str "Finding links for docid: " docid))
+  (let [[words _] (solr/get-popular-words docid)
+        query (clojure.string/join " " (take 5 words))
+        [links _] (google-search/search query)]
+    (println query)
+    links))
