@@ -2,16 +2,6 @@
   (:require [org.httpkit.client :as http]
             [cheshire.core :as json]))
 
-(declare insert-document
-         get-popular-words
-         clear-database)
-
-;; (println (insert-document "ID" "TITLE" "CONTENT"))
-
-;; (println (get-popular-words "ID"))
-
-;; (println (clear-database))
-
 
 ;; Insert document
 
@@ -94,3 +84,10 @@
     (if-not error
       [(parse-clear-database-result body) nil]
       [nil error])))
+
+
+;; Examples
+
+;; (println (insert-document "ID" "TITLE" "CONTENT"))
+;; (println (get-popular-words "ID"))
+;; (println (clear-database))

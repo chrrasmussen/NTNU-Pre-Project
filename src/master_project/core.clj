@@ -6,16 +6,6 @@
             [master-project.google-translate :as google-translate]
             [master-project.google-search :as google-search]))
 
-(declare get-links
-         train)
-
-(println (get-links "Eclipse.txt"))
-
-;; (println (train "data/documents/"))
-
-;; (println (insert-file (io/file "data/documents/Faginnhold.txt")))
-
-;; (println (solr/clear-database))
 
 ;; Train
 
@@ -28,17 +18,16 @@
 
 (defn- insert-file
   [file]
-  (let [path (.getPath file)
-        filename (.getName file)
+  (let [filename (.getName file)
 
         docid filename
 
-        title-id (str path "#title")
+        title-id (str filename "#title")
         title (.substring filename 0 (.lastIndexOf filename "."))
         [translated-title _] (google-translate/translate title-id title)
 
-        text-id (str path "#content")
-        text (tika/extract-text (.getPath file))
+        text-id (str filename "#content")
+        text (tika/extract-text file)
         [translated-text _] (google-translate/translate text-id text)
 
         [success _] (solr/insert-document docid translated-title translated-text)]
@@ -59,3 +48,11 @@
         query (clojure.string/join " " (take 5 words))
         [links _] (google-search/search query)]
     links))
+
+
+;; Examples
+
+;; (println (get-links "Eclipse.txt"))
+;; (println (train "data/documents/"))
+;; (println (insert-file (io/file "data/documents/Faginnhold.txt")))
+;; (println (solr/clear-database))
