@@ -46,15 +46,11 @@
         ;; => ("b" "a")
     (reverse sorted-words)))
 
-(defn- construct-get-popular-words-url
-  [id]
-  (let [url-format "http://localhost:8983/solr/tvrh?q=id:%s&tv.tf_idf=true&wt=json"]
-    (format url-format id)))
-
 (defn get-popular-words
   [docid]
   (let [url "http://localhost:8983/solr/tvrh"
-        options {:query-params {:q (str "id:" docid)
+        escaped-docid (clojure.string/join "\\ " (clojure.string/split docid #" "))
+        options {:query-params {:q (str "id:" escaped-docid)
                                 :tv.tf_idf true
                                 :wt "json"}}
         {:keys [status headers body error]} @(http/post url options)]
@@ -89,5 +85,5 @@
 ;; Examples
 
 ;; (println (insert-document "ID" "TITLE" "CONTENT"))
-;; (println (get-popular-words "ID"))
+;; (println (get-popular-words "Feil og advarsler i editoren.txt"))
 ;; (println (clear-database))

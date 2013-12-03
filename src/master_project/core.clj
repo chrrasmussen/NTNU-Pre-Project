@@ -52,7 +52,8 @@
 
 ;; Examples
 
-;; (println (get-links "Eclipse.txt"))
+(println (solr/get-popular-words "Feil og advarsler i editoren.txt"))
+(println (get-links "Bruk av debuggeren i Eclipse.txt"))
 ;; (println (train "data/documents/"))
 ;; (println (insert-file (io/file "data/documents/Faginnhold.txt")))
 ;; (println (solr/clear-database))
