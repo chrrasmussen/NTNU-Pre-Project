@@ -7,7 +7,7 @@
   (:import [clojure.java.io]))
 
 
-(def ^:private ^:const config (properties/read-properties "config/google-translate.properties"))
+(def ^:private ^:const config (properties/read-properties "config/google_translate.properties"))
 (def ^:private ^:const google-api-key (get config "api-key"))
 (def ^:private ^:const translate-from (get config "translate-from"))
 (def ^:private ^:const translate-to (get config "translate-to"))

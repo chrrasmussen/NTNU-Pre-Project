@@ -5,7 +5,7 @@
   (:import [java.net URLEncoder]))
 
 
-(def ^:private ^:const config (properties/read-properties "config/google-search.properties"))
+(def ^:private ^:const config (properties/read-properties "config/google_search.properties"))
 (def ^:private ^:const google-api-key (get config "api-key"))
 (def ^:private ^:const google-custom-search-id (get config "custom-search-id"))
 
