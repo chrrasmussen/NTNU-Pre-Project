@@ -1,4 +1,4 @@
-(ns master-project.solr
+(ns pre-project.solr
   (:require [org.httpkit.client :as http]
             [cheshire.core :as json]))
 

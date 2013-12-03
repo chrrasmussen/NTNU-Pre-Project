@@ -1,10 +1,10 @@
-(ns master-project.core
+(ns pre-project.core
   (:require [clojure.core.async :as async :refer :all :rename {map a-map, into a-into, reduce a-reduce, merge a-merge, partition-by a-partition-by, partition a-partition, take a-take}]
             [clojure.java.io :as io]
-            [master-project.tika :as tika]
-            [master-project.solr :as solr]
-            [master-project.google-translate :as google-translate]
-            [master-project.google-search :as google-search]))
+            [pre-project.tika :as tika]
+            [pre-project.solr :as solr]
+            [pre-project.google-translate :as google-translate]
+            [pre-project.google-search :as google-search]))
 
 
 ;; Train
@@ -53,7 +53,7 @@
 ;; Examples
 
 (println (solr/get-popular-words "Feil og advarsler i editoren.txt"))
-(println (get-links "Bruk av debuggeren i Eclipse.txt"))
+(println (get-links "Feil og advarsler i editoren.txt"))
 ;; (println (train "data/documents/"))
 ;; (println (insert-file (io/file "data/documents/Faginnhold.txt")))
 ;; (println (solr/clear-database))

@@ -1,3 +1,3 @@
-# Introduction to master-project
+# Introduction to pre-project
 
 TODO: write [great documentation](http://jacobian.org/writing/great-documentation/what-to-write/)

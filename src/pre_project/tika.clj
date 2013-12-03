@@ -1,4 +1,4 @@
-(ns master-project.tika
+(ns pre-project.tika
   (:import [org.apache.tika.parser.html HtmlParser]
            [org.apache.tika.sax BodyContentHandler]
            [org.apache.tika.metadata Metadata]))

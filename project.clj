@@ -1,5 +1,5 @@
-(defproject master-project "0.1.0"
-  :description "Master Project by Christian Rasmussen"
+(defproject pre-project "0.1.0"
+  :description "Pre-Project by Christian Rasmussen"
   :url "http://christian.rasmussen.io"
   :license {:name "MIT"
             :url "http://opensource.org/licenses/MIT"}
