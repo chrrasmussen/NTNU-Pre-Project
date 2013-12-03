@@ -18,8 +18,3 @@
     (with-open [input (java.io.FileInputStream. file)]
       (.parse pdf-parser input content-handler metadata))
     (-> content-handler .toString clean-whitespace)))
-
-
-;; Examples
-
-;; (println (extract-text "data/documents/Faginnhold.txt"))

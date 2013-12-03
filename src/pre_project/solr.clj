@@ -80,10 +80,3 @@
     (if-not error
       [(parse-clear-database-result body) nil]
       [nil error])))
-
-
-;; Examples
-
-;; (println (insert-document "ID" "TITLE" "CONTENT"))
-;; (println (get-popular-words "Feil og advarsler i editoren.txt"))
-;; (println (clear-database))

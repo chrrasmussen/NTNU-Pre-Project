@@ -69,9 +69,3 @@
 (defn translate
   ([text] (direct-translate text))
   ([id text] (cached-translate id text)))
-
-
-;; Examples
-
-;; (println (translate "Dette er en test"))
-;; (println (translate "ID" "Dette er en test"))

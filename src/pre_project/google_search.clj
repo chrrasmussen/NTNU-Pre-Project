@@ -33,8 +33,3 @@
     (if-not error
       [(parse-search-result body) nil]
       [nil error])))
-
-
-;; Examples
-
-;; (println (search "test"))

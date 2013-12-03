@@ -52,8 +52,21 @@
 
 ;; Examples
 
-(println (solr/get-popular-words "Feil og advarsler i editoren.txt"))
-(println (get-links "Feil og advarsler i editoren.txt"))
+(println (get-links "Collection-rammeverket.txt"))
 ;; (println (train "data/documents/"))
 ;; (println (insert-file (io/file "data/documents/Faginnhold.txt")))
+
+;; Tika
+;; (println (tika/extract-text "data/documents/Faginnhold.txt"))
+
+;; Solr
+;; (println (solr/insert-document "ID" "TITLE" "CONTENT"))
+;; (println (solr/get-popular-words "Feil og advarsler i editoren.txt"))
 ;; (println (solr/clear-database))
+
+;; Google Translate
+;; (println (google-translate/translate "Dette er en test"))
+;; (println (google-translate/translate "ID" "Dette er en test"))
+
+;; Google Search
+;; (println (google-search/search "test"))
