@@ -13,7 +13,7 @@
   [path]
   (let [directory (io/file path)
         files (file-seq directory)
-        text-file? #(-> % .getName (.endsWith ".txt"))]
+        text-file? #(-> % .getName (.endsWith ,,, ".txt"))]
     (filter text-file? files)))
 
 (defn- insert-file
@@ -23,7 +23,7 @@
         docid filename
 
         title-id (str filename "#title")
-        title (.substring filename 0 (.lastIndexOf filename "."))
+        title (clojure.string/replace filename #".txt$" "")
         [translated-title _] (google-translate/translate title-id title)
 
         text-id (str filename "#content")
