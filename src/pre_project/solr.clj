@@ -39,12 +39,9 @@
         words-map-list (for [[k v] words-map] {:word k, :tf-idf (second v)})
         ;; => ({:word "a" :tf-idf 0.5} {:word "b" :tf-idf 0.25})
 
-        sorted-words-map-list (sort-by :tf-idf words-map-list)
+        sorted-words-map-list (sort-by :tf-idf words-map-list)]
         ;; => ({:word "b" :tf-idf 0.25} {:word "a" :tf-idf 0.5})
-
-        sorted-words (map :word sorted-words-map-list)]
-        ;; => ("b" "a")
-    (reverse sorted-words)))
+    (reverse sorted-words-map-list)))
 
 (defn get-popular-words
   [docid]

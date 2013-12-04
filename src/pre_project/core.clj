@@ -35,9 +35,9 @@
 
 (defn train
   [path]
-  (let [files (get-text-files path)
-        inserted-files (map insert-file files)]
-    inserted-files))
+  (let [text-files (get-text-files path)
+        inserted-files-status (map insert-file text-files)]
+    inserted-files-status))
 
 
 ;; Get links
@@ -45,23 +45,24 @@
 (defn get-links
   [docid]
   (let [[words _] (solr/get-popular-words docid)
-        query (clojure.string/join " " (take 5 words))
+        query (clojure.string/join " " (take 5 (map :word words)))
         [links _] (google-search/search query)]
     links))
 
 
 ;; Examples
 
-(println (get-links "Collection-rammeverket.txt"))
+;; (println (get-links "Collection-rammeverket.txt"))
 ;; (println (train "data/documents/"))
 ;; (println (insert-file (io/file "data/documents/Faginnhold.txt")))
 
 ;; Tika
-;; (println (tika/extract-text "data/documents/Faginnhold.txt"))
+;; (println (tika/extract-text (get-text-file "data/documents/" "Tilstand og oppførsel.txt")))
 
 ;; Solr
 ;; (println (solr/insert-document "ID" "TITLE" "CONTENT"))
-;; (println (solr/get-popular-words "Feil og advarsler i editoren.txt"))
+;; (let [[words _] (solr/get-popular-words "Collection-rammeverket.txt")]
+;;   (println (take 5 words)))
 ;; (println (solr/clear-database))
 
 ;; Google Translate
