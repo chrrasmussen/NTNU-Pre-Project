@@ -39,7 +39,7 @@
 (defn- get-cache
   [id]
   (let [hashed-id (digest/md5 id)
-        path (str cache-path hashed-id)]
+        path (str cache-path hashed-id ".json")]
     (if (.exists (io/as-file path))
       (json/parse-string (slurp path))
       nil)))
@@ -47,8 +47,9 @@
 (defn- save-cache
   [id checksum text]
   (let [hashed-id (digest/md5 id)
-        path (str cache-path hashed-id)
-        data {:checksum checksum
+        path (str cache-path hashed-id ".json")
+        data {:id id
+              :checksum checksum
               :text text}
         serialized-data (json/generate-string data)]
     (spit path serialized-data)))
@@ -57,10 +58,9 @@
 (defn- cached-translate
   [id text]
   (let [cache (get-cache id)
-        cache-exists? (not (empty? cache))
         checksum (digest/md5 text)
         checksum-matches? (= (get cache "checksum") checksum)]
-    (if (and cache-exists? checksum-matches?)
+    (if checksum-matches?
       [(get cache "text") nil]
       (let [[translated-text error] (translate text)]
         (save-cache id checksum translated-text)
