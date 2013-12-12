@@ -10,4 +10,5 @@
                  [org.apache.tika/tika-parsers "1.4"]
                  [http-kit "2.1.12"]
                  [cheshire "5.2.0"]
-                 [digest "1.4.3"]])
+                 [digest "1.4.3"]
+                 [selmer "0.5.4"]])

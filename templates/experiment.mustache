@@ -1,0 +1,25 @@
+\subsubsection{<{title}>}
+\label{subsubsec:<{id}>}
+
+Table~\ref{tab:<{id}>} lists the top 5 words from the document ``<{title}>''.
+
+\begin{table}[htdp]
+\centering
+\begin{tabular}{|l|c|}
+\hline\hline
+    Word & TF-IDF \\
+\hline<%for word in words%>
+    <{word.word}> & <{word.tf-idf|double-format:2}> \\<%endfor%>
+\hline\hline
+\end{tabular}
+\caption{Top 5 words from the document ``<{title}>''}
+\label{tab:<{id}>}
+\end{table}
+
+The search results based on the query ``<{query}>'':
+
+\begin{enumerate}<%for page in pages%>
+\item
+    \verb|<{page.title|safe}>| \\
+    \url{<{page.link|safe}>}<%endfor%>
+\end{enumerate}

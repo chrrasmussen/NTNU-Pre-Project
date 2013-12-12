@@ -3,6 +3,8 @@
             [cheshire.core :as json]))
 
 
+(def ^:private ^:const base-url "http://localhost:8983/solr")
+
 ;; Insert document
 
 (defn- generate-insert-document-json-data
@@ -16,10 +18,10 @@
     (zero? status)))
 
 (defn insert-document
-  [id title content]
-  (let [url "http://localhost:8983/solr/update?commit=true"
+  [collection doc-id title content]
+  (let [url (format "%s/%s/update?commit=true" base-url collection)
         options {:headers {"Content-Type" "application/json"}
-                 :body (generate-insert-document-json-data id title content)}
+                 :body (generate-insert-document-json-data doc-id title content)}
         {:keys [status headers body error]} @(http/post url options)]
     (if-not error
       [(parse-insert-document-result body) nil]
@@ -44,10 +46,10 @@
     (reverse sorted-words-map-list)))
 
 (defn get-popular-words
-  [docid]
-  (let [url "http://localhost:8983/solr/tvrh"
-        escaped-docid (clojure.string/join "\\ " (clojure.string/split docid #" "))
-        options {:query-params {:q (str "id:" escaped-docid)
+  [collection doc-id]
+  (let [url (format "%s/%s/tvrh" base-url collection)
+        escaped-doc-id (clojure.string/join "\\ " (clojure.string/split doc-id #" "))
+        options {:query-params {:q (str "id:" escaped-doc-id)
                                 :tv.tf_idf true
                                 :wt "json"}}
         {:keys [status headers body error]} @(http/post url options)]
@@ -69,8 +71,8 @@
     (zero? status)))
 
 (defn clear-database
-  []
-  (let [url "http://localhost:8983/solr/update?commit=true"
+  [collection]
+  (let [url (format "%s/%s/update?commit=true" base-url collection)
         options {:headers {"Content-Type" "application/json"}
                  :body (generate-clear-database-json-data)}
         {:keys [status headers body error]} @(http/post url options)]
