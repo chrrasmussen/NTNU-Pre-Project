@@ -39,9 +39,9 @@
         ;; => {"a" ["tf", 1, "df", 2, "tf-idf", 0.5], "b" ["tf", 1, "df", 4, "tf-idf", 0.25]}
 ;;         _ (println words-map)
         words-map-list (for [[k v] words-map] {:word k
-                                               :tf (nth 2 v)
-                                               :df (nth 4 v)
-                                               :tf-idf (nth 6 v)})
+                                               :tf (nth v 1)
+                                               :df (nth v 3)
+                                               :tf-idf (nth v 5)})
         ;; => ({:word "a", :tf 1, :df 2, :tf-idf 0.5} {:word "b", :tf 1, :df 4, :tf-idf 0.25})
 
         sorted-words-map-list (sort-by :tf-idf words-map-list)]

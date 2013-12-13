@@ -2,11 +2,11 @@
 \centering
 \begin{tabular}{|l|c|r|c|}
 \hline\hline
-    Document & Avg. TF-IDF & Top Word (TF-IDF) & Word Count \\
+    Document & Avg. tf-idf & Top Word (tf-idf) & Word Count \\
 \hline<%for document in documents%>
     <{document.doc-id}> & <{document.avg-tf-idf|double-format:2}> & <{document.top-word.word}> (<{document.top-word.tf-idf|double-format:2}>) & <{document.word-count}> \\<%endfor%>
 \hline\hline
 \end{tabular}
-\caption{!!!TODO!!!}
-\label{tab:!!!TODO!!!}
+\caption{The documents with the highest tf-idf (average of top 5 words) in the document set.}
+\label{tab:highestRankedDocuments-<{collection}>}
 \end{table}

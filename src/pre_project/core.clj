@@ -95,6 +95,27 @@
     (map #(get-stats-for-document % collection) files)))
 
 
+;; Get most common words
+
+(defn- get-df-for-document
+  [file collection]
+    (let [filename (.getName file)
+          doc-id filename
+          [words _] (solr/get-popular-words collection doc-id)]
+      (map #(select-keys % [:word :df]) words)))
+
+(defn- get-most-common-words
+  [path collection]
+  (let [files (get-text-files path)
+        list-of-lists (map #(get-df-for-document % collection) files)
+        list-of-words (apply concat list-of-lists)
+        distinct-words (distinct list-of-words)
+        sorted-words (reverse (sort-by :df distinct-words))]
+    sorted-words))
+
+(println (get-most-common-words data-path selected-collection))
+
+
 ;; Latex
 
 (defn- get-experiment-data
@@ -117,12 +138,13 @@
             {:tag-open \<
              :tag-close \>})))
 
-(defn- stats-to-latex
+(defn- highest-ranked-documents-to-latex
   [path collection]
-  (let [template (slurp "templates/stats.mustache")
+  (let [template (slurp "templates/highest-ranked-documents.mustache")
         stats (get-stats-for-documents path collection)
         sorted-stats (reverse (sort-by :avg-tf-idf stats))]
-    (render template {:documents (take 10 sorted-stats)}
+    (render template {:documents (take 10 sorted-stats)
+                      :collection collection}
             {:tag-open \<
              :tag-close \>})))
 
@@ -140,8 +162,8 @@
 
 ;; Solr
 ;; (println (solr/insert-document selected-collection "ID" "TITLE" "CONTENT"))
-;; (let [[words _] (solr/get-popular-words selected-collection selected-doc-id)]
-;;   (println (take 5 words)))
+(let [[words _] (solr/get-popular-words selected-collection selected-doc-id)]
+  (println (take 5 words)))
 ;; (println (solr/clear-database en-collection))
 
 ;; Google Translate
@@ -158,4 +180,4 @@
 
 ;; Latex
 ;; (println (experiment-to-latex selected-doc-id))
-(println (stats-to-latex data-path no-collection))
+(println (highest-ranked-documents-to-latex data-path selected-collection))
