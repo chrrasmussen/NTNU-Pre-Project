@@ -33,16 +33,19 @@
 (defn- parse-get-popular-words-result
   [body]
   (let [words-vector (get-in (json/parse-string body) ["termVectors" 3 3])
-        ;; => ["a", ["tf-idf", 0.5], "b", ["tf-idf", 0.25]]
+        ;; => ["a", ["tf", 1, "df", 2, "tf-idf", 0.5], "b", ["tf", 1, "df", 4, "tf-idf", 0.25]]
 
         words-map (apply hash-map words-vector)
-        ;; => {"a" ["tf-idf", 0.5], "b" ["tf-idf", 0.25]}
-
-        words-map-list (for [[k v] words-map] {:word k, :tf-idf (second v)})
-        ;; => ({:word "a" :tf-idf 0.5} {:word "b" :tf-idf 0.25})
+        ;; => {"a" ["tf", 1, "df", 2, "tf-idf", 0.5], "b" ["tf", 1, "df", 4, "tf-idf", 0.25]}
+;;         _ (println words-map)
+        words-map-list (for [[k v] words-map] {:word k
+                                               :tf (nth 2 v)
+                                               :df (nth 4 v)
+                                               :tf-idf (nth 6 v)})
+        ;; => ({:word "a", :tf 1, :df 2, :tf-idf 0.5} {:word "b", :tf 1, :df 4, :tf-idf 0.25})
 
         sorted-words-map-list (sort-by :tf-idf words-map-list)]
-        ;; => ({:word "b" :tf-idf 0.25} {:word "a" :tf-idf 0.5})
+        ;; => ({:word "b", :tf 1, :df 2, :tf-idf 0.25} {:word "a", :tf 1, :df 4, :tf-idf 0.5})
     (reverse sorted-words-map-list)))
 
 (defn get-popular-words
@@ -50,7 +53,7 @@
   (let [url (format "%s/%s/tvrh" base-url collection)
         escaped-doc-id (clojure.string/join "\\ " (clojure.string/split doc-id #" "))
         options {:query-params {:q (str "id:" escaped-doc-id)
-                                :tv.tf_idf true
+                                :tv.all true
                                 :wt "json"}}
         {:keys [status headers body error]} @(http/post url options)]
     (if-not error
