@@ -66,7 +66,7 @@
     links))
 
 
-;; Document stats
+;; Get highest ranked documents
 
 
 (defn- get-average-tf-idf
@@ -89,10 +89,11 @@
        :avg-tf-idf (get-average-tf-idf 5 words)
        :word-count (count (clojure.string/split text #"\w+"))}))
 
-(defn- get-stats-for-documents
+(defn- get-highest-ranked-documents
   [path collection]
-  (let [files (get-text-files path)]
-    (map #(get-stats-for-document % collection) files)))
+  (let [files (get-text-files path)
+        stats (map #(get-stats-for-document % collection) files)]
+    (reverse (sort-by :avg-tf-idf stats))))
 
 
 ;; Get most common words
@@ -112,8 +113,6 @@
         distinct-words (distinct list-of-words)
         sorted-words (reverse (sort-by :df distinct-words))]
     sorted-words))
-
-(println (get-most-common-words data-path selected-collection))
 
 
 ;; Latex
@@ -141,9 +140,8 @@
 (defn- highest-ranked-documents-to-latex
   [path collection]
   (let [template (slurp "templates/highest-ranked-documents.mustache")
-        stats (get-stats-for-documents path collection)
-        sorted-stats (reverse (sort-by :avg-tf-idf stats))]
-    (render template {:documents (take 10 sorted-stats)
+        highest-ranked-documents (get-highest-ranked-documents path collection)]
+    (render template {:documents (take 10 highest-ranked-documents)
                       :collection collection}
             {:tag-open \<
              :tag-close \>})))
@@ -162,8 +160,8 @@
 
 ;; Solr
 ;; (println (solr/insert-document selected-collection "ID" "TITLE" "CONTENT"))
-(let [[words _] (solr/get-popular-words selected-collection selected-doc-id)]
-  (println (take 5 words)))
+;; (let [[words _] (solr/get-popular-words selected-collection selected-doc-id)]
+;;   (println (take 5 words)))
 ;; (println (solr/clear-database en-collection))
 
 ;; Google Translate
@@ -173,11 +171,14 @@
 ;; Google Search
 ;; (println (google-search/search "test"))
 
-;; Document stats
-(let [stats (get-stats-for-documents data-path selected-collection)
-      sorted-stats (reverse (sort-by :avg-tf-idf stats))]
-  (println sorted-stats))
+;; Get highest ranked documents
+;; (let [stats (get-highest-ranked-documents data-path selected-collection)
+;;       sorted-stats (reverse (sort-by :avg-tf-idf stats))]
+;;   (println sorted-stats))
+
+;; Get most common words
+;; (println (map :word (get-most-common-words data-path selected-collection)))
 
 ;; Latex
 ;; (println (experiment-to-latex selected-doc-id))
-(println (highest-ranked-documents-to-latex data-path selected-collection))
+;; (println (highest-ranked-documents-to-latex data-path selected-collection))
