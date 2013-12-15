@@ -3,12 +3,13 @@
 
 
 ;; Extract-text
-(defn find-all-macros
-  [html]
-  (let [doc (Jsoup/parse html)
-        macros (.getElementsByTag doc "ac:macro")]
-    macros))
-;;     (distinct (map #(.attr % "ac:name") macros))))
+
+;; (defn find-all-macros
+;;   [html]
+;;   (let [doc (Jsoup/parse html)
+;;         macros (.getElementsByTag doc "ac:macro")]
+;;     macros))
+;; ;;     (distinct (map #(.attr % "ac:name") macros))))
 
 (defn- in?
   "true if seq contains elm"
@@ -36,6 +37,6 @@
 
 ;; (def path "data/documents/Faginnhold.txt")
 ;; (def path "data/documents/Objektorientert programmering/Objektorientert programmering.txt")
-;; (def path "data/documents/Ti.txt")
+;; (def path "data/documents/Eclipse/Refactoring/Refactoring.txt")
 ;; (let [file (clojure.java.io/as-file path)]
-;;   (println (find-all-macros (extract-text file))))
+;;   (println (extract-text file)))
