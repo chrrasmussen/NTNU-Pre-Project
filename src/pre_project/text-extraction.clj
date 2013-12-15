@@ -32,7 +32,7 @@
 
     ;; Get text from special links
     (doall (map #(.text % (.attr % "ri:content-title")) (.getElementsByTag doc "ri:page")))
-    (.html doc)))
+    (.text doc)))
 
 
 ;; (def path "data/documents/Faginnhold.txt")
