@@ -1,6 +1,6 @@
 (ns pre-project.core
   (:require [clojure.java.io :as io]
-            [pre-project.tika :as tika]
+            [pre-project.text-extraction :as text-extraction]
             [pre-project.solr :as solr]
             [pre-project.google-translate :as google-translate]
             [pre-project.google-search :as google-search]
@@ -31,16 +31,19 @@
   (let [filename (.getName file)
         doc-id filename
 
-        title-id (str filename title-suffix)
-        title (clojure.string/replace filename #".txt$" "")
-        [translated-title _] (google-translate/translate title-id title)
+;;         title-id (str filename title-suffix)
+;;         title (clojure.string/replace filename #".txt$" "")
+;;         [translated-title _] (google-translate/translate title-id title)
 
-        text-id (str filename text-suffix)
-        text (tika/extract-text file)
-        [translated-text _] (google-translate/translate text-id text)
+;;         text-id (str filename text-suffix)
+;;         text (text-extraction/extract-text file)
+;;         [translated-text _] (google-translate/translate text-id text)
 
-        [en-success _] (solr/insert-document en-collection doc-id translated-title translated-text)
-        [no-success _] (solr/insert-document no-collection doc-id title text)]
+;;         [en-success _] (solr/insert-document en-collection doc-id translated-title translated-text)
+;;         [no-success _] (solr/insert-document no-collection doc-id title text)]
+        en-success true
+        no-success true]
+;;     (println (text-extraction/find-all-macros (text-extraction/extract-text file)))
     [en-success no-success]))
 
 (defn train
@@ -82,7 +85,7 @@
   [file collection]
     (let [filename (.getName file)
           doc-id filename
-          text (tika/extract-text file)
+          text (text-extraction/extract-text file)
           [words _] (solr/get-popular-words collection doc-id)]
       {:doc-id doc-id
        :top-word (first words)
@@ -152,11 +155,11 @@
 ;; (println (take 5 (get-links selected-collection selected-doc-id)))
 ;; (solr/clear-database en-collection)
 ;; (solr/clear-database no-collection)
-;; (println (train data-path))
+(println (train data-path))
 ;; (println (insert-file (io/file (str data-path selected-doc-id))))
 
-;; Tika
-;; (println (tika/extract-text (first (get-text-files data-path))))
+;; Extract text
+;; (println (text-extraction/extract-text (first (get-text-files data-path))))
 
 ;; Solr
 ;; (println (solr/insert-document selected-collection "ID" "TITLE" "CONTENT"))
