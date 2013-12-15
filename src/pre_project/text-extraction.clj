@@ -3,7 +3,6 @@
 
 
 ;; Extract-text
-;; pagetree, spacegraph, htmlcomment
 (defn find-all-macros
   [html]
   (let [doc (Jsoup/parse html)
@@ -19,13 +18,15 @@
 (defn extract-text
   [file]
   (let [doc (Jsoup/parse file "utf-8")
-        macro-blacklist '("metadata-list", "code", "plantuml")
+        macro-blacklist '("metadata-list", "code", "plantuml", "chart", "lucidchart", "pagetree", "spacegraph", "htmlcomment") ;; excerpt
         remove-macros #(if (in? macro-blacklist (.attr % "ac:name")) (.remove %) nil)]
-    (println (.select doc "code"))
-    ;; Remove blacklisted macros
+    ;; Remove blacklisted 'ac:macro' elements
     (doall (map remove-macros (.getElementsByTag doc "ac:macro")))
 
-    ;; Remove all parameters
+    ;; Remove all 'code' elements
+    (-> doc (.getElementsByTag "code") .remove)
+
+    ;; Remove all 'ac:parameter' elements
     (-> doc (.getElementsByTag "ac:parameter") .remove)
 
     ;; Get text from special links

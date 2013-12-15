@@ -31,19 +31,16 @@
   (let [filename (.getName file)
         doc-id filename
 
-;;         title-id (str filename title-suffix)
-;;         title (clojure.string/replace filename #".txt$" "")
-;;         [translated-title _] (google-translate/translate title-id title)
+        title-id (str filename title-suffix)
+        title (clojure.string/replace filename #".txt$" "")
+        [translated-title _] (google-translate/translate title-id title)
 
-;;         text-id (str filename text-suffix)
-;;         text (text-extraction/extract-text file)
-;;         [translated-text _] (google-translate/translate text-id text)
+        text-id (str filename text-suffix)
+        text (text-extraction/extract-text file)
+        [translated-text _] (google-translate/translate text-id text)
 
-;;         [en-success _] (solr/insert-document en-collection doc-id translated-title translated-text)
-;;         [no-success _] (solr/insert-document no-collection doc-id title text)]
-        en-success true
-        no-success true]
-;;     (println (text-extraction/find-all-macros (text-extraction/extract-text file)))
+        [en-success _] (solr/insert-document en-collection doc-id translated-title translated-text)
+        [no-success _] (solr/insert-document no-collection doc-id title text)]
     [en-success no-success]))
 
 (defn train
