@@ -1,4 +1,5 @@
-\begin{table}[htdp]
+Table~\ref{<{highest-ranked-documents-id}>} lists the top 10 documents, sorted by average tf-idf value.
+\begin{table}[H]
 \centering
 \begin{tabular}{|l|c|r|c|}
 \hline\hline
@@ -7,6 +8,6 @@
     <{document.doc-id}> & <{document.avg-tf-idf|double-format:2}> & <{document.top-word.word}> (<{document.top-word.tf-idf|double-format:2}>) & <{document.word-count}> \\<%endfor%>
 \hline\hline
 \end{tabular}
-\caption{The documents with the highest tf-idf (average of top 5 words) in the document set.}
-\label{tab:highestRankedDocuments-<{collection}>}
+\caption{Top 10 documents (by avg. tf-idf) from the \textit{<{collection}>} document set.}
+\label{<{highest-ranked-documents-id}>}
 \end{table}

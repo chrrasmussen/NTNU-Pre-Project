@@ -13,7 +13,7 @@
 (def ^:private en-collection (str "en" iteration))
 (def ^:private no-collection (str "no" iteration))
 (def ^:private selected-collection en-collection)
-(def ^:private selected-doc-id "Faginnhold.txt")
+(def ^:private selected-doc-id "JavaFX.txt")
 (def ^:private data-path "data/documents/")
 
 
@@ -63,6 +63,7 @@
         translated-words (if (= collection "no") (map translate-word top-words) top-words)
         query (clojure.string/join " " (map :word translated-words))
         [links _] (google-search/search query)]
+    (println query)
     links))
 
 
@@ -82,12 +83,18 @@
   [file collection]
     (let [filename (.getName file)
           doc-id filename
+
+          text-id (str filename text-suffix)
           text (text-extraction/extract-text file)
+          [translated-text _] (google-translate/translate text-id text)
+          not-null-translated-text (if (empty? translated-text) "" translated-text)
+          actual-text (if (= collection en-collection) not-null-translated-text text)
+
           [words _] (solr/get-popular-words collection doc-id)]
       {:doc-id doc-id
        :top-word (first words)
        :avg-tf-idf (get-average-tf-idf 5 words)
-       :word-count (count (clojure.string/split text #"\w+"))}))
+       :word-count (count (clojure.string/split actual-text #"\w+"))}))
 
 (defn- get-highest-ranked-documents
   [path collection]
@@ -118,22 +125,27 @@
 ;; Latex
 
 (defn- get-experiment-data
-  [collection doc-id]
+  [collection doc-id prefix]
   (let [title (clojure.string/replace doc-id #".txt$" "")
         id (clojure.string/replace (clojure.string/lower-case title) #"[^\w]+" "-")
         [words _] (solr/get-popular-words collection doc-id)
-        query (clojure.string/join " " (take 5 (map :word words)))
+        top-words (take 5 words)
+        translated-words (if (= collection "no") (map translate-word top-words) top-words)
+        query (str prefix " " (clojure.string/join " " (map :word translated-words)))
         [pages _] (google-search/search query)]
     {:title title
-     :id id
+     :collection (if (= collection en-collection) "translate-first" "index-first")
+     :subsubsec-id (str "subsubsec:" id)
+     :top-words-id (str "tab:topWords-" collection "-" id); "-2"
+     :ratings-id (str "tab:ratings-" collection "-" id); "-2"
      :query query
      :words (take 5 words)
      :pages (take 5 pages)}))
 
 (defn- experiment-to-latex
-  [collection doc-id]
+  [collection doc-id prefix]
   (let [template (slurp "templates/experiment.mustache")]
-    (render template (get-experiment-data collection doc-id)
+    (render template (get-experiment-data collection doc-id prefix)
             {:tag-open \<
              :tag-close \>})))
 
@@ -142,17 +154,18 @@
   (let [template (slurp "templates/highest-ranked-documents.mustache")
         highest-ranked-documents (get-highest-ranked-documents path collection)]
     (render template {:documents (take 10 highest-ranked-documents)
-                      :collection collection}
+                      :collection (if (= collection en-collection) "translate-first" "index-first")
+                      :highest-ranked-documents-id (str "tab:highestRankedDocuments-" collection)}
             {:tag-open \<
              :tag-close \>})))
 
 
 ;; Examples
 
-;; (println (take 5 (get-links selected-collection selected-doc-id)))
+;; (println (take 5 (get-links no-collection selected-doc-id)))
 ;; (solr/clear-database en-collection)
 ;; (solr/clear-database no-collection)
-(println (train data-path))
+;; (println (train data-path))
 ;; (println (insert-file (io/file (str data-path selected-doc-id))))
 
 ;; Extract text
@@ -176,9 +189,25 @@
 ;;       sorted-stats (reverse (sort-by :avg-tf-idf stats))]
 ;;   (println sorted-stats))
 
-;; Get most common words
-;; (println (map :word (get-most-common-words data-path selected-collection)))
-
 ;; Latex
-;; (println (experiment-to-latex selected-doc-id))
-;; (println (highest-ranked-documents-to-latex data-path selected-collection))
+;; (println (experiment-to-latex selected-collection selected-doc-id))
+;; (println (highest-ranked-documents-to-latex data-path no-collection))
+
+;; Get most common words
+;; (def stopwords '("a", "an", "and", "are", "as", "at", "be", "but", "by",
+;; "for", "if", "in", "into", "is", "it",
+;; "no", "not", "of", "on", "or", "such",
+;; "that", "the", "their", "then", "there", "these",
+;; "they", "this", "to", "was", "will", "with"))
+
+;; (defn- in?
+;;   "true if seq contains elm"
+;;   [coll element]
+;;   (some #(= element %) coll))
+;; (println (filter #(not (in? stopwords %)) (take 50 (map :word (get-most-common-words data-path selected-collection)))))
+;; (println (count (map :word (get-most-common-words data-path selected-collection))))
+
+;; Experiments
+(let [doc-ids '("Tall og beregninger.txt");"JavaFX.txt", "Tråder med java.txt", "Swing.txt", "Bruk av debuggeren i Eclipse.txt")
+      collection en-collection]
+  (println (clojure.string/join "\n\n%---\n\n" (map #(experiment-to-latex collection % "") doc-ids))))
