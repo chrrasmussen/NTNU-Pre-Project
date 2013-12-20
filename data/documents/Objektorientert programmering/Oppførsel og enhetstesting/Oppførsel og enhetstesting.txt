@@ -1,0 +1,76 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Oppf&oslash;rselen til et objekt er hva man til enhver tid kan be det om &aring; gj&oslash;re og hvordan det p&aring;virker objektets tilstand, og testing gj&oslash;res for &aring; sjekke at oppf&oslash;rselen er implementert slik det er ment.</p></ac:rich-text-body></ac:macro><p>De fleste former for testing av oppf&oslash;rsel er basert p&aring; eksempler p&aring; riktig (eller gal) oppf&oslash;rsel. Siden en sjelden kan sjekke at noe <em>alltid</em> er tilfelle, m&aring; en istedet sjekke <em>representative</em> tilfeller. Teknikken best&aring;r i &aring; rigge opp en eller flere objekter i en start-tilstand og s&aring; se hvordan et eller flere av objektene oppf&oslash;rer seg n&aring;r metoder kalles. Oppf&oslash;rselen sjekkes mot fasiten, alts&aring; forventet oppf&oslash;rsel, og avvik rapporteres som feil. Oppf&oslash;rselen til metoder som beregner verdier kan sjekkes direkte, mens oppf&oslash;rselen til metoder som endrer tilstanden m&aring; sjekkes indirekte, ved at tilstanden leses ut i etterkant.</p><p>Ta som eksempel oppf&oslash;rselen som er illustrert i <ac:link><ri:page ri:content-title="Tilstand og oppf&oslash;rsel" /></ac:link> og vist under til venstre. Slike tilstandsdiagrammer er relativt rett frem &aring; oversette til testkode: En rigger f&oslash;rst opp objektene i start-tilstanden, ved &aring; opprette objektene og sette attributtene. S&aring; utf&oslash;res kallet p&aring; en av transisjonene f&oslash;r en sjekker at tilstanden etterp&aring; er slik diagrammet krever. Dersom tilstanden er feil s&aring; rapporteres dette, ellers s&aring; fortsetter en med denne tilstanden som utgangspunkt for videre testing. Denne teknikker er brukt i testkoden under til h&oslash;yre.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Oppf&oslash;rselen til count()</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object "Counter" as counter1 {
+	counter = 1
+	end = 3
+}
+
+counter1 --> counter1 : getCounter() => 1
+ 
+object "Counter" as counter2 {
+	counter = 2
+	end = 3
+}
+counter1 --> counter2 : count()
+counter2 --> counter2 : getCounter() => 2
+ 
+object "Counter" as counter3 {
+	counter = 3
+	end = 3
+}
+counter2 --> counter3 : count()
+counter3 --> counter3 : getCounter() => 3
+counter3 --> counter3 : count()]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Testing av oppf&oslash;rselen til count()</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Counter counter = new Counter(1, 3);
+if (getCounter() != 1) {
+	throw new IllegalStateException("Expected that counter was 1, but actually it was " + getCounter());
+}
+counter.count();
+if (getCounter() != 2) {
+	throw new IllegalStateException("Expected that counter was 2, but actually it was " + getCounter());
+}
+counter.count();
+if (getCounter() != 3) {
+	throw new IllegalStateException("Expected that counter was 3, but actually it was " + getCounter());
+}
+counter.count();
+if (getCounter() != 3) {
+	throw new IllegalStateException("Expected that counter was 3, but actually it was " + getCounter());
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>&nbsp;Det er et par som er verdt &aring; kommentere:</p><ul style="list-style-type: square;"><li>Vi kan ikke teste <strong>end</strong>-attributtet, siden det ikke finnes noen getter for denne verdien. Denne testes implisitt n&aring;r en kommer til siste tilstand og <strong>counter</strong>-verdien forblir den samme.</li><li><strong>getCounter()</strong> testes ikke eksplisitt, men brukes til &aring; teste <strong>count()</strong>, siden slike enkle getter-metoder er banale &aring; implementere.</li><li>Med utgangspunkt i &eacute;n start-tilstand, s&aring; kan en sjekke en sekvens av tilstander. Men dersom en tilstand har flere transisjoner til nye tilstander, s&aring; m&aring; en f&aring;r en ikke testet alle alternativer uten &aring; m&aring;tte rigge opp objektene p&aring; nytt.</li></ul><p>Nedenfor vises oppf&oslash;rselen til en alternativ count-metode, hvor argumentet angir hvor langt det skal telles. Siden vi her har en forgreining, m&aring; vi teste ulike sekvenser for seg, ved &aring; rigge opp start-tilstanden p&aring; nytt. Dette illustrerer ogs&aring; problemet med &aring; teste metoder som tar argumenter: En m&aring; jo egentlig pr&oslash;ve alle mulige verdier for &aring; sjekke at oppf&oslash;rsel er riktig for dem alle, og dette er i praksis umulig.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Oppf&oslash;rselen til count(int)</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object "Counter" as counter1 {
+	counter = 1
+	end = 3
+}
+ 
+object "Counter" as counter2 {
+	counter = 2
+	end = 3
+}
+counter1 --> counter2 : count(1)
+ 
+object "Counter" as counter3 {
+	counter = 3
+	end = 3
+}
+counter2 --> counter3 : count(1)
+counter1 --> counter3 : count(2)
+counter2 --> counter3 : count(2) ]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Testing av oppf&oslash;rselen til count(int)</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Counter counter = new Counter(1, 3);
+counter.count(1);
+if (getCounter() != 2) {
+	throw new IllegalStateException("Expected that counter was 2, but actually it was " + getCounter());
+}
+counter.count(1);
+if (getCounter() != 3) {
+	throw new IllegalStateException("Expected that counter was 3, but actually it was " + getCounter());
+}
+// test other path
+counter = new Counter(1, 3);
+counter.count(2);
+if (getCounter() != 3) {
+	throw new IllegalStateException("Expected that counter was 3, but actually it was " + getCounter());
+}
+// test yet another path
+counter = new Counter(2, 3);
+counter.count(2);
+if (getCounter() != 3) {
+	throw new IllegalStateException("Expected that counter was 3, but actually it was " + getCounter());
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p class="confluence-link">N&aring;r en skriver testkode som over, vil en oppdage at det er en del kode(m&oslash;nstre) som g&aring;r igjen, f.eks. det &aring; sjekke at en verdi er som er forventet og utl&oslash;se et unntak med en passende melding. I tillegg vil en typisk ha egne hjelpemetoder for &aring; rigge opp objektstrukturer osv. For &aring; gj&oslash;re kodingen av tester mer effektiv er det lurt &aring; benytte seg av et rammeverk, f.eks. <span class="confluence-link">JUnit</span>. JUnit fungerer som en slags mal for skriving av testkode og tilbyr mange hendige hjelpemetoder. Du kan lese mer om dette <ac:link><ri:page ri:content-title="Enhetstesting med JUnit" /><ac:plain-text-link-body><![CDATA[her]]></ac:plain-text-link-body></ac:link>.</p><p class="confluence-link">Det at det ikke er noen transisjoner fra den siste tilstanden, kan bety at alle kall til <strong>count(int)</strong> er ulovlige og utl&oslash;ser unntak, og utl&oslash;sing av unntak er ogs&aring; oppf&oslash;rsel det er viktig &aring; teste at er korrekt implementert. Imidlertid har JUnit svak st&oslash;tte for testing av unntak, s&aring; derfor kan det v&aelig;re greit &aring; lese litt om <ac:link><ri:page ri:content-title="Testing av unntak" /><ac:plain-text-link-body><![CDATA[testing av unntak med JUnit]]></ac:plain-text-link-body></ac:link>.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 95 |
+|| Dekningsgrad | 50 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>

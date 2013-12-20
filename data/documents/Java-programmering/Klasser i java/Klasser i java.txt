@@ -1,0 +1,66 @@
+<p><ac:macro ac:name="htmlcomment"><ac:parameter ac:name="hidden">true</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">INLINE</ac:parameter><ac:rich-text-body><p>Hvordan en klasse defineres:</p><ul style="list-style-type: square;"><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Felt</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Metoder</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Konstrukt&oslash;r&nbsp;</span></li></ul><p>Hvordan en instans av en klasse opprettes:</p><ul style="list-style-type: square;"><li>Objektreferanse</li></ul></ac:rich-text-body></ac:macro>Denne siden vil fors&oslash;ke &aring; forklare siden&nbsp;<ac:link><ri:page ri:content-title="Objekter og klasser" /></ac:link> i Java-kontekst. Om man p&aring; forh&aring;nd har forst&aring;tt den objektorienterte tankegangen, vil Java implementasjonenene v&aelig;re vesentlig lettere &aring; forst&aring;. Om man synes den objektorienterte tankegangen er vanskelig &aring; forst&aring;, vil det kanskje hjelpe &aring; se den i Java-kontekst.&nbsp;</p><p><span style="font-size: 16.0pt;font-weight: bold;line-height: normal;">Definere en klasse<br /></span><span style="font-size: 10.0pt;line-height: 13.0pt;">En klasse best&aring;r typisk av&nbsp;</span><em style="font-size: 10.0pt;line-height: 13.0pt;">felt, metoder&nbsp;</em><span style="font-size: 10.0pt;line-height: 13.0pt;">og&nbsp;</span><em style="font-size: 10.0pt;line-height: 13.0pt;">konstrukt&oslash;r(er).</em><span style="font-size: 10.0pt;line-height: 13.0pt;"> Samspillet mellom disse definerer oppf&oslash;rsel og tilstand for objektet.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;"><strong>Felter og metoder</strong><br /></span></p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Simple class</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class MyDescriptiveAndConciseClassname {
+	
+}]]></ac:plain-text-body></ac:macro><ol><li><em>class -&nbsp;</em>Dette betyr at &quot;eieren&quot; av innholdet i { } er en klasse.</li><li><em>public</em>&nbsp;- Dette definerer&nbsp;<em>synligheten&nbsp;</em>til klassen. Ofte jobber<br />programmer med flere klasser, og noen ganger vil man at&nbsp;<br />klassene skal &quot;vite&quot;&nbsp;om hverandre, andre ganger ikke.<br />Mer om synlighet, se&nbsp;<a href="https://www.ntnu.no/wiki/display/tdt4100/Innkapsling">Innkapsling</a>&nbsp;og&nbsp;<br /><a href="https://www.ntnu.no/wiki/display/tdt4100/Synlighetsmodifikatorer">Synlighetsmodifikatorer</a>.</li><li><em>MyDescriptiveAndConciseClassname - </em>Navnet p&aring; klassen. <br />Har her valgt et forholdsvis teit klassenavn, men dette er&nbsp;<br />bare for &aring; illustrere at det kan v&aelig;re akkurat det man &oslash;nsker.<br />I tillegg forteller <span>navnet </span>hva slags klassenavn man egentlig<br />&oslash;nsker; beskrivende og konsise p&aring; en gang.</li></ol><p><br />Dette er en klasse med fryktelig lite mening, men uansett;<br /><em>en klasse.</em></p><p><em> <br /></em></p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Class with fields</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Song {
+ 
+	public String title;
+	public Person artist;
+	public String lyrics;
+
+}]]></ac:plain-text-body></ac:macro><ol><li>Det er her valgt et kort og presist klassenavn, og man burde<br />ikke v&aelig;re i tvil om hva denne klassen &quot;representerer&quot;.</li><li><em>Song</em>-klassen har her tre <em>felter. </em><br />Et felt fungerer omtrent som en vanlig variabel, men i stedet<br />for &aring; deklareres i en funksjon, deklareres feltet i <em>klassen</em>.<br />Felter kan sees p&aring; som klassens <em>egenskaper. </em><br />Det vil si at et felt opptrer som en <em>global variabel </em>i klassen.</li></ol></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Class with fields and methods</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Song {
+ 
+	private String title;
+	public Person artist;
+	public String lyrics;
+ 
+	public String getTitle() {
+		return title;
+	}
+ 
+	public void setTitle (String title) {
+		this.title = title;
+	}
+ 
+	public int countWordInLyrics(String word) {
+		// Code that finds the number of
+		// occurrences of "word" in lyrics-field
+	}
+}]]></ac:plain-text-body></ac:macro><ol><li>N&aring;r man lager funksjoner i klasser pleier man &aring; kalle <br />funksjonene klassen <em>metoder. </em><em>Metodene </em>er bygget opp p&aring;<br />helt lik m&aring;te som en <ac:link><ri:page ri:content-title="Funksjoner" /><ac:plain-text-link-body><![CDATA[funksjon]]></ac:plain-text-link-body></ac:link>.&nbsp;</li><li>Her er det opprettet to metoder; <em>getTitle() &amp; setTitle(...) </em>som<br />henholdsvis returnerer og forandrer feltet <em>title. </em>Disse kalles<br />gettere og settere, som kan leses mer om under <ac:link><ri:page ri:content-title="Innkapsling" /></ac:link>.</li><li>countWordInLyrics(...) er en metode som hverken returnerer<br />eller forandrer noen av feltene i klassen, men utf&oslash;rer en<br />beregning basert p&aring; verdiene til ett av feltene&nbsp;</li></ol></th></tr></tbody></table><p><br /><strong>Konstrukt&oslash;rer</strong>&nbsp;<br />En konstrukt&oslash;r er en spesiell <em>metode</em>&nbsp;som bare kalles n&aring;r man oppretter en ny instans av en klasse, alts&aring; lager et nytt objekt. Dersom et objekt er avhengig av at felt <em>x</em>&nbsp;og <em>y</em>&nbsp;har verdier for at objektet skal ha en gyldig tilstand, gir en konstrukt&oslash;r muligheten til &aring; si at disse feltene <em>m&aring;</em> &quot;oppgis&quot; ved opprettelsen.&nbsp;Om man ikke har definert noen konstrukt&oslash;r (slik som over), vil Java sette inn en &quot;tom&quot;, og denne kalles men utf&oslash;rer ingen forandring p&aring; objektets initielle tilstand.&nbsp;</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Class with constructor</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Song {
+ 
+	private String title;
+	public Person artist;
+	public String lyrics;
+ 
+	public Song(Person p) {
+		artist = p;
+	}
+ 
+	public String getTitle {...}
+	// Osv...
+} ]]></ac:plain-text-body></ac:macro><ol><li>En konstrukt&oslash;r skiller seg fra en vanlig metode<br />ved at den ikke har noen returtype. I tillegg <u>m&aring;</u><br />konstrukt&oslash;ren ha samme navn som klassen.</li><li>Konstrukt&oslash;ren her tar inn et <em>person</em>-<br />objekt og knytter det til <em>artist-</em>feltet.<br />Det vil si at dersom man skal opprette ett objekt<br />av klassen <em>Song, </em>slik den er definert over, <u>m&aring;</u><br />man oppgi ett <em>person-</em>objekt.&nbsp;</li></ol><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Class with multiple constructors</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Song {
+ 
+	private String title;
+	public Person artist;
+	public String lyrics;
+ 
+	public Song(Person p) {
+		artist = p;
+	}
+ 	
+	public Song(Person p, String t) {
+		artist = p;
+		title = t;
+	}
+	
+	// ... Methods]]></ac:plain-text-body></ac:macro><ol><li>Her er det innf&oslash;rt en ny konstrukt&oslash;r i <em>tillegg </em>til den fra<br />forrige kodesnutt. Den nye konstrukt&oslash;ren tar inn<br />en ekstra parameter <em>t, </em>som brukes til &aring; sette tittel<br />p&aring; <em>Song</em>-objektet.</li><li>N&aring;r man n&aring; oppretter et nytt <em>Song-</em>objekt vil man kunne<br />velge hvilken av konstrukt&oslash;rene man vil bruke, ved &aring; <br />&quot;sende med&quot; den ekstra parameteren, eller la v&aelig;re.&nbsp;</li></ol><p>Se neste kolonne for eksempler p&aring; hvordan konstrukt&oslash;rene<br />tas i bruk.&nbsp;</p></th><th colspan="1"><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">New instance of class</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Song s = new Song();]]></ac:plain-text-body></ac:macro><p><span>Koden ovenfor viser hvordan en variabel, </span><em>s</em><span>,</span><br /><span>deklareres og knyttes&nbsp;til et nytt objekt.</span></p><ol><li><em>Song s - representerer variabel-deklarasjonen.</em></li><li><em>new Song() - tilsvarer opprettelsen av objektet.</em><span><br /></span></li></ol><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">New instance of class, with constructor</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Person michaelJ = new Person();
+
+Song s1 = new Song(michaelJ);
+Song s2 = new Song(michaelJ, "Beat it");
+ 
+Song s3 = new Song(); // UGYLDIG!]]></ac:plain-text-body></ac:macro><ol><li>s1 refererer her til et <em>Song-</em>objekt<em> </em>hvor dens<br />konstrukt&oslash;r har &quot;tatt imot&quot; et <em>person-</em>objekt.</li><li>s2 refererer til <span>et </span><em>Song-</em><span>objekt</span><em> </em><span>hvor dens<br /></span><span>konstrukt&oslash;r har &quot;tatt imot&quot; b&aring;de et <em>person</em>-objekt og en streng</span></li><li><span>s3 er her deklarert for &aring; knyttes mot et <em>Song</em>-objekt.<br />Men her er<em> new Song(); </em>&nbsp;ugyldig siden klassen <em>Song </em>ikke<br />har denne konstrukt&oslash;ren. Da klassen <em>har </em>konstrukt&oslash;rer<br />setter ikke Java inn en &quot;tom&quot;, slik den ville gjort ellers.</span></li></ol></th></tr></tbody></table><h2>Objektreferanser</h2><p>For &aring; beskrive forholdet mellom en variabel og et objekt har det s&aring; langt blitt brukt termer som at variabelen er &quot;knyttet til&quot;, &quot;referer til&quot;, &quot;holder p&aring;&quot; objektet osv. Dette skal n&aring; fors&oslash;kes tydeliggj&oslash;res.<br />I kode-eksemplene over er det nemlig ikke slik at f.eks.&nbsp;<em>s2&nbsp;</em><strong>er&nbsp;</strong>et&nbsp;<em>Song</em>-objekt, men at&nbsp;<em>s2&nbsp;</em><strong>peker/refererer&nbsp;</strong>til et&nbsp;<em>Song</em>-objekt. Dette kan illustreres med figurer.</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Variable with reference</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Song s2 = new Song();
+// Gitt at Song har en tom konstruktør ]]></ac:plain-text-body></ac:macro><p><ac:image ac:width="300"><ri:attachment ri:filename="Object-referance 1-242-3eea2d77-0.png" /></ac:image></p><p>Fig. 1</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Assigning reference to other variable</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Song s1 = new Song("Beat it");
+Song s2;]]></ac:plain-text-body></ac:macro><p><ac:image ac:width="300"><ri:attachment ri:filename="object-referance 2-127-ed9827a2-0.png" /></ac:image></p><p>Fig. 2</p></th><th colspan="1"><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Continued</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[s2 = s1; 
+System.out.println(s1 == s2);
+// TRUE]]></ac:plain-text-body></ac:macro><p><ac:image ac:width="300"><ri:attachment ri:filename="Object-references 3-114-bd3209d-0.png" /></ac:image></p><p>Fig. 3</p></th><th colspan="1"><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Continued 2</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[s1 = new Song("Let it be");]]></ac:plain-text-body></ac:macro><p><ac:image ac:width="300"><ri:attachment ri:filename="Object-reference 4-55-a426af60-0.png" /></ac:image></p><p>Fig. 4</p></th></tr></tbody></table><p>Legg merke til at dersom man er i en situasjon slik som <em>Fig. 3.&nbsp;</em>Om man forandrer objektet&nbsp;<em>s1&nbsp;</em>refererer til, vil man ogs&aring; ha forandret objektet&nbsp;<em>s2&nbsp;</em>refererer til, siden disse er samme objekt.<br />&nbsp;</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro>

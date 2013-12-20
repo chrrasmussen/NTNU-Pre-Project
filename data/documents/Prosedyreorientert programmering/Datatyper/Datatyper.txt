@@ -1,0 +1,133 @@
+<p>&nbsp;</p><p>En&nbsp;<em>datatype</em>&nbsp;er en klassifisering som kan identifisere data, i den forstand at datatypen&nbsp;bestemmer hvilke <strong>verdier dataene kan ha</strong>, hvilke <strong>operasjoner</strong> som kan gj&oslash;res med verdier av denne datatypen og tildels&nbsp;<strong>meningen</strong> med dataene. Det er viktig &aring; merke seg at egendefinerte klasser ogs&aring; er datatyper, og at variabler kan referere til disse egendefinerte datatypene. Mer om klasser&nbsp;<ac:link><ri:page ri:content-title="Objekter og klasser" /><ac:plain-text-link-body><![CDATA[her]]></ac:plain-text-link-body></ac:link>.</p><p>Vi kan ofte dele datatypene inn i noen overordnede grupper:<br /><br /><strong><u>Talldata</u>:</strong><br /><br />Tall representeres ofte som <em>integer&nbsp;</em>eller <em>double.</em></p><p><u><em>Integer</em></u></p><p><em style="font-size: 10.0pt;line-height: 13.0pt;">Dersom data er av typen&nbsp;<em>integer,&nbsp;</em>begrenser dette verdiene dataene kan ha til&nbsp;<strong>heltall.<br /></strong></em><span style="font-size: 10.0pt;line-height: 13.0pt;">Int-tallene ligger etter hverandre, som p&aring; en&nbsp;tallinje i begge retninger.<br /></span><span style="font-size: 10.0pt;line-height: 13.0pt;">Av praktisk grunner er heltallene avgrenset til en minimum-/maksimum-verdi, som i java ser slik ut:&nbsp;</span><em style="font-size: 10.0pt;line-height: 13.0pt;">MIN_VALUE ...-2,-1,0,1,2 ... Integer.MAX_VALUE</em></p><p>Hva kan vi gj&oslash;re med <em>integer</em>?<br /><br /><span style="font-size: 10.0pt;line-height: 13.0pt;">-&nbsp;Beregne nye tall: 1 + 2 &ndash; 3 * 4 / 5 % 6<br />-&nbsp;Sammenligne med andre tall: ==, !=, &lt;, &lt;=, &gt;=, &gt;&nbsp;<br />-&nbsp;Operere p&aring; dem som bin&aelig;re tall med:&nbsp;&amp;, | og ~&nbsp;<br />&nbsp;</span></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Integer i java</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[int heltall;
+
+heltall = 1337; // Lovlig verdi for integer-variabelen
+heltall = 10.3; // Ulovlig
+heltall = 5/2;  // Lovlig (heltallsdivisjon)
+heltall = 5.0/2; // Ulovlig 
+
+heltall = 2;
+heltall < 3.2; // true
+ ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p><em><u>Double</u></em></p><p><span style="line-height: 0.0px;font-size: 10.0pt;">Dersom data er av typen double, kan dataene ha verdier som </span><strong style="line-height: 0.0px;font-size: 10.0pt;">desimaltall</strong><span style="line-height: 0.0px;font-size: 10.0pt;">. Faktisk vil selv heltallsverdier &quot;omgj&oslash;res&quot; til desimaltall. &nbsp;<br />Med double kan man beregne nye tall, og sammenligne de med andre tall.</span></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Double i java</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[double desimaltall;
+
+desimaltall = 13.37; // Lovlig verdi for double-variabelen
+desimaltall =  10;  // Lovlig, tolkes som 10.0
+ 
+double annetDesimaltall = desimaltall/2.3; // Lovlig
+ 
+desimaltall == 10; // true, siden de er samme faktiske verdi
+desimaltall != 3; // true]]></ac:plain-text-body></ac:macro><p><br /><strong><u>Strengdata</u>:</strong></p><p>N&aring;r vi skal lagre tekst eller tegn brukes datatypene&nbsp;<em>String&nbsp;</em>eller&nbsp;<em>char.</em></p><p><em><br /></em><u>Char</u> (Character)</p><p>Dersom vi har data best&aring;ende av<strong> en bokstav, et siffer eller et tegn</strong> kan dataene v&aelig;re av typen&nbsp;<em>char</em>.&nbsp;<br />Teknisk sett ligger alle&nbsp;<em>char</em>-verdier etter hverandre p&aring; en tall linje, slik som <em>integers</em>. Alle&nbsp;<em>char</em> kan derav representeres som en tallverdi.<br /><br />Hva kan man/er meningsfylt &aring; gj&oslash;re med en&nbsp;<em>char</em>?&nbsp;<br /><span style="font-size: 10.0pt;line-height: 13.0pt;"><br />-&nbsp;Klassifisere data som som bokstav, stor/liten bokstav, siffer<br /></span><span style="font-size: 10.0pt;line-height: 13.0pt;">- Gj&oslash;re om til stor/liten bokstav<br /></span><span style="font-size: 10.0pt;line-height: 13.0pt;">- Konvertering mellom siffer og tall, f.eks. fra &lsquo;1&rsquo; til 1<br />- Sammenligne med andre <em>char</em>-data<br /><br /></span></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Char i java</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[char tegn;
+
+tegn = 'A'; // I java defineres en char med enkle apostrofer. 
+tegn = Character.toLowerCase(tegn); // tegn settes lik 'a' ved hjelp av en forhåndsdefinert metode som finnes i java
+ 
+ 
+tegn = '#'; // Lovlig char-verdi
+tegn = 't5'; // Ulovlig char-verdi, kan ikke bestå av flere tegn. Se String i stedet
+tegn = '\''; // Setter tegn lik '
+ 
+tegn = '2'; // Lovlig char-verdi
+tegn == 2; // false, da int og char ikke er like, selv om verdien ser lik ut.
+
+
+//Konvertering mellom char og int krever litt triksing:
+
+
+// 1) Hvis man forsøke caste en char til int, vil dette gi svært rare resultater:
+
+int heltall = (int) tegn;  // heltall settes lik 50?? 
+
+// Dette skyldes, som nevnt ovenfor, at alle char-verdier ligger på en tall-linje. Vi vet nå at '2' er representert på plass 50 langs denne tall-linjen.
+
+// 2) I java må vi konvertere char-verdien til en Sting, og deretter "parse" String-verdien til et integer. Det kan gjøres slik
+ 
+String s = Character.toString(tegn); // Bruker en ny forhåndsdefinert metode i java
+int heltall = Integer.parseInt(s); // heltall settes nå lik integer-verdien 2.
+ ]]></ac:plain-text-body></ac:macro><p><u><br />String</u><br /><br />Dersom vi har data best&aring;ende av <strong>tekst/flere tegn,siffer,bokstaver</strong>&nbsp;vil dataene v&aelig;re av typen <em>String</em>.&nbsp;<br />En <em>String</em> kan sees p&aring; som en tabell med&nbsp;<em>char</em>-verdier. Dersom vi vil forandre p&aring; teksten tabellen lager, modifiserer vi enten hele tabellen, eller enkelte&nbsp;<em>char</em>-verdier i tabellen</p><p>Hva kan man/er meningsfylt &aring; gj&oslash;re med en&nbsp;<em>String</em>?&nbsp;<br />- Hente deler av teksten<br />- Forandre hele, eller deler av teksten (store/sm&aring; bokstaver)&nbsp;<br />- Konvertering mellom siffer og tall, f.eks. fra &quot;1&quot; til 1<br />- Sammenligne teksten med andre tekster</p><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">String i java</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// Det er verdt å merke seg at 1) og 2) nedenfor er ekvivalente. Dette sier noe om hvordan en String er bygd opp
+
+// 1)  
+String str = "abc";
+ 
+// 2) 
+char data[] = {'a', 'b', 'c'};
+String str = new String(data);
+
+
+// Andre egenskaper ved String
+
+String tekst;
+String tekst2; 
+ 
+tekst = "hEi"; // I java defineres en String-verdi med doble apostrofer
+tekst2 = "HeI";
+tekst == tekst2; // false, det skilles mellom store og små bokstaver.
+ 
+tekst = String.toLowerCase(tekst); // Hele tekst gjøres liten
+
+String navn = "Ola Normann";
+ 
+int telling = navn.length(); // Teller tegn i strengen. Merk at whitespace er også et tegn
+
+// Om vi vil hente fornavnet til Ola kan det gjøres ved å tenke på navn som en tabell.
+
+String fornavn = navn.substring(0,2); // Henter de tre første elementene i "tabellen"
+char initial = fornavn.charAt(0); // Setter initial lik 'O']]></ac:plain-text-body></ac:macro><p><strong><u><br />Logiske data</u>:</strong></p><p>Logiske data kan bare ta en av to mulige verdier,&nbsp;<em>true&nbsp;</em>eller&nbsp;<em>false</em>. Logiske data er ogs&aring; kjent som boolsk data.<br />I mange spr&aring;k kan true/false ogs&aring; representeres som &nbsp;1/0 (evt <em>null</em>), eller streng-med-tegn/streng-uten-tegn.&nbsp;<br /><br /><u>Boolean<br /><br /></u>Dersom vi har data som uttrykker en <strong>enten-eller-verdi</strong> er det hensiktsmessig &aring; representere dataene som en&nbsp;<em>boolean</em>.<br />En&nbsp;<em>boolean&nbsp;</em>kan bare ta to verdier, <em>true</em> eller <em>false</em>, og boolske data brukes gjerne i&nbsp;<em>kontrollstrukturer.&nbsp;<br /></em></p><p><em><br /></em></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Boolean i java</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[boolean isBroken;
+
+isBroken = false;
+// Knuser noe
+isBroken = true;
+
+// Kan brukes i kontrollstrukturer
+
+if (isBroken) { 
+	...Reparer...
+	...Reparert...
+	isBroken = false;	 
+} 
+
+// Når vi gjør sammenligninger returneres en boolsk-verdi vi kan ta vare på i en variabel
+
+int heltall = 5;
+boolean isLess = heltall < 10; // Setter isLess lik true
+
+// Vi kan også bruke logiske operatorer på boolske data
+
+boolean b = isBroken && isLess; // b settes lik false, siden isBroken er false]]></ac:plain-text-body></ac:macro><p><strong><u><br /></u></strong></p><p><strong><u>Tabelldata</u></strong></p><p>Dersom vi har mange data som &oslash;nsker &aring; strukturere og knytte sammen, vil det v&aelig;re naturlig &aring; putte de i en tabell, eller datatypen&nbsp;<em>array</em>.</p><p><u>Array<br /><br /></u>Et array er datatype som kan <strong>holde p&aring; flere verdier av andre datatyper</strong>. Et array er som nevnt en tabell hvor vi kan legge inn nye data, forandre data, slette data eller lese av data som ligger der.&nbsp;</p><p>&nbsp; &nbsp;0 &nbsp; &nbsp; 1 &nbsp; &nbsp; &nbsp;2 &nbsp; &nbsp; 3</p><table><tbody><tr><th>13</th><th>37</th><th>19</th><th>91</th></tr></tbody></table><p><br />Et array er null-indeksert, som vil si at dersom vi vil lese av, slette, osv. data som finnes p&aring; den f&oslash;rste plassen, refererer vi til plass 0. Det er viktig &aring; skille mellom verdiene som finnes i tabellen, og indeksen.<br />Dersom vi sp&oslash;r &quot;arrayet&quot; ovenfor om hva som er elementet p&aring; plass 2, vil svaret v&aelig;re 19.&nbsp;<br /><br />I noen spr&aring;k kan arrays innholde mange forskjellige datatyper slik som i <em>python</em> hvor dette er et gyldig array:</p><table><tbody><tr><th>'?'</th><th>54</th><th>&quot;Hei&quot;</th><th>12.21</th></tr></tbody></table><p>Mens andre spr&aring;k krever at alle elementene er samme datatype. Java er et slikt spr&aring;k.<br /><br /></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Array i java</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[double[] desimalTabell; // Klammene definerer at dette er et array som skal holde på double-verdier
+
+// Vi må bestemme hvor stor tabellen skal være før vi kan sette elementer i den
+
+desimalTabell = new double[10]; // Denne linjen allokerer minne til 10 desimaltall fra plass 0 til 9
+
+desimalTabell[0] = 100.23; // Setter 100.23 inn på index-plass 0 i tabellen
+
+// Vi kan sette inn verdier hvor vi vil, og forandre de når vi vil
+
+desimalTabell[8] = 96.3; 
+desimalTabell[10] = 77.77; // Ikke gyldig operasjon, da vi bare har allokert minne til 10 desimaltall på plassene 0 til 9
+desimalTabell[4] = 0.45; 
+desimalTabell[8] = desimaltabell[8] - 6.1; // Setter index-plass 8 i tabellen lik 90.2
+
+
+// Vi kan også ha arrays i arrays
+ 
+int[][] multi;
+		
+multi = new int[3][5]; // Setter den "ytterste" tabellen til å holde 3 tabeller som kan holde 5 integers hver
+
+multi[0][0] = 5;
+multi[2][3] = 678;
+..
+.. 
+// Antar at en fult initialisert tabell ser slik ut
+// [5,3,4,67,19],[95,57,345,0,2],[78,34,678,23,21] 
+ 
+// Vi kan nå traversere hele tabellen på denne måten
+ 
+for (int i = 0; i < multi.length; i++) {
+	for (int j = 0; j < multi[i].length; j++) {
+		System.out.println(multi[i][j]);
+	}
+}
+ 
+// Som vil skrive ut tallene i den rekkefølgen de kan leses ovenfor
+ 
+ ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p>&nbsp;</p>

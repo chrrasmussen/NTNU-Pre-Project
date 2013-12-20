@@ -1,0 +1,4 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | oppgave |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><h2>Treningsoppgaver</h2><ul><li>Lag et enum for&nbsp;<em>suit&nbsp;</em>(slik det er nevnt i andre avsnitt)</li><li>Lag et enum for fargene r&oslash;d og sort, og lag et felt i&nbsp;<em>suit-</em>enumet hvor du definerer hvilken farge&nbsp;<em>suiten</em>&nbsp;har (hjerter = r&oslash;d, kl&oslash;ver = sort, osv). Bruk farge-enumet til dette feltet.</li><li>Lag en metode i&nbsp;<em>suit-</em>enumet for &aring; hente fargen til&nbsp;<em>suiten.</em></li><li>Finn&nbsp;en m&aring;te &aring; returnere&nbsp;<em>suiten</em>&nbsp;som tekst. (Hint: Se p&aring; eksisterende metoder for enums)</li></ul>

@@ -1,0 +1,50 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 25 | 
+|| Omfang | 25 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p>Enhetstesting er testing av de minste enhetene i et program, i praksis enkeltklasser og deres metoder. Ved testing av metoder, vil en typisk rigge opp en eller flere instans, kalle metodene med ulike argumenter og sammenligne <em>returverdiene</em> med fasiten. Dette vil imidlertid ikke teste et annet viktig aspekt ved metoder, nemlig n&aring;r og hvilke unntak som utl&oslash;ses, f.eks. n&aring;r argumenter er ugyldige. Testing av dette er ikke like rett frem som ved testing av returverdier, og derfor trenger en &aring; kjenne ulike teknikker for &aring; teste unntak.</p><p>Det enkleste hadde v&aelig;rt om det fantes en assertException-metode i JUnit-rammeverket. En slik metode er imidlertid umulig &aring; implementere, fordi unntak gir en spesiell typer kontrollflyt, som avbryter den ordin&aelig;re kontrollflyten som brukes ved metodekall. Derfor m&aring; vi istedenfor lage testkode tilpasset den ekstraordin&aelig;re unntakskontrollflyten.</p><p>Den vanlige teknikken for &aring; h&aring;ndtere unntak er bruk av <code>try/catch</code>, som gir f&oslash;lgende kontrollflyt:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[try {
+   // kode som kan gi unntak
+   ...
+   // kode som kjøres dersom det ikke utløses noe unntak
+   ...
+} catch (Exception1 exception1) {
+   // kode som håndtere unntak av type Exception1
+   ...
+} catch (Exception2 exception2) {
+   // kode som håndtere unntak av type Exception2
+   ...
+} catch (Exception exception) {
+   // kode som håndtere andre unntak enn Exception1 og Exception2
+   ...
+}]]></ac:plain-text-body></ac:macro><p>N&aring;r man tester unntak, s&aring; vil man typisk &oslash;nske &aring; sjekke om kontrollflyten fortsetter som vanlig eller havner i en bestemt catch-del. For &aring; angi at en bestemt kontrollflyten ikke er som forventet, dvs. &quot;hit skulle man ikke kommet&quot;, kaller man <code>fail()</code>-metoden, som rett og slett gir feilmelding umiddelbart, omtrent som om en brukte <code>assertTrue(true)</code>. Anta f.eks. at konstrukt&oslash;ren i Counter-klassen fra <ac:link><ri:page ri:content-title="Enhetstesting med JUnit" /></ac:link> skal utl&oslash;se en IllegalArgumentException, dersom end-verdien er mindre enn start-verdien. Da m&aring; en teste begge tilfeller, b&aring;de n&aring;r en forventer unntak av denne typen og n&aring;r en ikke forventer det, gjerne i hver sin test-metode:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[public void testCounterWithoutException() {
+   try {
+      // prøve to tilfeller, både mindre enn og lik
+      new Counter(1, 2);
+      new Counter(1, 1);
+      // skal komme hit
+   } catch (Exception e) (
+      // forventer ingen unntak, så skal ikke komme hit
+      fail();
+   }
+}
+
+public void testCounterException() {
+   try {
+      new Counter(1, 0);
+      // forventer unntak, så skal ikke komme hit
+      fail();
+   } catch (IllegalArgumentException iae) (
+      // forventer unntak av denne typen, så skal komme hit
+   } catch (Exception e) (
+      // forventer ikke andre unntak, så skal ikke komme hit
+      fail();
+   }
+}]]></ac:plain-text-body></ac:macro><p>En trenger fors&aring;vidt ikke catch-grenen for Exception med fail() i, fordi den likevel vil bli fanget opp av test-systemet, men det er greit &aring; ha den med fordi den gj&oslash;r test-koden tydeligere p&aring; hva slags unntak som forventes og ikke.</p><p>Det er ett tilfelle koden over ikke dekker, nemlig n&aring;r det kreves et unntak av en bestemt klasse og ikke en subklasse. Dersom Counter-konstrukt&oslash;ren utl&oslash;ser et unntak av typen NumberFormatException, vil dette blir akseptert av testkoden over, men dette unntaket passer jo egentlig ikke. Kravet til konstrukt&oslash;ren b&oslash;r v&aelig;re at unntaket er av den bestemte klassen IllegalArgumentException (og ikke en subklasse) og dette kan en teste med f&oslash;lgende kode:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[public void testCounterException() {
+   try {
+      new Counter(1, 0);
+      // forventer unntak, så skal ikke komme hit
+      fail();
+   } catch (Exception e) (
+      // forventer unntak, men bare av en bestemt klasser
+      assertTrue(e.getClass().equals(IllegalArgumentException.class));
+   }
+}]]></ac:plain-text-body></ac:macro><p>Her fanger en alts&aring; opp alle unntak og sjekker at typen til unntaksinstansen, som returneres med e.getClass(), er den spesifikke klassen IllegalArgumentException.</p><hr /><p>Sider om <ac:link><ri:page ri:content-title="Enhetstesting med JUnit" /></ac:link>: <ac:macro ac:name="list-pages"><ac:parameter ac:name="direction">children</ac:parameter><ac:parameter ac:name="startPage">@parent</ac:parameter></ac:macro></p>

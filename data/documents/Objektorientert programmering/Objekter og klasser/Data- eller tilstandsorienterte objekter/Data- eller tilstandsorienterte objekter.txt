@@ -1,0 +1,46 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Noen objekter har hovedsaklig som form&aring;l &aring; huske og h&aring;ndtere data, og disse kaller vi <em>data- eller tilstandsorienterte.</em></p></ac:rich-text-body></ac:macro><p>Et eksempel p&aring; dette er et <strong>Person</strong>-objekt som h&aring;nderer data tilsvarende det en finner p&aring; et visittkort. Et slik objekt gj&oslash;r ikke s&aring; mye mer enn &aring; lagre attributt-verdier, og tilbyr (stort sett bare) operasjoner for &aring; lese og endre attributtene.</p><h2>Enkle verdier</h2><p>Anta at <strong>Person</strong>-objektet h&aring;ndterer verdier for navn, f&oslash;dselsdato og e-post-adresse. Hvert <strong>Person</strong>-objekt vil ha unike verdier, som leses og settes med egne operasjoner. F&oslash;r en definerer disse operasjonene m&aring; en gi verdiene navn og bestemme hvilken datatype som er logisk for hvert av dem. Datatypene vil vi finne igjen i parameter- og returntypene for getter- og setter-operasjonene. F.eks. kan vi kalle bruke <strong>fullName</strong> og <strong>String</strong> for navnet til personen og det vil gi opphav til operasjonene <strong>String getFullName()</strong> og <strong>void setFullName(String)</strong>. En mulig innkapsling av disse verdiene er vist under til venstre.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Innkapsling av navn, f&oslash;dselsdato og e-post</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	+String getFullName()
+	+void setFullName(String)
+	+Date getDateOfBirth()
+	+void setDateOfBirth(Date)
+	+String getEmail()
+	+void setEmail(String)
+}]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Implementasjon av navn, f&oslash;dselsdato og e-post</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	-String name
+	-Date dateOfBirth
+	-String emailUser
+	-String emailDomain
+	+String getFullName()
+	+void setFullName(String)
+	+Date getDateOfBirth()
+	+void setDateOfBirth(Date)
+	+String getEmail()
+	+void setEmail(String)
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>Merk at vi kan velge andre navn og typer til attributtet som brukes til &aring; <em>lagre</em> verdien, for &aring; gj&oslash;re det mer praktisk &aring; bruke verdien internt i klassen. F.eks. kan vi ha to attributter for lagre e-post-adresser, ett for brukernavnet og ett for domenet/tjenesten, selv om vi har valgt &aring; kapsle dem inn e-post-verdien med operasjonene <strong>String getEmail()</strong> og <strong>void setEmail(String)</strong>. Dette kan gj&oslash;re koden internt i klassen enklere, selv om det kan gj&oslash;re implementasjon av operasjonene litt mer komplisert. Implementasjonen kan v&aelig;re som vist over til h&oslash;yre.</p><h2>Multiple verdier</h2><p>H&aring;ndtering av attributter for enkeltverdier er noks&aring; enkelt, men n&aring;r ett attributt tilsvarer mange verdier, s&aring; blir det mer komplisert, kanskje mest fordi det er flere valg &aring; ta omkring b&aring;de innkapslingsmetoder og implementasjon av attributtene. Ta som eksempel h&aring;ndtering av barna til en person. Siden en kan ha flere av dem, s&aring; kan en ikke innkapsle dem med<strong> Person getChild()</strong> og <strong>setChild(Person)</strong>. En variant er &aring; bruke tabeller, alts&aring; <strong>Person[] getChildren()</strong> og <strong>void setChildren(Person[])</strong>, men det vil gj&oslash;re enkle operasjoner som &aring; legge til barn mer komplisert &aring; kode for de som bruker <strong>Person</strong>-klassen. Derfor er det bedre &aring; velge en innkapsling som er mer skreddersydd for bruken av dataene. Tre forslag er vist under:</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Innkapsling av barn variant 1</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	+boolean containsChild(Person)
+	+Iterator<Person> getChildren()
+	+void addChild(Person)
+	+void removeChild(Person)
+}	]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Innkapsling av barn variant 2</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	+int getChildCount()
+	+int indexOfChild(Person)
+	+Person getChild(int)
+	+void addChild(Person)
+	+void removeChild(Person)
+}]]></ac:plain-text-body></ac:macro></td><td colspan="1"><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Innkapsling av barn variant 3</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	+int getChildCount()
+	+int indexOfChild(Person)
+	+Person getChild(int)
+	+void addChild(int, Person)
+	+void removeChild(int)
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>Variant 1 gir mulighet til &aring; sjekke om en person har en annen person som barn, g&aring; gjennom alle barna vha. en s&aring;kalt iterator (se <ac:link><ri:page ri:content-title="java.util.Iterator" /><ac:plain-text-link-body><![CDATA[Iterator]]></ac:plain-text-link-body></ac:link>) og legge til og fjerne barn. Merk at ingen metoder knytter nummer til barna, s&aring; skal en hente ut barn nr. 3, s&aring; m&aring; en be om alle og hoppe over de to f&oslash;rste (om de finnes). Variant 2 gj&oslash;r det enklere &aring; hente ut barn basert p&aring; indeks (nummer i rekka), men ikke endre p&aring; rekkef&oslash;lgen, slik variant 3 gir mulighet for. Hvilken av disse variantene en b&oslash;r velge er avhengig av hva det er naturlig for andre klasser &aring; gj&oslash;re med person-barn-koblingen. For andre typer koblinger kan det v&aelig;re begrensninger som gj&oslash;r at noen metoder utelates eller en forventet bruk som gj&oslash;r at en tilbyr et rikere utvalg, f.eks. en kombinasjon av flere varianter. Det vesentlige er 1) at en vurderer hvilke logiske operasjoner en er tjent med og 2) at en f&oslash;lger etablerte konvensjoner for navngiving og signaturer.</p><h2>Standardoperasjoner versus logiske operasjoner</h2><p>N&aring;r en skal innkapsle verdier, er det lettvint &aring; bruke konvensjoner for navngiving og signaturer, slik vi har gjort over. Men en skal v&aelig;re forsiktig med &aring; gj&oslash;re dette ukritisk, siden det ikke alltid stemmer med den iboende logikken til og bruken av verdiene. Ta en konto som eksempel, som kan ses p&aring; som en innkapsling av et bel&oslash;p eller balanse. Det er fort gjort &aring; definere en innkapsling som vist under til venstre, men er dette riktig? Det er riktignok naturlig &aring; kunne sp&oslash;rre om balansen, men en setter jo sjelden balansen direkte. I stedet setter en inn og tar ut bel&oslash;p, alts&aring; legger til eller trekker fra. Noen ganger p&aring;l&oslash;per det ulike gebyr for hver av disse, s&aring; det er ogs&aring; en grunn til &aring; skille dem fra hverandre. Derfor er innkapslingen under til h&oslash;yre bedre.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Innkapsling med standardoperasjoner</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Account {
+	int getBalance()
+	void setBalance(int)
+}]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Innkapsling med tilpassede operasjoner</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Account {
+	int getBalance()
+	void deposit(int)
+	int withdraw(int)
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 95 |
+|| Dekningsgrad | 50 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>

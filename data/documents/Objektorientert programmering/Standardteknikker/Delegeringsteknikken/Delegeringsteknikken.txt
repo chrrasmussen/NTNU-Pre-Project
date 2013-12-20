@@ -1,0 +1,4 @@
+<p>Delegering i det virkelige liv handler om at &eacute;n person kan ta ansvar for &aring; utf&oslash;re noe for en oppdragsgiver, men overlater til den annen (delegaten) &aring; gj&oslash;re selve jobben uten at dette (n&oslash;dvendigvis) synliggj&oslash;res for oppdragsgiveren. Den som delegerer f&aring;r evner til &aring; utf&oslash;re oppgaver, basert p&aring; delegatens evner og ens myndighet over denne. Denne rollefordelingen er ogs&aring; nyttig innen objektorientering: et objekt benytter seg av et annet for &aring; utf&oslash;re en del av en tjeneste.</p><p>&nbsp;</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 25 |
+|| Dekningsgrad | 25 |
+|| Omfang | 25 |]]></ac:plain-text-body></ac:macro>

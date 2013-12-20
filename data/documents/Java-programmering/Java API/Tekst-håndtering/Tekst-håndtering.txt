@@ -1,0 +1,4 @@
+<p>Har kan man finne teori om&nbsp;hvordan tekst h&aring;ndteres i java.</p><p>P&aring; siden&nbsp;<ac:link><ri:page ri:content-title="String" /></ac:link> kan man lese mer om hva tekst er i java, og hvordan tekst bygges og endres. Dersom man skal bygge eller manipulere tekst over mange steg burde man ta en titt p&aring; siden&nbsp;<ac:link><ri:page ri:content-title="StringBuffer og StringBuilder" /></ac:link>.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | oversikt |
+|| Dekningsgrad | 0 |
+|| Omfang | 0 |
+|| Ferdig | 25 |]]></ac:plain-text-body></ac:macro>

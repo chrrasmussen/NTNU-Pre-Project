@@ -1,0 +1,4 @@
+<p>P&aring; dette omr&aring;det finnes det teori og eksempler om hvordan GUI kan implementeres med java.&nbsp;</p><p>P&aring; siden <ac:link><ri:page ri:content-title="Swing" /></ac:link>&nbsp;finner man teori og eksempler knyttet til Swing-biblioteket i Java, samt en innf&oslash;ring i noen enkle konsepter man kan knyttet til GUI-programmering.<br />Veldig enkelt forklart er <ac:link><ri:page ri:content-title="Java2D" /></ac:link>&nbsp;for java, det <em>Paint</em> er for Windows, og man kan for eksempel bruke Java2D til &aring; lage komponenter som kan brukes i Swing-kontekst.&nbsp;</p><p>JavaFX ...</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | oversikt |
+|| Dekningsgrad | 0 |
+|| Omfang | 0 |
+|| Ferdig | 25 |]]></ac:plain-text-body></ac:macro>

@@ -1,0 +1,30 @@
+<p>Kall til funksjoner brukes for &aring; utnytte en blokk med kode som allerede er skrevet. Ordet&nbsp;<em>metode</em> brukes om funksjoner i objektorienterte-spr&aring;k.<br />Funksjoner lages ofte til &aring; utf&oslash;re bestemte beregninger eller oppgaver, og trenger ikke n&oslash;dvendigvis se beregningen i en st&oslash;rre sammenheng. &nbsp;<br /><br /><strong>Parametere/Argumenter&nbsp;</strong>(brukes om hverandre)<br />En funksjon kan ta imot 0 eller flere parametere. Parametere er verdier funksjonen &quot;krever&quot; for &aring; kunne utf&oslash;res. Funksjonen behandler disse verdiene som variabler som kan/m&aring; benyttes gjennom utf&oslash;relsen av koden.<br />&nbsp;- Dersom man vil bruke sinus-funksjonen innenfor matematikk, krever denne en parameter (f.eks&nbsp;<em>pi</em> eller 0) for &aring; kunne gi et svar. <em>(Pi eller 0 vil da v&aelig;re den konkrete verdien sinus-funksjonen benytter i beregningen(e))</em><br />&nbsp;</p><p><strong>Returverdi<br /></strong>N&aring;r en funksjon er utf&oslash;rt kan den returnere en verdi, som ofte forteller noe om utf&oslash;relsen av funksjonen.<br />&nbsp;- Dersom man vil bruke sinus-funksjonen innenfor matematikk, vil svaret man f&aring;r etter &aring; ha gitt funksjonen et argument kalles&nbsp;<em>returverdien&nbsp;</em>til funksjonen.<br /><br /><em>Merk! I objektorientert-programmering kan metodene ogs&aring; returnere objektreferanser</em><br /><br /></p><p><strong>Deklarasjon<br /></strong>Funksjoner kan deklareres p&aring; forskjellige m&aring;ter, og varierer fra spr&aring;k til spr&aring;k.&nbsp;</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Funksjonsdeklarasjon i python</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">python</ac:parameter><ac:plain-text-body><![CDATA[## Funksjon som undersøker om en gitt verdi er mindre enn tjue
+
+def isLessThanTwenty(num):
+	
+	if (num < 20):
+		return true 
+		## Return definerer at funksjonen er ferdig
+		## Gjenværende kode blir ikke utført
+ 
+	return false]]></ac:plain-text-body></ac:macro><p>I python er det verdt &aring; merke seg at vi hverken deklarerer hva slags returtype<br />funksjonen har, eller datatype for parameterne.</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Funksjonsdeklarasjon i java</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// Funksjon som undersøker om et gitt heltall er mindre enn tjue
+ 
+boolean isLessThanTwenty(int num) {
+	
+	if(num < 20) {
+		return true;
+		// Return definerer at funksjonen er ferdig
+		// Gjenværende kode blir derav ikke utført
+	}
+	
+	return false;
+}]]></ac:plain-text-body></ac:macro><p>I java m&aring; vi deklarere b&aring;de returtypen, som her er boolean, og datatype for parameterne.<br />&nbsp;</p></th></tr></tbody></table><p>&nbsp;</p><p>I java har vi to m&aring;ter &aring; gj&oslash;re metodekall p&aring; med tanke p&aring; syntaks:<br /><br />&nbsp;1.&nbsp;<span style="font-size: 10.0pt;line-height: 13.0pt;">&lt;klasse&gt;.&lt;navn&gt;(&lt;arg1&gt;, ..., &lt;argN&gt;);&nbsp;</span></p><p>&nbsp;2. &lt;objektreferanse&gt;.&lt;navn&gt;(&lt;arg1&gt;, ..., &lt;argN&gt;);&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Metodekall</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// 1
+Math.sqrt(6.25);
+
+
+String tekst = "heihei";
+ 
+// 2
+tekst.length();]]></ac:plain-text-body></ac:macro><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Funksjoner som returnerer en verdi/objektreferanse kan brukes som et&nbsp;</span><span style="font-size: 10.0pt;line-height: 13.0pt;">uttrykk eller del av et uttrykk:</span></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Funksjon som del av uttrykk</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[String navn = "Hallvard Trætteberg";
+String fornavn = navn.substring(0, 8);
+char initial = Character.toLowerCase(navn.charAt(0)); // initial settes lik "h"]]></ac:plain-text-body></ac:macro>

@@ -1,0 +1,1 @@
+<p>JExercise er et tillegg til Eclipse, en s&aring;kalt plugin, for programmeringsoppgaver basert p&aring; <ac:link><ri:page ri:content-title="Enhetstesting med JUnit" /><ac:plain-text-link-body><![CDATA[enhetstesting med JUnit]]></ac:plain-text-link-body></ac:link>.</p>

@@ -1,0 +1,42 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Et objekt har b&aring;de <em>tilstand</em> og <em>oppf&oslash;rsel</em>. Tilstanden til et objekt er alle dataene den inneholder, mens oppf&oslash;rselen er hva objektet kan gj&oslash;re av <em>beregninger og operasjoner</em> p&aring; dataene og hvordan disse potensielt endrer tilstanden <em>over tid</em>.</p></ac:rich-text-body></ac:macro><p>Ta som eksempel et <strong>Counter</strong>-objekt som teller fra en start-verdi til en slutt-verdi. Slutt-verdien angis n&aring;r objektet opprettes og kan variere fra objekt til objekt. Objektet m&aring; alts&aring; huske b&aring;de teller-verdien og slutt-verdien (begge er heltall), s&aring; disse utgj&oslash;r objektets <em>tilstand</em>. Objektet har to operasjoner, <strong>int getCounter()</strong>, som returnerer n&aring;v&aelig;rende teller-verdi, og <strong>void count()</strong>, som &oslash;ker telleren med 1 inntil den n&aring;r slutt-verdien. <em>Oppf&oslash;rselen</em> defineres av disse to operasjonene, f&oslash;rst og fremst ved hvordan <strong>count</strong> evt. endrer tilstanden, men ogs&aring; hvordan tilstanden leses av <strong>getCounter</strong> og dermed p&aring;virkes av <strong>count</strong>.</p><p>En m&aring;te &aring; illustrere oppf&oslash;rselen p&aring; er et diagram over hvordan tilstanden til objektet utvikler seg over tid, n&aring;r ulike metoder blir kalt.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object "Counter" as counter1 {
+	counter = 1
+	end = 3
+}
+
+counter1 --> counter1 : getCounter() => 1
+ 
+object "Counter" as counter2 {
+	counter = 2
+	end = 3
+}
+counter1 --> counter2 : count()
+counter2 --> counter2 : getCounter() => 2
+ 
+object "Counter" as counter3 {
+	counter = 3
+	end = 3
+}
+counter2 --> counter3 : count()
+counter3 --> counter3 : getCounter() => 3
+counter3 --> counter3 : count()]]></ac:plain-text-body></ac:macro></td><td>Figuren viser hvordan samme&nbsp;<strong>Counter</strong>-objekt g&aring;r fra &eacute;n tilstand (verdiene til <strong>counter</strong> og <strong>end</strong>) til en annen, n&aring;r&nbsp;<strong>getCounter</strong>- og&nbsp;<strong>count</strong>-operasjonene utf&oslash;res. Hver boks er alts&aring; det samme objektet i ulike tilstander og pilene angir hvilket kall som leder til neste (eller <span>samme) </span>tilstand. Kallene til&nbsp;<strong>getCounter</strong>&nbsp;endrer ikke noen verdier, s&aring; derfor leder de til samme tilstand. Kallene til&nbsp;<strong>count</strong>, derimot, endrer telleren (<strong>counter</strong>) inntil den n&aring;r slutt-verdien (<strong>end</strong>) og gir en (heldigvis endelig) kjede med tilstander (se fotnote 1).</td></tr></tbody></table><p>Generelt er <em>tilstanden</em> til et objekt <em>verdien av alle attributtene</em>, mens <em>oppf&oslash;rselen</em> er n&aring;r en kan kalle de ulike operasjonene, hvilke argumenter som er gyldige og hva de returnerer og hvordan tilstanden endres av dem. I eksemplet er det alltid tillatt &aring; kalle begge operasjonene, men en kunne tenke seg at <strong>count</strong> tok et argument som anga hvor mye telleren skulle &oslash;kes og at det var ulovlig (&aring; pr&oslash;ve) &aring; &oslash;ke telleren forbi slutt-verdien. Dette gir en annen oppf&oslash;rsel, som er fors&oslash;kt illustrert i diagrammet under.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object "Counter" as counter1 {
+	counter = 1
+	end = 3
+}
+ 
+object "Counter" as counter2 {
+	counter = 2
+	end = 3
+}
+counter1 --> counter2 : count(1)
+ 
+object "Counter" as counter3 {
+	counter = 3
+	end = 3
+}
+counter1 --> counter3 : count(2)
+counter2 --> counter3 : count(1)
+counter2 --> counter3 : count(2)
+]]></ac:plain-text-body></ac:macro></td><td>Vi ser at ett kall til&nbsp;<strong>count</strong>(<strong>2)</strong>&nbsp;har samme effekt som to kall til&nbsp;<strong>count(1)</strong>&nbsp;og at det ikke lenger er lov &aring; kalle count i den siste tilstanden, dsv. n&aring;r telleren (counter) har n&aring;dd slutt-verdien (end). Kall til&nbsp;<strong>getCounter</strong>&nbsp;er utelatt, siden de (fortsatt) ikke endrer tilstand.</td></tr></tbody></table><p>For den som bruker et objekt (eller klasse) er det viktig &aring; vite hvordan et objekt oppf&oslash;rer seg, b&aring;de for &aring; vite om objektet passer til (l&oslash;ser) problemet og hvordan unng&aring; &aring; bruke det feil. For den som skal kode oppf&oslash;rselen i en klasse, er det selvsagt helt vesentlig &aring; tenke gjennom hvilken oppf&oslash;rsel objektene skal ha, og eksempler som den i figurene er ofte nyttige, b&aring;de for &aring; tenke gjennom problemet f&oslash;r en koder og for &aring; forklare andre hvordan koden virker (eller er ment &aring; virke). Slike eksempler hjelper en ogs&aring; &aring; skrive tester, som forklart i <ac:link><ri:page ri:content-title="Oppf&oslash;rsel og enhetstesting" /></ac:link>.</p><h3>Sp&oslash;rsm&aring;l til refleksjon</h3><ol><li>I kommentaren til det andre diagrammet st&aring;r det at <em>ett</em> kall til <strong>count(2)</strong> har samme effekt som <em>to</em> kall til <strong>count(1)</strong>. Dette er imidlertid ikke riktig i alle tilfeller, ser du i hvilket?</li><li>Anta at det finnes en metode kalt <strong>setEnd(int)</strong> som lar en endre slutt-verdien. Hva synes du b&oslash;r skje hvis slutt-verdien settes lavere enn telleren?</li></ol><p>&nbsp;</p><hr /><p>1) For s&aring; enkel oppf&oslash;rsel som denne g&aring;r det greit &aring; lage et komplett diagram, men generelt kan det bli veldig mange tilstander (noen ganger uendelig) og veldig mange kombinasjoner/rekkef&oslash;lger av kall. Derfor er et slikt diagram greit som illustrasjon p&aring; et eksempel, men ikke som en komplett beskrivelse av oppf&oslash;rklsen.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 25 |
+|| Omfang | 25 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro>

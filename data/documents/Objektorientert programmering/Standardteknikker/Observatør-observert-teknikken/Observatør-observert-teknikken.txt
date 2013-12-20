@@ -1,0 +1,4 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Det er ofte behov for &aring; sikre at et objekt er konsistent med et annet, f.eks. at det som vises i et brukergrensesnittelement stemmer overens med det som er i systemet. En god m&aring;te &aring; gj&oslash;re det p&aring; er &aring; bruke <em>observat&oslash;r-observert-teknikken</em>.</p></ac:rich-text-body></ac:macro><p>&nbsp;</p><p>&nbsp;</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 0 |
+|| Dekningsgrad | 0 |
+|| Omfang | 0 |]]></ac:plain-text-body></ac:macro>

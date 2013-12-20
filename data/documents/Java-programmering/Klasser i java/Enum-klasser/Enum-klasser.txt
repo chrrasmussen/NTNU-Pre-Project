@@ -1,0 +1,38 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 100 |
+|| Omfang | 75 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p><span style="font-size: 10.0pt;line-height: 13.0pt;">En </span><em style="font-size: 10.0pt;line-height: 13.0pt;">enum type</em><span style="font-size: 10.0pt;line-height: 13.0pt;"> er en spesiell datatype som gj&oslash;r det mulig &aring; sette variabler til forh&aring;ndsdefinerte konstanter.&nbsp;</span></p><p>Det hender at vi &oslash;nsker &aring; definere et sett eller en begrenset mengde med verdier p&aring; en tydelig m&aring;te, og knytte metoder og egenskaper til disse verdiene. Til dette har java en&nbsp;<em>enum-klasse</em>.&nbsp;</p><p>Et brukseksempel er n&aring;r vi vil tilordne kort i en kortstokk farge (eng: suit). I stedet for &aring; bruke en <em>String</em>&nbsp;i koden, hvor vi skriver &quot;hjerter&quot;, &quot;kl&oslash;ver&quot;, osv. kan man definere disse fargene som konstanter i en enum-klasse.<br />Om man skriver feil i koden n&aring;r man bruker en String til &aring; representere farge (&quot;spar&quot; vs &quot;spra&quot;), vil ikke dette hindre utf&oslash;relse av koden, og man vil kunne f&aring; kort med en&nbsp;<em>suit&nbsp;</em>man ikke forventer og har tatt h&oslash;yde for. Denne &quot;fellen&quot; kan man unng&aring; ved &aring; bruke enum-klasser.</p><p>Enum-klasser skaper en struktur i koden og letter forst&aring;elsen av hva som utf&oslash;res der enum-konstantene blir brukt.<br />Det vil som regel falle veldig naturlig der det passer &aring; bruke en enum, og ofte erstatter en enum en begrenset mengde med f.eks. strenger som beskriver begreper vi mennesker kan forholde oss til. (Dette blir mer forst&aring;elig med eksemplene nedenfor)</p><p>Et typisk bruksomr&aring;de for en enum er&nbsp;<em>himmelretninger.&nbsp;</em>Dersom vi &oslash;nsker &aring; definere himmelretningene North, South, East og West p&aring; en annen m&aring;te enn f.eks. bare ved hjelp av forbokstaven deres, kan dette gj&oslash;res ved hjelp av en enum.</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Enum for himmelretningene</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[enum CardinalDirection {
+	NORTH, SOUTH, EAST, WEST;
+}
+ 
+// Himmelretningene kan nå brukes som konstanter i koden og f.eks i statements
+
+CardinalDirection dir1 = CardinalDirection.NORTH;
+CardinalDirection dir2 = CardinalDirection.EAST;
+ 
+ 
+if (dir1 == CardinalDirection.WEST) { ... } 
+ 
+ ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Man kan ogs&aring; gi enum-konstantene verdier, som kan hentes ved behov for &aring; presentere konstantene som tekst, tall eller andre datatyper. Man kan ogs&aring; knytte metoder til enum-konstanter.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Det faktum at vi har disse mulighetene gj&oslash;r at vi egentlig kan se p&aring; enum-konstantene som noe i retning av &quot;hybrid-objekter&quot;. Enum-konstantene kan ha innhold som felt og metoder, akkurat som vanlige objekter. Men man har allerede definert mengden av konstanter og vi kan ikke forandre de underveis i utf&oslash;relsen av koden.<br />&nbsp;</span></p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Enum for ukedagene</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public enum Day {
+	MONDAY("Mon"), TUESDAY("Tue"), WEDNESDAY("Wed"), THURSDAY("Thu"), FRIDAY("Fri"), SATURDAY("Sat"), SUNDAY("Sun");
+ 
+	//Felt som definerer navnet på verien(e) konstantene får tildelt ovenfor
+	String short;
+	
+ 
+	//Konstruktør som setter forkortelsene
+	private Day (String short) {
+		this.short = short;
+	}
+ 
+	// Metode for å hente verdien "short"
+	public String getShort() {
+		return this.short;
+	}
+}
+ 
+// Vi kan da hente en string-verdi til hver av konstantene
+ 
+Day weekday = Day.MONDAY;
+
+System.out.println(weekday.getShort()); //Skriver ut "Mon"]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table>

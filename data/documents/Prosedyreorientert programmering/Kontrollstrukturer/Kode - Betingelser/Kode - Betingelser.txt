@@ -1,0 +1,47 @@
+<table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">N&oslash;stet If</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[int score = someInt;
+char grade;
+
+
+if (score > 90) {
+	grade = 'A';
+}
+else {
+	if (score > 80) {
+		grade = 'B';
+	}
+	else {
+		if (score > 60) {
+			grade = 'C';
+		}
+		else {
+			if (score > 50) {
+				grade = 'D';
+			}
+			else {
+				if (score > 40) {
+					grade = 'E';
+				}
+				else {
+					grade = 'F';
+				}
+			}
+		}
+	}
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Else If</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[if (score > 90) {
+	grade = 'A';
+}
+else if (score > 80) {
+	grade = 'B';
+}
+else if (score > 60) {
+	grade = 'C';
+}
+else if (score > 50) {
+	grade = 'D';
+}
+else if (score > 40) {
+	grade = 'E';
+}
+else {
+	grade = 'F';
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>

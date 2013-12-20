@@ -1,0 +1,46 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 100 |
+|| Omfang | 75 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><h2>Basics</h2><p>For &aring; forst&aring; hvordan tr&aring;der i java fungerer er det viktig &aring; kunne skille mellom en&nbsp;<strong>tr&aring;d</strong> (<em>thread</em>) og en&nbsp;<strong>prosess&nbsp;</strong>(process). <br />En prosess kan sees p&aring; som kj&oslash;ring av et program eller en applikasjon. I operativsystemer (av typen multitasking) vil det ofte finnes flere prosesser, og hver enkelt har sitt eget minneomr&aring;de.<br />En hver prosess har minst &eacute;n tr&aring;d. En tr&aring;d er en &quot;lettvekter&quot;-prosess som kan kj&oslash;re kode i et program eller en applikasjon, men vil benytte seg av ressursene til prosessen den tilh&oslash;rer</p><p>Figuren under pr&oslash;ver &aring; framstille (veldig enkelt) hvordan en prosess har en&nbsp;<strong>hovedtr&aring;d</strong> som utf&oslash;rer kode, og samtidig&nbsp;kan lage nye tr&aring;der som utf&oslash;rer kode parallelt. Alle tre tr&aring;dene vil dele p&aring; ressursene (f.eks. minnet) som prosessen har f&aring;tt tildelt.</p><p><ac:macro ac:name="lucidchart"><ac:parameter ac:name="id">4464-74d4-52317cbc-8d42-12920a00cdb0</ac:parameter><ac:parameter ac:name="height">350</ac:parameter><ac:parameter ac:name="width">700</ac:parameter><ac:parameter ac:name="name">Process&amp;Thread-237-a3e6829b</ac:parameter><ac:parameter ac:name="auto-update">true</ac:parameter><ac:parameter ac:name="align">Left</ac:parameter></ac:macro></p><p><br />Man kan kanskje sp&oslash;rre seg; hvorfor &oslash;nsker man &aring; utf&oslash;re kode i forskjellige tr&aring;der?<br />Et vanlig bruksomr&aring;de for flertr&aring;dsprogrammering&nbsp;er i applikasjoner hvor man har klient-tjener arkitektur. Det kan v&aelig;re lettere &aring; forst&aring; med en analogi;</p><p>Taxi Trondheim AS fungerer p&aring; f&oslash;lgende m&aring;te:<br />En d&oslash;gn&aring;pen taxisentral tar i mot henvendelser fra kunder, avklarer hvilken tjeneste kunden vil ha (vanlig taxi, maxitaxi, tidspunkt for henting, osv.), kontakter en passende taxi og overlater kunden til taxisj&aring;f&oslash;ren. Taxisj&aring;f&oslash;ren henter s&aring; kunden, og kj&oslash;rer dit kunden &oslash;nsker &aring; dra. N&aring;r kunden er framme, slippes vedkommende av og taxisj&aring;f&oslash;ren stopper for &aring; vente p&aring; en ny oppringning fra taxisentralen. Taxi Trondheim AS har mange taxier som kan kj&oslash;re mange kunder samtidig.<br /><br />I dette eksempelet vil hele Taxi Trondheim AS v&aelig;re en <strong>prosess</strong>. Taxisentralen som tar i mot henvendelser fra kunder tilsvarer&nbsp;<strong>hovedtr&aring;den</strong>, som kj&oslash;rer s&aring; lenge prosessen gj&oslash;r. N&aring;r sentralen kontakter taxier (som bare st&aring;r stille) og tildeler de kunder, tilsvarer dette at&nbsp;<strong>hovedtr&aring;den</strong> lager en ny&nbsp;<strong>tr&aring;d.&nbsp;</strong>Etter at taxisj&aring;f&oslash;ren har utf&oslash;rt oppdraget, kj&oslash;rt kunden dit den &oslash;nsker, stopper taxisj&aring;f&oslash;ren og tr&aring;den avsluttes. Men&nbsp;hovedtr&aring;den (taxisentralen) vil naturligvis fortsatt ta i mot henvendelser. En prosess (Taxi Trondheim) vil alts&aring; kunne mange tr&aring;der (taxier) kj&oslash;rende samtidig.<br /><span style="font-size: 16.0pt;font-weight: bold;line-height: normal;"><br />Tr&aring;dobjekter&nbsp;<span style="font-size: 16.0pt;">&nbsp;</span><br /></span></p><p>For at et tr&aring;dobjekt skal kunne brukes trenger det egentlig bare to ting: <br />F&oslash;rst m&aring; vi fortelle tr&aring;den hva den skal utf&oslash;re i&nbsp;<strong>run</strong>-metode. Deretter m&aring; tr&aring;den&nbsp;<strong>startes</strong>.&nbsp;<br /><br />Det er hovedsakelig to m&aring;ter &aring; starte en ny tr&aring;d p&aring;.</p><p><u>Gi et <strong>Runnable</strong>-objekt til en ny&nbsp;<strong>Thread</strong></u><strong>:</strong>&nbsp;</p><p>Klassen Taxi implementerer&nbsp;<strong>runnable</strong>, et grensesnitt som krever at taxi har&nbsp;<strong>run</strong>-metoden. Main-metoden lager s&aring; nye tr&aring;der, og gir de et&nbsp;<strong>runnable</strong>-objekt som forteller hvordan tr&aring;den skal kj&oslash;res. Deretter kan tr&aring;dene startes.<br />Denne m&aring;ten er mer generell fordi runnable-objektet kan arve fra en annen klasse enn Thread.</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Taxi-Runnable</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Taxi implements Runnable {
+ 
+	int seats;
+ 
+	public Taxi(int seats) {
+		this.seats = seats;
+	}
+
+	public void run() {
+		// Hente kunde
+		// Kjøre kunde
+		// Slippe av kunde
+	}
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Main-Thread</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public static void main(String[] args) {
+		
+	Taxi taxi = new Taxi(4);
+	Thread trd1 = new Thread(taxi);
+	trd1.start();
+	 
+	Taxi maxitaxi = new Taxi(16);
+	Thread trd2 = new Thread(maxitaxi);
+	trd2.start();
+} ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><p><u style="font-size: 10.0pt;line-height: 13.0pt;"><br />Instansere en klasse som arver </u><strong style="font-size: 10.0pt;line-height: 13.0pt;"><u>Thread</u>:</strong><span style="font-size: 10.0pt;line-height: 13.0pt;">&nbsp;</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Klassen taxi arver&nbsp;<strong>Thread</strong> og kan derav startes selv. Man legger oppf&oslash;rselen (<strong>run</strong>-metoden) til tr&aring;den direkte. Denne m&aring;ten er lettere &aring; bruke i enkle applikasjoner, men begrenser klassen ved at den&nbsp;<em>m&aring;</em> arve&nbsp;<strong>Thread.</strong>&nbsp;</span></p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Taxi-Thread</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Taxi extends Thread {
+ 
+	int seats;
+ 
+	public Taxi(int seats) {
+		this.seats = seats;
+	}
+
+	public void run() {
+		// Hente kunde
+		// Kjøre kunde
+		// Slippe av kunde
+	}
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Main-Thread</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public static void main(String[] args) {
+		
+	Taxi taxi = new Taxi(4);
+	taxi.start();
+ 
+	Taxi maxitaxi = new Taxi(16);
+	maxitaxi.start();
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><p><br />Med tr&aring;der f&oslash;lger det mye nyttig funksjonalitet, f.eks. Thread.sleep() -funksjonen. Mer om funksjonalitet i forbindelse med tr&aring;der finnes&nbsp;<em><a href="http://www.javamex.com/tutorials/threads/thread_methods.shtml">her</a></em>.<br /><br /></p>

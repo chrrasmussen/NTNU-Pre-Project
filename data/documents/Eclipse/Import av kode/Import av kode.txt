@@ -1,0 +1,1 @@
+<p>Det finnes flere m&aring;ter &aring; f&aring; kode inn i Eclipse, uten &aring; m&aring;tte &aring; skrive koden inn for h&aring;nd. For mindre mengder kode er det mulig &aring; bruke lim-inn-funksjonene og det finnes ogs&aring; flere veivisere som leder deg gjennom ulike typer import av kode.</p>

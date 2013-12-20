@@ -1,0 +1,41 @@
+<p>Objektdiagrammer viser tilstanden til objektstrukturer, med verdiene til attributter og referanser som knytter objekter sammen. Ofte er typene til objektene representert i et eget <ac:link><ri:page ri:content-title="Klassediagrammer" /><ac:plain-text-link-body><![CDATA[klassediagram]]></ac:plain-text-link-body></ac:link> og m&aring; forst&aring;s i kontekst av det.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object "#1: Playlist" as playlist1 {
+	name = "Beatles ballades"
+}
+note top: object of type Playlist
+
+object "#yesterday: Song" as yesterday {
+	name = "Yesterday"
+	playLength = 123
+}
+
+object "#42: Song" as letitbe {
+	name = "Let it Be"
+	playLength = 230
+}
+
+playlist1 --> yesterday : songs
+playlist1 --> letitbe : songs
+
+object "#1: Playlist" as playlist2 {
+	name = "Beatles ballades"
+	songs = {#yesterday, #42}
+}
+note top: compact form]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object "#p1: Person" as p1 {
+	name = "Hallvard Trætteberg"
+	dateOfBirth = "1966.11.16"
+}
+object "#2: Date" as date1 {
+	day = 16
+	month = 11
+	year = 1966
+}
+p1 --> date1: dateOfBirth
+
+object "#p1: Person" as p2 {
+	name = "Hallvard Trætteberg"
+	dateOfBirth = "1966.11.16"
+}
+note top: compact form]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>Figuren over viser tre objekter, en instans av <strong>Playlist</strong>-klassen og to av <strong>Song</strong>-klassen. <strong>Playlist</strong>-objektet har et <strong>name</strong>-attributt med verdien &quot;Beatles ballades&quot;, og de to <strong>Song</strong>-objektene har begge <strong>name</strong>- og <strong>playLength</strong>-attributter med sine spesifikke verdier. <strong>Playlist</strong>-objektet har dessuten to <strong>songs</strong>-koblinger (eng: link), en til hver av de to <strong>Song</strong>-objektene.</p><h2>Objekter/instanser</h2><p>Objekter vises som bokser, med en identifikasjonsdel og en innholdsdel. Identifikasjonsdelen viser <em>identiteten</em> og <em>typen,</em> p&aring; formen <strong>#</strong>identity<strong>:</strong> type. Identiteten er ikke p&aring;krevd, men er nyttig for &aring; kunne referere til objektet uten &aring; bruke piler og evt. fra tekst. Identiteten er som regel et tall uten annen mening enn at den er unik for diagrammet, men kan godt v&aelig;re en kombinasjon av bokstaver og tall, f.eks. playlist1, hvis det gj&oslash;r diagrammet enklere &aring; lese.</p><h2>Attributter</h2><p>Attributtene med tilh&oslash;rende verdier vises i innholdsdelen under identitetsdelen, med ett attributt/verdi-par pr. linje. Dette kan brukes til b&aring;de enkle verdier og til objekt-referanser (koblinger), s&aring; lenge verdiene/objektene kan representeres med en passende tekst. F.eks. kan en angi en referanse til et dato som en tekst, selv om datoen egentlig er et eget objekt med egne attributt/verdi-par. Merk at en slik tekstlig notasjonen for objekt-referanser gj&oslash;r det umulig &aring; vise at samme objekt har flere referanser til seg, s&aring; det b&oslash;r bare brukes for <ac:link><ri:page ri:content-title="Funksjonelle objekter" /><ac:plain-text-link-body><![CDATA[objekter som oppfører seg som enkle verdier]]></ac:plain-text-link-body></ac:link>.</p><p>Dersom objektet ikke har en passende tekstlig representasjon, s&aring; kan en bruke identiteten. Hvis attributtet har flere verdier (mange-multiplisitet) s&aring; skrives verdiene etter hverandre i kr&oslash;llparenteser.</p><h2>Referanser</h2><p>En referanse (eng: link) vises som en pil (strek med pilhode) fra (kanten av) boksen som eier referanser til kanten av objektet som det refereres til. Navnet p&aring; referansen vises ved eller opp&aring; streken, slik at en vet hvilket underliggende attributt som har referansen(e) som verdi. En mer kompakt notasjon er &aring; bruke attributt-notasjonen med navn og identitet(er) som attributt/verdi-par.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 95 |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>

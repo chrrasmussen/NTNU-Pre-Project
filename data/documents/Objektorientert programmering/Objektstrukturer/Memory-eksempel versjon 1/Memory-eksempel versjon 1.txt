@@ -1,0 +1,136 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Memory er et spill hvor en pr&oslash;ver &aring; huske og gjenta en s&aring; lang sekvens som mulig med tall, bilder eller andre &quot;objekter&quot;. Sekvensen blir lengre og lengre og spillet fortsetter helt til en gjentar den feil. Dette kodeeksemplet viser hvordan vi kan implementere en enkel tekstlig versjon av spillet.</p></ac:rich-text-body></ac:macro><p>Selv om et slikt enkelt spill kan implementeres med &eacute;n klasse, s&aring; legger vi opp til en klassisk todeling i &eacute;n hovedprogram-klasse, som h&aring;ndterer kommunikasjone med brukeren, og &eacute;n logikk-klasse, som h&aring;ndterer spill-logikken. Dersom logikk-klassen gj&oslash;res anvendelig og generell nok, vil en senere kunne gjenbruke den i en <ac:link><ri:page ri:content-title="Memory-eksempel versjon 3" /><ac:plain-text-link-body><![CDATA[grafisk versjon]]></ac:plain-text-link-body></ac:link>. Todelingen illustreres under med et objektdiagram:</p><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class MemoryProgram {
+}
+note right: Hovedprogram-klasse, kommuniserer med brukeren
+
+class Memory {
+}
+note right: Logikk-klasse, håndterer tilstanden underveis i spillet
+MemoryProgram --> Memory: memory]]></ac:plain-text-body></ac:macro><p>I et spill som dette vil hovedprogrammet hovedsaklig best&aring; av en l&oslash;kke som utvider sekvensen med tall og deretter ber brukeren om &aring; gjenta hele sekvensen. For hvert tall brukeren gir inn, m&aring; det sjekkes om tallet stemmer med neste tall i sekvensen. Vi kan tenke oss dialogen som f&oslash;lger (<em>system-output i kursiv</em> og <strong>bruker-input i fet skrift</strong>):</p><table><tbody><tr><td class="highlight-grey" data-highlight-colour="grey"><p><em>Element nr. 1 er 3</em><br /><em>Gjenta element nr. 1 av 1</em><br /><strong>3</strong><br /><em>Element nr. 2 er 4</em><br /><em>Gjenta element nr. 1 av 2</em><br /><strong>3</strong><br /><em>Gjenta element nr. 2 av 2</em><br /><strong>4</strong><br /><em>Element nr. 3 er 7</em><br /><em>Gjenta element nr. 1 av 3</em><br /><strong>3</strong><br /><em>Gjenta element nr. 2 av 3</em><br /><strong>4</strong><br /><em>Gjenta element nr. 3 av 3</em><br /><strong>5</strong><br /><em>Feil! Den lengste sekvensen du klarte var p&aring; 2 elementer. </em><br /><em>Vil du pr&oslash;ve p&aring; nytt (ja/nei)?</em><br /><strong>ja</strong><br /><em>Element nr. 1 er 8</em><br />...</p></td></tr></tbody></table><p>Det som ikke kommer frem av dialogen er hvordan <strong>MemoryProgram</strong>-objektet samspiller med <strong>Memory</strong>-objektet, dvs. hvilke kall&nbsp;<strong>MemoryProgram</strong> utf&oslash;rer p&aring;&nbsp;<strong>Memory</strong> og hvilke verdier som flyter frem (argumentverdier) og tilbake (returverdier). Dette er den vanskeligste delen av programmering: &aring; bestemme n&aring;r og hvordan objektene samhandler, alts&aring; &aring; fordele oppgaver mellom objektene og konkretisere oppgavene som metoder med argumenter og returverdier. En m&aring;te &aring; komme litt videre p&aring; er &aring; tegne et <ac:link><ri:page ri:content-title="Sekvensdiagrammer" /><ac:plain-text-link-body><![CDATA[sekvensdiagram]]></ac:plain-text-link-body></ac:link>, som illustrerer hvordan&nbsp;<strong>MemoryProgram</strong> bruker&nbsp;<strong>Memory</strong> underveis, trigget av interaksjon med brukeren.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:parameter ac:name="border">1</ac:parameter><ac:plain-text-body><![CDATA[class MemoryProgram {
+}
+class Memory {
+	expectedItems	// list of numbers 1-9
+	acceptedCount	// position in list
+	nextItem()		// adds item to list
+	acceptItem()	// accepts (or rejects) item
+}
+
+MemoryProgram -right-> Memory: memory]]></ac:plain-text-body></ac:macro><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[actor bruker
+MemoryProgram -> Memory: nextItem()
+Memory -> MemoryProgram: 3
+MemoryProgram -> bruker: "Element nr. 1 er 3"
+MemoryProgram -> bruker: "Gjenta element nr. 1 av 1"
+bruker --> MemoryProgram: 3
+MemoryProgram -> Memory: acceptItem()
+Memory --> MemoryProgram: ok og ferdig
+MemoryProgram -> Memory: nextItem()
+Memory --> MemoryProgram: 4
+MemoryProgram -> bruker: "Element nr. 2 er 4"
+MemoryProgram -> bruker: "Gjenta element nr. 1 av 2"
+bruker --> MemoryProgram: 3
+MemoryProgram -> Memory: acceptItem()
+Memory --> MemoryProgram: ok, men ikke ferdig
+MemoryProgram -> bruker: "Gjenta element nr. 2 av 2"
+bruker --> MemoryProgram: 4
+MemoryProgram -> Memory: acceptItem()
+Memory --> MemoryProgram: ok og ferdig
+MemoryProgram -> Memory: nextItem()
+Memory --> MemoryProgram: 4]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p>&nbsp;</p></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object "Memory" as memory1 {
+	expectedItems = []
+	acceptedCount = 0
+}
+object "Memory" as memory2 {
+	expectedItems = [3]
+	acceptedCount = 0
+}
+memory1 -down-> memory2: nextItem() => 3
+object "Memory" as memory3 {
+	expectedItems = [3]
+	acceptedCount = 1
+}
+memory2 -down-> memory3: acceptItem() => ok og ferdig
+object "Memory" as memory4 {
+	expectedItems = [3, 4]
+	acceptedCount = 0
+}
+memory3 -down-> memory4: nextItem() => 4
+object "Memory" as memory5 {
+	expectedItems = [3, 4]
+	acceptedCount = 1
+}
+memory4 -down-> memory5: acceptItem() => ok, men ikke ferdig
+object "Memory" as memory6 {
+	expectedItems = [3, 4]
+	acceptedCount = 2
+}
+memory5 -down-> memory6: acceptItem() => ok og ferdig
+object "Memory" as memory7 {
+	expectedItems = [3, 4, 7]
+	acceptedCount = 0
+}
+memory6 -down-> memory7: nextItem() => 7
+
+]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p>&nbsp;</p></td></tr></tbody></table><p>I <ac:link><ri:page ri:content-title="Sekvensdiagrammer" /><ac:plain-text-link-body><![CDATA[sekvensdiagrammet]]></ac:plain-text-link-body></ac:link> har vi satt navn p&aring; to tjenester som <strong>Memory</strong>-objektet m&aring; tilby: <strong>nextItem()</strong> genererer nye tall i sekvensen, og <strong>acceptItem()</strong> tar imot et nytt tall (fra brukeren) og sjekker det mot fasiten. Det er dessuten underforst&aring;tt at <strong>Memory</strong> m&aring; huske b&aring;de <em>tall-sekvensen</em> og <em>hvor langt</em> brukeren har kommet i &aring; gjenta den, som angitt i klassediagrammet med henholdsvis attributtene <strong>expectedItems</strong> og <strong>acceptedCount</strong>. To av de mulige svarene fra <strong>acceptItem()</strong> er angitt som <strong>ok og ferdig</strong> og <strong>ok, men ikke ferdig</strong>. Dette er ikke gyldig java, s&aring; n&aring;r vi koder metoden, s&aring; m&aring; vi finne passende verdier &aring; returnere for disse to tilfellene, i tillegg til den tredje muligheten, som er <strong>feil</strong>.</p><p>Dette er et godt utgangspunkt for &aring; begynne &aring; kode, og for noen vil det v&aelig;re det meste effektive. Men er man fortsatt usikker p&aring; hvordan den interne tilstanden h&aring;ndteres av metodene, s&aring; kan et <ac:link><ri:page ri:content-title="Objekttilstandsdiagrammer" /><ac:plain-text-link-body><![CDATA[objekttilstandsdiagram]]></ac:plain-text-link-body></ac:link> v&aelig;re nyttige, siden det illustrerer effekten av metodekall p&aring; den interne tilstanden, ikke bare sekvensen av kall. Et slikt diagram er vist til h&oslash;yre for tilstandsdiagrammet, basert p&aring; samme sekvens av kall.</p><p>N&aring;r vi begynner &aring; kode, har vi valget mellom tre strategier. 1) Ved topp-ned-koding s&aring; skriver en f&oslash;rst <strong>MemoryProgram</strong> og lar detaljene i <strong>Memory</strong> bli avgjort av hva som gj&oslash;r <strong>MemoryProgram</strong> enklest &aring; skrive. 2) Ved bunn-opp-koding skriver en <strong>Memory</strong> f&oslash;rst og tilpasser <strong>MemoryProgram</strong> deretter. 3) Med en blandet (hybrid) strategi jobber vi parallelt med begge to. Dette er ofte en smaksak, men jeg foretrekker ofte &aring; jobbe topp-ned p&aring; skissestadiet, og bunn-opp med selve kodingen. Her er koden for <strong>Memory</strong>:</p><ac:macro ac:name="code"><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Memory {
+
+    private List<Integer> expectedItems = new ArrayList<Integer>();
+    private int acceptedCount = 0;
+    
+    public int nextItem() {
+        int nextItem = (int) (Math.random() * 9) + 1; 	// new number value
+        expectedItems.add(nextItem);					// add to number sequence
+        acceptedCount = 0;								// reset counter
+        return nextItem;								// return new number value
+    }
+
+    public Boolean acceptItem(int item) {
+        if (! expectedItems.get(acceptedCount).equals(item)) {	// compare the number input by the user with the corresponding sequence value
+            return Boolean.FALSE;								// if they are not the same, we indicate this by returning false
+        }
+        acceptedCount++;										// correct number, so increment counter
+        if (acceptedCount == expectedItems.size()) {			// if this was the last number
+            return Boolean.TRUE;								// return true
+        }
+        return null;											// otherwise return null, indicating correct value, but not finished with sequence 
+    }
+} ]]></ac:plain-text-body></ac:macro><p>Vi har valgt &aring; representere tallsekvensen (<strong>expectedItems</strong>) som en liste (<strong>List</strong>) av heltallsobjekter (<strong>Integer</strong>). Vi bruker en liste og ikke en Java-tabell (<strong>int[]</strong>), siden sekvensen skal utvides, og vi bruker heltallsobjekter, siden lister bare kan spesialiseres til objekt-typer og ikke verdi-typer som int. Vi har latt metoden <strong>nextItem</strong> legge det nye tallet til sekvensen og returnere det tallet, siden vi ser fra dialogen med brukeren at det skal vises frem og at <strong>MemoryProgram</strong> derfor trenger verdien. M&aring;let for hvor langt brukeren har kommet er en indeks (<strong>int acceptedCount</strong>) inn i tallsekvensen. Returverdien fra metoden som sjekker et nytt tall fra brukeren (<strong>acceptItem(int)</strong>), m&aring; kunne skille mellom tre tilfeller: 1) tallet er feil, 2) tallet er riktig og sekvensen er komplett, og 3) tallet er riktig, men sekvensen er ikke ferdig. Derfor bruker vi et <strong>Boolean</strong>-objekt, og lar <strong>Boolean.FALSE</strong>, <strong>Boolean.TRUE</strong> og <strong>null</strong> representere de tre tilfellene. Her er et oppdatert diagram over implementasjonen s&aring; langt:</p><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class MemoryProgram {
+}
+class Memory {
+	-List<Integer> expectedItems
+	-int acceptedCount
+	+int nextItem()
+	+Boolean acceptItem(int)
+}
+
+MemoryProgram -right-> Memory: memory]]></ac:plain-text-body></ac:macro><p>Med <strong>Memory</strong>-klassen p&aring; plass, er det lettere &aring; skrive hovedprogram-klassen <strong>MemoryProgram</strong>, siden den kan bygge p&aring; tjenestene som <strong>Memory</strong> tilbyr og heve seg litt over detaljer om datarepresentasjon. Som nevnt over er spillet hovedsaklig en dobbel l&oslash;kke, hvor den ytre forlenger tallsekvensen med et nytt element og den indre ber om et nytt tall inntil brukeren skriver feil eller har skrevet inn alle tallene i sekvensen. Dersom en skal kunne spille flere spill i samme slengen, s&aring; legges enda en l&oslash;kke utenp&aring; der igjen, som kj&oslash;rer gjennom ett spill og sp&oslash;r om en vil pr&oslash;ve p&aring; nytt. Her er koden:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[Scanner scanner = new Scanner(System.in);
+do {
+	Memory memory = new Memory();				// new game instance
+	while (true) {								// repeat as long as the user does not make a mistake
+		int nextItem = memory.nextItem();		// extend sequence with another value
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");	// scroll previous dialog away
+		System.out.println("Element nr. " + memory.getItemCount() + " er " + nextItem);
+		Boolean result = null;
+		do {									// get another number from the user
+			System.out.println("Gjenta element nr. " + (memory.getAcceptedCount() + 1) + " av " + memory.getItemCount());
+			int nextInt = Integer.valueOf(scanner.nextLine().trim());
+			result = memory.acceptItem(nextInt);	// check item
+		} while (result == null);					// repeat until there is a definite result, either a mistake or a complete and correct sequence
+		if (result == Boolean.FALSE) {				// if the user made a mistake, break out of loop
+			System.out.println("Feil, den lengste sekvensen du klarte var på " + (memory.getItemCount() - 1) + " elementer.");
+			break;
+		}
+	}
+	System.out.println("Vil du prøve på nytt (ja/nei)?");
+} while (scanner.nextLine().trim().equals("ja"));	// repeat as long as the user wants to play another game
+scanner.close();]]></ac:plain-text-body></ac:macro><p>Merk at vi her har brukt to getter-metoder i <strong>Memory</strong> som ikke er angitt i diagrammene eller koden, nemlig <strong>getItemCount()</strong> og <strong>getAcceptedCount()</strong>.</p><p>Dette er ren prosedyre-orientert kode og m&aring; plasseres inn i en metode i hovedprogram-klassen <strong>MemoryProgram</strong>. Strengt tatt kan dette v&aelig;re <strong>main</strong>-metoden som startes opp ved kj&oslash;ring av Java-programmer, men i et objektorientert hovedprogram bruker vi <strong>main</strong>-metoden til kun &aring; opprette hovedprogram-objektet, som her er en instans av <strong>MemoryProgram</strong> og s&aring; kj&oslash;re en <strong>run</strong>-metoden, som inneholder koden over:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[public class MemoryProgram {
+
+    private void run() {
+		... // insert the code above
+    }
+
+	// entry point for Java program    
+    public static void main(String[] args) {
+        new MemoryProgram().run();	// instantiate program object and call its run() method
+    }
+}]]></ac:plain-text-body></ac:macro><p>I <ac:link><ri:page ri:content-title="Memory-eksempel versjon 2" /><ac:plain-text-link-body><![CDATA[versjon 2 av Memory-programmet]]></ac:plain-text-link-body></ac:link> s&aring; ser vi p&aring; hvordan koden kan gj&oslash;res litt mer generell og gjenbrukbar. I <ac:link><ri:page ri:content-title="Memory-eksempel versjon 3" /><ac:plain-text-link-body><![CDATA[versjon 3]]></ac:plain-text-link-body></ac:link> bytter vi ut det tekstlige brukergrensesnittet med et minimalistisk grafisk grensesnitt bygget p&aring; JavaFX-rammeverket. Dette videreutvikles i <ac:link><ri:page ri:content-title="Memory-eksempel versjon 4" /><ac:plain-text-link-body><![CDATA[versjon 4]]></ac:plain-text-link-body></ac:link> til et rikere brukergrensesnitt, hvor flere JavaFX-mekanismer pr&oslash;ves ut.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | eksempel |
+|| Ferdig | 95 |
+|| Dekningsgrad | 50 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>

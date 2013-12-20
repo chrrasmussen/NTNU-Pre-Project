@@ -1,0 +1,4 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Arv (eng: inheritance) er en mekanisme for &aring; bygge videre p&aring; eksisterende klasser og regnes ofte som varemerket til objektorientert programmering. N&aring;r arv brukes riktig, kan den gj&oslash;re koden ryddigere og enklere &aring; gjenbruke.</p></ac:rich-text-body></ac:macro><p>&nbsp;</p><p>&nbsp;</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 0 |
+|| Dekningsgrad | 0 |
+|| Omfang | 0 |]]></ac:plain-text-body></ac:macro>

@@ -1,0 +1,73 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 25 |
+|| Omfang | 25 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p><span style="font-size: 10.0pt;line-height: 13.0pt;">En test-klasse best&aring;r gjerne av mange test-metoder og hver test-metode vil typisk f&oslash;rst rigge opp en eller flere instanser og s&aring; teste at disse oppf&oslash;rer seg som forventet. Ta test-klassen for </span><code style="font-size: 10.0pt;line-height: 13.0pt;">Counter</code><span style="font-size: 10.0pt;line-height: 13.0pt;">-klassen som eksempel:</span></p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[public class CounterTest extends junit.framework.TestCase {
+   public void testCounter() {
+      Counter counter = new Counter(1, 3);
+      assertEquals(1, counter.getCounter());
+   }
+   public void testGetCounter() {
+      Counter counter = new Counter(1, 3);
+      assertEquals(1, counter.getCounter());
+      counter.count();
+      assertEquals(2, counter.getCounter());
+      counter.count();
+      assertEquals(3, counter.getCounter());
+   }
+   public void testCount() {
+      Counter counter = new Counter(1, 3);
+      assertTrue(counter.count());
+      assertFalse(counter.count());
+   }
+}]]></ac:plain-text-body></ac:macro><p>Her har vi tre test-metoder, som hver oppretter en instans og tester oppf&oslash;rselen til henholdsvis konstrukt&oslash;ren,&nbsp;<code>getCounter</code> og <code>count()</code>. Vi ser at alle rigger opp like instanser og dersom dette hadde v&aelig;rt mer enn &eacute;n linje kode, s&aring; hadde det v&aelig;rt greit &aring; samle denne koden i en egen hjelpemetode, f.eks. kalt riggInstanser, som kalles i begynnelsen av hver test-metode:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[public class CounterTest extends junit.framework.TestCase {
+   private Counter counter = null;
+   private Counter riggInstanser() {
+      counter = new Counter(1, 3);
+   }
+   public void testCounter() {
+      riggInstanser(1, 3);
+      ...
+   }
+   public void testGetCounter() {
+      riggInstanser(1, 3);
+      ...
+   }
+   public void testCount() {
+      riggInstanser(1, 3);
+      ...
+   }
+}]]></ac:plain-text-body></ac:macro><p>Siden dette er et relativt vanlig tilfelle har JUnit-rammeverket innebygget st&oslash;tte for en slik hjelpemetode. Denne er deklarert som&nbsp;<code>protected void setUp() throws Exception</code> i TestCase-klassen og kalles automatisk av JUnit rammeverket f&oslash;r hver test-metode. Test-klasser som &oslash;nsker &aring; rigge opp instanser, eller p&aring; annen m&aring;te gj&oslash;re forberedelser f&oslash;r testene, kan redefinere <code>setUp()</code>-metoden med &oslash;nsket innhold. Hver test-metode er sikret at instansene er ferdig rigget opp, og siden dette skjer p&aring; nytt for hver test-metode, s&aring; kan disse herje fritt med instansene uten &aring; tukle det til for de andre test-metodene. Koden over kan dermed skrives om slik:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[public class CounterTest extends junit.framework.TestCase {
+   private Counter counter = null;
+   @Override
+   protected void setUp() {
+      counter = new Counter(1, 3);
+   }
+   public void testCounter() {
+      ...
+   }
+   public void testGetCounter() {
+      ...
+   }
+   public void testCount() {
+      ...
+   }
+}]]></ac:plain-text-body></ac:macro><p>I noen tilfeller vil det som rigges opp av <code>setUp()</code>-metoden ogs&aring; m&aring;tte rigges ned, for ikke &aring; fors&oslash;ple systemet testene kj&oslash;res p&aring;. Det kan f.eks. v&aelig;re praktisk &aring; opprette noen tempor&aelig;re datafiler i <code>setUp()</code>-metoden, og da m&aring; de jo fjernes etterp&aring;. Det vil ikke v&aelig;re s&aelig;rlig ryddig &aring; gj&oslash;re dette i test-metodene selv, siden en da m&aring; bruke&nbsp;<code>try/finally</code> for &aring; sikre at det skjer uansett utfall av testen. Derfor st&oslash;tter JUnit-rammeverket en <code>tearDown()</code>-metode, som kalles automatisk etter at hver test-metode er kj&oslash;rt, uansett om testen ble avbrutt eller ikke. Som for&nbsp;<code>setUp()</code> er denne definert i&nbsp;<code>TestCase</code>-klassen og egnet for redefinering. I tilfellet over er ikke en slik metode n&oslash;dvendig (hver test-metode kj&oslash;res p&aring; en ny instans av CounterTest), men en test-klasse med <code>tearDown()</code>-metode kunne sett slik ut:</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[public class CounterTest extends junit.framework.TestCase {
+   private Counter counter = null;
+   @Override
+   protected void setUp() {
+      counter = new Counter(1, 3);
+   }
+   @Override
+   protected void tearDown() {
+      counter = null;
+   }
+   public void testCounter() {
+      ...
+   }
+   public void testGetCounter() {
+      ...
+   }
+   public void testCount() {
+      ...
+   }
+}]]></ac:plain-text-body></ac:macro><p>I praksis brukes ikke&nbsp;<code>tearDown()</code> s&aring; ofte, men n&aring;r setUp endrer tilstanden til systemet utenfor testene, s&aring; b&oslash;r en vurdere &aring; bruke den!</p><hr /><p>Sider om <ac:link><ri:page ri:content-title="Enhetstesting med JUnit" /></ac:link>: <ac:macro ac:name="list-pages"><ac:parameter ac:name="direction">children</ac:parameter><ac:parameter ac:name="startPage">@parent</ac:parameter></ac:macro></p><p>&nbsp;</p>

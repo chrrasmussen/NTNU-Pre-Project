@@ -1,0 +1,58 @@
+<div class="contentLayout" data-atlassian-layout="{&quot;name&quot;:&quot;pagelayout-two-simple-right&quot;,&quot;columns&quot;:[&quot;large&quot;,&quot;aside&quot;]}"><div class="columnLayout twoColumns"><div class="cell large"><div class="innerCell"><table><tbody><tr><th class="highlight-grey" data-highlight-colour="grey"><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">WeightProgram</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+ 
+public class WeightProgram {
+     
+    private Map<String,List<Double>> weightLogs = new HashMap<String,List<Double>>();
+     
+    public WeightProgram () {
+         
+        initializeLogs(weightLogs);
+    }
+     
+    public String biggestLooser() {
+         
+        String looserName = null;
+        double highestLoss = Double.NEGATIVE_INFINITY;
+         
+        for (Map.Entry<String, List<Double>> entry : weightLogs.entrySet()) {
+             
+            List<Double> log = entry.getValue();
+             
+            double initialWeight = log.get(0);
+            double currentWeight = log.get(log.size()-1);
+             
+            double prosentageWeightLoss = 100 - ((100/initialWeight)*currentWeight);
+             
+            if(prosentageWeightLoss > highestLoss) {
+                looserName = entry.getKey();
+                highestLoss = prosentageWeightLoss;
+            }
+        }
+        return looserName;
+    }
+     
+    private void initializeLogs(Map<String,List<Double>> map) {
+    	List<Double> log1 = new ArrayList<Double>();
+    	List<Double> log2 = new ArrayList<Double>();
+    	List<Double> log3 = new ArrayList<Double>();
+        
+    	log1.add(95.0);
+        log1.add(93.1);
+        log1.add(87.9);
+         
+        log2.add(123.0);
+        log2.add(119.1);
+        log2.add(115.9);
+         
+        log3.add(102.0);
+        log3.add(100.1);
+        log3.add(98.3);
+
+        weightLogs.put("OlaNor", log1);
+        weightLogs.put("PerSpe", log2);
+        weightLogs.put("EspAsk", log3);
+    }
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p>&nbsp;</p></div></div><div class="cell aside"><div class="innerCell"><table><tbody><tr><th><p><br /><br /><br /><br /><br /><br /><br /><span><br />(8) Her brukes et HashMap til &aring; organisere innveiingsloggene. HashMapet har </span>en String (deltakernavn) som n&oslash;kkel&nbsp;og en List som verdi.&nbsp;Deklarerer HashMapet som et Map, siden det ikke skal brukes noen HashMap-spesifikke metoder.<br />Merk at det egentlig ville v&aelig;rt mer naturlig med et personobjekt som n&oslash;kkel i Mapet<br /><span><br />(12) Metode for &aring; opprette lister og gj&oslash;re koden kj&oslash;rbar, ikke eksplisitt en del av oppgaveteksten.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;"><span style="font-size: 10.0pt;line-height: 13.0pt;"><br /><br /><span style="font-size: 10.0pt;line-height: 13.0pt;">(20) Bruker metoden entrySet() som returnerer alle parene med n&oslash;kkel og verdi HashMapet har, </span><span style="font-size: 10.0pt;line-height: 13.0pt;">og traverserer disse.&nbsp;</span><br /></span></span></p><p>(22) Henter deretter en og en log med getValue()-metoden.</p><p>(24) Henter element p&aring; plass 0 fra ArrayList.<br />(25) Henter siste element fra ArrayList, (st&oslash;rrelsen - 1) pga 0-indeksert.</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">(38) Med en ArrayList til &aring; holde p&aring; innveiingene vil man enkelt kunne</span><span style="font-size: 10.0pt;line-height: 13.0pt;"> h</span><span style="font-size: 10.0pt;line-height: 13.0pt;">ente vekt etter uketall siden listen er 0-indeksert. Bruker double siden l</span><span style="font-size: 10.0pt;line-height: 13.0pt;">isten </span><span style="font-size: 10.0pt;line-height: 13.0pt;">skal st&oslash;tte desimaltall.&nbsp;Deklarerer ArrayListen som en List, siden det ikke skal brukes noen ArrayList-spesifikke metoder.</span></p><p>(42) Benytter List-metoden add, for &aring; legge til elementer p&aring; slutten av listen</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p><br />(54) Benytter Map-metoden put, for &aring; mappe et nytt sett av n&oslash;kel og verdi.</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></th></tr></tbody></table></div></div></div></div>

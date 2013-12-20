@@ -1,0 +1,4 @@
+<p>Det at objekter i st&oslash;rre strukturer bruker hverandre, kalles objektsamhandling.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 0 |
+|| Dekningsgrad | 0 |
+|| Omfang | 0 |]]></ac:plain-text-body></ac:macro>

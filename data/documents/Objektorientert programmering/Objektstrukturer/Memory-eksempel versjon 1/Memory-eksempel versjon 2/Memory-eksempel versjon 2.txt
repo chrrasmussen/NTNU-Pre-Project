@@ -1,0 +1,133 @@
+<p>I <ac:link><ri:page ri:content-title="Memory-eksempel versjon 1" /></ac:link> laget vi en enkel tekstbasert versjon av et hukommelsesspill, hvor brukeren skulle pr&oslash;ve &aring; huske og gjenta en s&aring; lang sekvens med tall som mulig. Koden var delt i to klasser, <strong>Memory</strong> og <strong>MemoryProgram</strong>, hvor <strong>Memory</strong> implementerte logikk som var ment &aring; v&aelig;re uavhengig av om spillet var tekstlig eller grafisk, og ble brukt av <strong>MemoryProgram</strong> som h&aring;ndterte kommunikasjonen med brukeren. F&oslash;r vi pr&oslash;ver oss p&aring; en&nbsp;<ac:link><ri:page ri:content-title="Memory-eksempel versjon 1" /><ac:plain-text-link-body><![CDATA[grafisk versjon]]></ac:plain-text-link-body></ac:link> basert p&aring; <ac:link><ri:page ri:content-title="JavaFX" /></ac:link> s&aring; er det lurt &aring; se om <strong>Memory</strong>-klassen kan gj&oslash;res litt mer generell og fleksibel. Dette kan b&aring;de gj&oslash;re det enklere &aring; lage neste versjon og gi mulighet til variasjoner i spillet.</p><p>I&nbsp;<ac:link><ri:page ri:content-title="Memory-eksempel versjon 1" /><ac:plain-text-link-body><![CDATA[versjon 1]]></ac:plain-text-link-body></ac:link> inneholdt sekvensen tall mellom 1 og 9, men det er ikke noe i veien for &aring; tillatte flere enn disse ni verdiene. Verdiene trenger egentlig ikke v&aelig;re tall heller, det kan v&aelig;re hva som helst bare en kan sjekke dem mot det brukeren gjentar. I en grafisk versjon kan det f.eks. v&aelig;re aktuelt &aring; klikke p&aring; figurer med ulike fasonger, farger og/eller motiver. Logikken i <strong>Memory</strong>-objektet blir essensielt den samme. Forskjellen er hovedsaklig at n&aring;r en skal utvide sekvensen, s&aring; genereres et tilfeldig tall (som f&oslash;r) som brukes til &aring; plukke et element <em>fra en liste med alle mulige verdier</em>. Denne lista er det naturlig &aring; oppgi n&aring;r Memory-objekter opprettes. Klassediagrammet for Memory under, viser hva som er endret:</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Memory {
+	-List<?> possibleItems
+	-List<?> expectedItems
+	-int acceptedCount
+	+Memory(Collection<?>)
+	+int getItemCount()
+	+int getAcceptedCount()
+	+? nextItem()
+	+Boolean acceptItem(?)
+}]]></ac:plain-text-body></ac:macro><p style="text-align: center;">Hva skal ? erstattes med?</p></td><td colspan="1">Vi ser at <strong>Memory</strong>-klassen n&aring; inneholder en liste over alle mulige verdier kalt <strong>possibleItems</strong>, som elementene i <strong>expectedItems</strong> skal plukkes fra. Vi har ogs&aring; lagt til en konstrukt&oslash;r som krever at en oppgir samlingen av mulig verdier, n&aring;r <strong>Memory</strong>-objekter opprettes.</td></tr></tbody></table><p>Et viktig sp&oslash;rsm&aring;l er valg av typer for attributtene. Den generelle regelen er &aring; bruke <em>s&aring; generelle typer som mulig</em> og <em>velge grensesnitt-klasser fremfor implementasjoner</em>, for &aring; gi st&oslash;rst frihet ved kodingen. Derfor har vi valgt &aring; bruke&nbsp;<ac:link><ri:page ri:content-title="java.util.List" /><ac:plain-text-link-body><![CDATA[List]]></ac:plain-text-link-body></ac:link> fremfor&nbsp;<ac:link><ri:page ri:content-title="java.util.Collection" /><ac:plain-text-link-body><![CDATA[Collection]]></ac:plain-text-link-body></ac:link> for b&aring;de <strong>possibleItems</strong> og <strong>expectedItems</strong>. <strong>List</strong> utvider <strong>Collection</strong> med metoder for &aring; hente ut elementer <em>basert p&aring; posisjon</em>, og dette er nyttig n&aring;r vi skal velge ut tilfeldige elementer fra <strong>possibleItems</strong> i <strong>nextItem()</strong> og sammenligne et nytt element fra brukeren med <em>siste</em> element i <strong>expectedItems</strong> i <strong>acceptItem(...)</strong>. Argumentet til <strong>Memory</strong>-konstrukt&oslash;ren er imidlertid av typen <strong>Collection</strong>, fordi vi kun trenger &aring; g&aring; sekvensielt gjennom det, n&aring;r vi kopierer elementene inn i den interne lista.</p><p><br />B&aring;de <strong>List</strong> og <strong>Collection</strong> er generiske typer, dvs. typer som kan <em>spesialiseres</em> til (&aring; bare kunne inneholde) bestemte element-typer, og sp&oslash;rsm&aring;let er n&aring; hva skal disse spesialiseres til? Det mest generelle er &aring; velge <strong>Object</strong>, slik det er vist under, fordi vi da kan st&oslash;tte hukommelsesspill med alle typer objekter. Ulempen er at vi da ikke f&aring;r noen typesjekk p&aring; verdiene vi gir som argumenter til konstrukt&oslash;ren og acceptItem. Vi f&aring;r p&aring; en m&aring;te for mye frihet: Ikke var kan vi spille med alle mulige objekter, men vi kan blande ulike typer i samme spill og dermed skape rot for oss selv. Det vil f.eks. v&aelig;re lov &aring; putte <strong>String</strong>-objekter inn i <strong>possibleItems</strong> og kalle <strong>acceptItem</strong>(...) med <strong>Integer</strong>-objekter, selv om det ikke gir mening:</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Memory {
+	-List<Object> possibleItems
+	-List<Object> expectedItems
+	-int acceptedCount
+	+Memory(Collection<Object>)
+	+int getItemCount()
+	+int getAcceptedCount()
+	+Object nextItem()
+	+Boolean acceptItem(Object)
+}]]></ac:plain-text-body></ac:macro><p>Bruker Object, s&aring; alle mulige objekter er tillatt</p></td><td><ac:macro ac:name="code"><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Memory memory = new Memory(Arrays.asList("En", "To", "Tre"));
+...
+Integer userInput = ...
+// meningsløst, uten at det gir feil
+if (memory.acceptItem(userInput) ...]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>Et alternativ er &aring; gj&oslash;re <strong>Memory</strong> generisk ved &aring; introdusere et typeparameter T og bruke typeparameteret i attributt-deklarasjonene, som vist under. Dette vil la oss spille med alle typer objekter, men hvert enkelt hukommelsesspill kan bare spilles med en bestemt type, som bestemmes (statisk) n&aring;r <strong>Memory</strong>-objektet opprettes. En spesialisering med f.eks. <strong>String</strong> vil ha effekten at listene og argumentene blir spesialisert til <strong>String</strong> (der vi har brukt <strong>T</strong>), tilsvarende klassen under til h&oslash;yre. Hvis vi da pr&oslash;ver &aring; blande ulike typer, s&aring; vil det gi typefeil (i editoren og ved kj&oslash;ring):</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Memory<T> {
+	-List<T> possibleItems
+	-List<T> expectedItems
+	-int acceptedCount
+	+Memory(Collection<T>)
+	+int getItemCount()
+	+int getAcceptedCount()
+	+T nextItem()
+	+Boolean acceptItem(T)
+}]]></ac:plain-text-body></ac:macro><p>Introduserer typeparameter T, slik at alle mulige typer kan brukes, men bare en bestemt type for hver instans.</p></td><td><ac:macro ac:name="code"><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[Memory<String> memory = new Memory<String>(Arrays.asList("En", "To", "Tre"));
+...
+Integer userInput = ...
+// meningsløst, og vil gi typefeil siden acceptItem er spesialisert til String
+if (acceptItem(userInput) ... ]]></ac:plain-text-body></ac:macro></td><td colspan="1"><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Memory<String> {
+	-List<String> possibleItems
+	-List<String> expectedItems
+	-int acceptedCount
+	+Memory(Collection<String>)
+	+int getItemCount()
+	+int getAcceptedCount()
+	+String nextItem()
+	+Boolean acceptItem(String)
+}]]></ac:plain-text-body></ac:macro><p>Effekten av &aring; spesialisere med T=String</p></td></tr></tbody></table><p>Her er fullstendig kode for <strong>Memory</strong>-klassen og en oppdatert <strong>MemoryProgram</strong>-klasse:</p><ac:macro ac:name="code"><ac:parameter ac:name="language">java</ac:parameter><ac:parameter ac:name="collapse">true</ac:parameter><ac:plain-text-body><![CDATA[public class Memory<T> {
+    private List<T> possibleItems;
+    private List<T> expectedItems;
+    private int acceptedCount;
+    
+    public Memory(Collection<T> possibleItems) {
+        this.possibleItems = new ArrayList<>(possibleItems);
+        expectedItems = new ArrayList<T>();
+        acceptedCount = 0;
+    }
+    public Memory(T... possibleItems) {
+        this(Arrays.asList(possibleItems));
+    }
+    
+    public T nextItem() {
+        int index = (int) (Math.random() * possibleItems.size());    // generate random index
+        T nextItem = possibleItems.get(index);                        // look up value
+        expectedItems.add(nextItem);    // add to sequence
+        acceptedCount = 0;                // reset accepted counter
+        return nextItem;                // return new item
+    }
+    public Collection<T> nextItems(int count) {
+        Collection<T> items = new ArrayList<T>();
+        while (count > 0) {
+            items.add(nextItem());
+        }
+        return items;
+    }
+    
+    public int getItemCount() {
+        return expectedItems.size();
+    }
+    
+    public int getItemsLeft() {
+        return expectedItems.size() - acceptedCount;
+    }
+    public Boolean acceptItem(T item) {
+        // is acceptItem called after sequence is completed
+        if (acceptedCount >= expectedItems.size()) {
+            return false;
+        }
+        // is the number input by the user correct
+        if (! expectedItems.get(acceptedCount).equals(item)) {
+            // if they are not the same, we indicate this by returning false object
+            return Boolean.FALSE;
+        }
+        acceptedCount++;    // correct number, so increment counter
+        // is this the last number
+        if (acceptedCount == expectedItems.size()) {
+            // return true object
+            return Boolean.TRUE;
+        }
+        // otherwise return null, indicating correct value, but not finished
+        return null;
+    }
+}
+
+public class MemoryProgram {
+    private void run() {
+        Scanner scanner = new Scanner(System.in);
+        do {
+            Memory<Integer> memory = new Memory<Integer>(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            while (true) {
+                int nextItem = memory.nextItem();
+                System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("Next item is " + nextItem);
+                System.out.println("Please input " + memory.getItemCount() + " items");
+                Boolean result = null;
+                do {
+                    int nextInt = scanner.nextInt();
+                    result = memory.acceptItem(nextInt);
+                } while (result == null);
+                if (result == Boolean.FALSE) {
+                    System.out.println("Wrong, game over");
+                    break;
+                }
+            }
+            System.out.println("Another game (true/false)?");
+        } while (scanner.nextBoolean());
+        scanner.close();
+    }
+    
+    public static void main(String[] args) {
+        new MemoryProgram().run();
+    }
+}]]></ac:plain-text-body></ac:macro><p>Her har vi lagt til to ekstra metoder i <strong>Memory</strong>, for &aring; gj&oslash;re klassen litt mer fleksibel og enklere &aring; bruke:</p><ul style="list-style-type: square;"><li><strong>nextItems(int)</strong>-metoden gir muligheten til &aring; utvide sekvensen med flere elementer om gangen</li><li>konstrukt&oslash;ren <strong>Memory(T...)</strong> bruker s&aring;kalte&nbsp;<ac:link><ri:page ri:content-title="varargs" /><ac:plain-text-link-body><![CDATA[varargs]]></ac:plain-text-link-body></ac:link> og gj&oslash;r det enklere &aring; lage et Memory-objekt med et spesifikt sett mulige verdier</li></ul><p>I <ac:link><ri:page ri:content-title="Memory-eksempel versjon 3" /><ac:plain-text-link-body><![CDATA[versjon 3]]></ac:plain-text-link-body></ac:link> brukes denne <strong>Memory</strong>-klassen i et hukommelsesspill med grafisk grensesnitt basert p&aring; <ac:link><ri:page ri:content-title="JavaFX" /></ac:link>.</p><p>&nbsp;</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | eksempel |
+|| Ferdig | 95 |
+|| Dekningsgrad | 50 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>

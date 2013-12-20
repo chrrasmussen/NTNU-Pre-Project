@@ -1,0 +1,48 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p>Enhetstesting er testing av de minste enhetene i et program, dvs. teste at metodene i en klasse implementerer &oslash;nsket oppf&oslash;rsel. JUnit er et praktisk rammeverk for &aring; gj&oslash;re enhetstesting av&nbsp;Java&ndash;klasser. Enkelt sagt best&aring;r enhetstesting med JUnit, ogs&aring; kalt JUnit-testing, i &aring; lage instanser av klassen som skal testes og pr&oslash;ve ulike sekvenser av metodekall og sjekke om verdiene de returnerer stemmer med &quot;fasiten&quot;. La oss ta f&oslash;lgende <code>Counter</code>-klasse som eksempel.</p><p><code>Counter</code> er ment &aring; implementere en teller fra en start-verdi til (men ikke med) en slutt-verdi. Hver gang vi caller&nbsp;<code>count()</code>-metoden, s&aring; skal telleren &oslash;ke med 1, men bare dersom vi enn&aring; ikke har n&aring;dd slutt-verdien. Idet slutt-verdien n&aring;s, s&aring; skal&nbsp;<code>count()</code> returnere <code>false</code>, ellers <code>true</code>. Teller-verdien f&aring;r vi tak i med <code>getCounter()</code>-metoden.</p><ac:macro ac:name="code"><ac:parameter ac:name="title">F&oslash;rste versjon av Counter-klassen</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:plain-text-body><![CDATA[public class Counter {
+   private int start, end, pos;
+   public Counter(int start, int end) {
+      this.start = start;
+      this.end = end;
+   }
+   public int getCounter() {
+      return pos;
+   }
+   public boolean count() {
+      if (pos >= end) {
+         return false;
+      }
+      pos = pos + 1;
+      return true;
+   }
+}]]></ac:plain-text-body></ac:macro><p>F&oslash;r vi tester&nbsp;<code>Counter</code>-klassen, m&aring; vi formulere oppf&oslash;rselen som testbare utsagn (regler) om metode-kall og returverdier. Et utsagt som at telleren skal &oslash;kes hver gang&nbsp;<code>count()</code> kalles, holder ikke, siden telleren er en del av den private tilstanden til klassen og ikke en del av klassens metode-grensesnitt. Her er utsagn kun om konstrukt&oslash;ren og metodene:</p><ul style="list-style-type: square;"><li>Etter at klassen er instansiert med&nbsp;<code>new Counter(start, end)</code> skal <code>getCounter()</code> returnere <code>start</code>.</li><li><code>getCounter()</code> skal returnere &eacute;n mer for hver gang <code>count()</code> kalles, med mindre verdien er blitt <code>end</code>.</li><li>Det kallet til&nbsp;<code>count()</code> som gj&oslash;r at&nbsp;<code>getCounter()</code> returnerer&nbsp;<code>end</code>, skal returnere <code>false</code>, ellers <code>true</code>.</li></ul><p>N&aring; som utsagnene for oppf&oslash;rsel kun handler om kall til &aring;pent tilgjengelige metoder, er det forholdsvis lett &aring; skrive kode som tester dem. Vi instansierer rett og slett Counter-objekter og utf&oslash;rer sekvenser med kall og sjekker returverdier mot fasiten. JUnit-rammeverket har ferdiglagde metoder for det siste, alts&aring; &aring; sammenligne en faktisk verdi med en forventet verdi. La oss se p&aring; testkoden for det f&oslash;rste utsagnet over:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Testkode for konstrukt&oslash;ren</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:plain-text-body><![CDATA[Counter counter = new Counter(1, 3);
+assertEquals(1, counter.getCounter());	// sjekk om returverdi er 1]]></ac:plain-text-body></ac:macro><p><code>Counter</code>-instansen som lages i f&oslash;rste linje er ment &aring; telle fra 0 til (og med) 2. Andre linje sjekker om getCounter() returnerer den forventede verdier 0. Generelt sjekker kall til&nbsp;<code>assertEquals</code> om argumentene er like, hvor det f&oslash;rste argumentet er fasiten og det andre den faktiske (retur)verdien. For &aring; sjekke det andre utsagnet m&aring; vi utf&oslash;re et par runder med kall til&nbsp;<code>getCounter()</code> og <code>count()</code>, og sjekke returverdien mot fasiten for hvert kall:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Testkode for count()-metoden</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:plain-text-body><![CDATA[assertEquals(true, counter.count());
+assertEquals(2, counter.getCounter());
+assertEquals(false, counter.count());
+assertEquals(3, counter.getCounter());]]></ac:plain-text-body></ac:macro><p>Hvordan f&aring;r vi s&aring; kj&oslash;rt koden over, slik at vi f&aring;r testet om <code>Counter</code>-koden er korrekt i henhold til kravene? Koden m&aring; f&oslash;rst legges inn i <em>test-metoder</em> i en <em>test-klasse</em>, og s&aring; m&aring; den kj&oslash;res ved hjelp av JUnit-rammeverket. En test-klasse m&aring; arve fra JUnit sin <code>TestCase</code>-klasse og test-metodene m&aring; v&aelig;re void-metoder uten argumenter, med navn som begynner med &quot;test&quot;, slik:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Test-klasse for Counter-klassen</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:plain-text-body><![CDATA[public class CounterTest extends junit.framework.TestCase {
+   public void testCounter() {
+      Counter counter = new Counter(1, 3);
+      assertEquals(1, counter.getCounter());	// sjekk om returverdi er 1
+      assertTrue(counter.count());				// sjekk om returverdi er true
+      assertEquals(2, counter.getCounter());	// sjekk om returverdi er 2
+      assertFalse(counter.count());				// sjekk om returverdi er false
+      assertEquals(3, counter.getCounter());	// sjekk om returverdi er 3
+   }
+}]]></ac:plain-text-body></ac:macro><p>I Eclipse er det n&aring; bare &aring; h&oslash;yreklikke p&aring; testklassen og velge Run as-&gt;JUnit Test. Da vil alle test-metodene i test-klassen bli kj&oslash;rt og resultatet blir vist i et eget JUnit panel:</p><p><ac:image><ri:attachment ri:filename="CounterTest failure.png" /></ac:image></p><p>Meldingen forteller at sjekken v&aring;r i linje 6 i CounterTest.java har avdekket en feil, counter.getCounter() returnerte 0, mens den forventede verdier var 1! Hvis vi ser n&aelig;rmere p&aring; koden, s&aring; ser vi at vi har glemt &aring; initialisere pos-variabelen til start-verdien. Derfor startet den p&aring; 0 istedenfor 1. Dersom vi endrer linje 4 i Counter.java til <code>pos = start;</code> og kj&oslash;rer p&aring; nytt, s&aring; skal feilen v&aelig;re fikset:</p><p><ac:image><ri:attachment ri:filename="CounterTest failure 2.png" /></ac:image></p><p>Der avdekket vi en annen feil (programmet stopper p&aring; den f&oslash;rste feilen i hver test-metode), i sjekken v&aring;r i linje 9 fikk vi <code>true</code>, men fasiten var <code>false</code>. Problemet denne gang er at count()-metoden returnerer true ogs&aring; den siste gangen den &oslash;ker telleren. Vi m&aring; endre litt p&aring; logikken, slik:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Endelig versjon av Counter-klassen</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:plain-text-body><![CDATA[public class Counter {
+   private int pos, end;
+   public Counter(int start, int end) {
+      this.pos = start;
+      this.end = end;
+   }
+   public int getCounter() {
+      return pos;
+   }
+   public boolean count() {
+      if (pos < end) {
+         pos = pos + 1;
+      }
+      return pos < end;
+   }
+}]]></ac:plain-text-body></ac:macro><p>Denne gangen kj&oslash;rer testen uten feil og vi har (st&oslash;rre) grunn til &aring; tro at <code>Counter</code>-klassen er implementert i henhold til kravene.</p><p><ac:image><ri:attachment ri:filename="CounterTest success.png" /></ac:image></p><p>Noen avsluttende kommentarer:</p><ul style="list-style-type: square;"><li>I dette eksemplet har vi kun testet klassen v&aring;r med ett sett test-data og dette er sjelden nok til &aring; finne alle feil. Dersom vi f.eks. hadde instansiert med new Counter(0, 2), s&aring; hadde ikke den f&oslash;rste feilen blitt oppdaget, siden default-verdien tilfeldigvis var riktig! Derfor er det lurt &aring; teste med sannsynlige, usannsynlige og gjerne tilfeldige verdier.</li><li>Det er vanlig &aring; strukturere koden i mange sm&aring; test-metoder, som hver tester kun ett krav. I dette tilfellet kunne vi laget to test-metoder, f.eks.&nbsp;<code>testCounter()</code> for &aring; teste konstrukt&oslash;ren, og&nbsp;<code>testCount()</code> for &aring; teste <code>count()</code>-metoden. Ved kj&oslash;ring vil begge test-metodene bli utf&oslash;rt og vi kan avdekke flere feil p&aring; en gang. Det vil dessuten ofte v&aelig;re praktisk &aring; skrive private hjelpemetoder for &aring; gj&oslash;re test-metodene ryddigere.</li></ul><hr /><p>Les ogs&aring; <ac:macro ac:name="list-pages"><ac:parameter ac:name="direction">children</ac:parameter></ac:macro></p>

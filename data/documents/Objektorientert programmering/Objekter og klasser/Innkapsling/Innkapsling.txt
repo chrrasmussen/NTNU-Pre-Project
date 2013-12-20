@@ -1,0 +1,58 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Innkapsling er en programmeringsteknikk som har som form&aring;l &aring; hindre direkte tilgang til tilstanden til et objekt fra objekter av andre klasser.</p></ac:rich-text-body></ac:macro><p>Motivasjonen for innkapsling er todelt:</p><ol><li>Det er viktig &aring; sikre at <ac:link><ri:page ri:content-title="Gyldig tilstand" /><ac:plain-text-link-body><![CDATA[tilstanden til alle objektene er gyldig]]></ac:plain-text-link-body></ac:link>. Dette gj&oslash;res best ved at alle endringer av tilstanden skjer ved &aring; kalle objektets metoder, heller enn &aring; endre p&aring; attributtene direkte. P&aring; denne m&aring;ten slipper andre objekter &aring; kjenne til alle reglene for gyldighet og konsistens, og koden blir mer robust ved at all logikk om attributter og regler samles i &eacute;n klasse.</li><li>Det er viktig at koden for en klasse ikke er avhengig av detaljer i en annen, f.eks. eksakt hvilke attributter og datatyper som brukes for &aring; representere data, fordi dette gj&oslash;r endringer lettere &aring; h&aring;ndtere.</li></ol><p>Ta som eksempel representasjon av fornavn og etternavn i et <strong>Person</strong>-objekt. Dette kan gj&oslash;res med ett <ac:link><ri:page ri:content-title="String" /></ac:link>-attributt, med fornavn og etternavn skilt med mellomrom, eller to separate <ac:link><ri:page ri:content-title="String" /></ac:link>-attributter, ett for fornavn og ett for etternavn. Uansett hvilken konkret representasjon som velges, s&aring; handler det logisk sett om &aring; h&aring;ndtere to (uavhengige) verdier og det er ingen grunn til at detaljer om hvordan representasjonen gj&oslash;res skal v&aelig;re kjent for andre klasser. Klassen definerer derfor operasjoner for b&aring;de &aring; lese og endre disse to verdiene, som lar seg implementere av begge l&oslash;sningsalternativene. Hvilket alternativ man faktisk velger er en detalj som andre klasser ikke beh&oslash;ver bry seg om. Dette er illustrert i f&oslash;lgende figur:</p><ac:macro ac:name="plantuml"><ac:parameter ac:name="title">Innkapsling av fornavn og etternavn</ac:parameter><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	String getGivenName()
+	void setGivenName(String givenName)
+	String getFamilyName()
+	void setFamilyName(String familyName)
+}
+note top: Kun operasjoner
+
+class "Person" as Person1 {
+	String givenName
+	String familyName
+	String getGivenName()
+	void setGivenName(String givenName)
+	String getFamilyName()
+	void setFamilyName(String familyName)
+}
+note top: Alternativ 1, separate attributter for hver verdi
+
+class "Person" as Person2 {
+	String fullName
+	String getGivenName()
+	void setGivenName(String givenName)
+	String getFamilyName()
+	void setFamilyName(String familyName)
+}
+note top: Alternativ 2, ett attributt som kombinerer begge verdiene
+
+]]></ac:plain-text-body></ac:macro><p>Innkapslingen av fornavn- og etternavn-verdiene er representert ved den f&oslash;rste klassen, mens de to andre klassene er alternative implementasjoner som st&oslash;tter denne innkapslingen. Andre klasser bruker bare operasjonene og trenger ikke bry seg om eller gj&oslash;re seg avhengig av hvilket alternativ som er valgt. En kan dermed bytte mellom implementasjonsalternativ 1 og 2 uten at andre klasser blir p&aring;virket.</p><h2>Synlighetsmodifikatorer</h2><p>Innkapsling best&aring;r alts&aring; av &aring; definere et sett operasjoner for sikker (og indirekte) tilgang til data, istedenfor &aring; gi direkte tilgang til attributter og dermed lekke detaljer om implementasjonsteknikken til andre klasser. For &aring; gj&oslash;re innkapslingen tydelig kan en angi i diagrammer den s&aring;kalte <em>synligheten</em> til navn, dvs. hvilke som skal v&aelig;re offentlig (kjent) og hvilke som skal v&aelig;re private. De offentlige skal v&aelig;re mulige &aring; bruke (referere til) utenfor klassen og de private umulige. Dette illustreres med henholdsvis gr&oslash;nne og r&oslash;de punkter eller + og - foran navnene, som vist i figuren under.</p><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class "Person" as Person1 {
+	-String givenName
+	-String familyName
+	+String getGivenName()
+	+void setGivenName(String givenName)
+	+String getFamilyName()
+	+void setFamilyName(String familyName)
+}
+note top: Synlighet angitt med grønn og rød farge]]></ac:plain-text-body></ac:macro><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[skinparam classAttributeIconSize 0
+class "Person" as Person2 {
+	-String givenName
+	-String familyName
+	+String getGivenName()
+	+void setGivenName(String givenName)
+	+String getFamilyName()
+	+void setFamilyName(String familyName)
+}
+note top: Synlighet angitt med + og -]]></ac:plain-text-body></ac:macro><p>Tilsvarende tilbyr mange objektorienterte spr&aring;k mekanismer s&aring;kalte <em>synlighetsmodifikatorer</em> for &aring; deklarere hvilke navn som skal v&aelig;re offentlige og private. Alternativ 1 over vil kodes som f&oslash;lger:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Innkapsling med bruk av public og private</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	// private fields
+	private String givenName;
+	private String familyName;
+	// public methods
+	public String getGivenName() { ... }
+	public void setGivenName(String givenName) { ... }
+	public String getFamilyName() { ... }
+	public void setFamilyName(String familyName) { ... }
+}
+]]></ac:plain-text-body></ac:macro><p>Merk at offentlig og privat synlighet kan brukes for b&aring;de operasjoner og attributter alt ettersom de oppfattes som en del av innkapslingen eller ikke (eller om innkapsling er viktig). Grunnregelen er at alle attributter er private, mens utvalgte operasjoner, de som er en del av innkapslingen, er offentlige. Men det er opp til programmereren &aring; tenke gjennom hvilke som skal brukes hvor.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 95 |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>

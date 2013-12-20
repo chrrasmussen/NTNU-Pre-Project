@@ -1,0 +1,50 @@
+<p>Kontrollstrukturer er kode som velger n&aring;r annen kode skal kj&oslash;res. Uten kontrollstrukturer ville man jobbet seg nedover programkoden linje for linje, og utf&oslash;rt hver eneste &eacute;n. Det ville skapt mange tungvinte programmer!</p><p>Kodeflyt skjer prim&aelig;rt ved &aring; velge mellom forskjellige kodeblokker eller ved &aring; gjennomf&oslash;re en kodeblokk flere ganger. Vi skiller gjerne mellom tre ulike kontrollstrukturer<strong>:&nbsp;</strong>betingelser, l&oslash;kker, og unntaksh&aring;ndtering.</p><h1>Betingelser</h1><p>Betingelser er ogs&aring; kjent som&nbsp;<em>if</em>-setninger. Alle betingelser stiller et sp&oslash;rsm&aring;l som svares med enten &quot;ja&quot; eller &quot;nei&quot;. I programmeringssjargong sier vi at uttrykket m&aring; kunne evalueres til&nbsp;<strong>sant</strong>&nbsp;eller&nbsp;<strong>usant</strong>, og omfatter derfor et&nbsp;<ac:link><ri:page ri:content-title="Datatyper" /><ac:plain-text-link-body><![CDATA[boolsk uttrykk]]></ac:plain-text-link-body></ac:link>.</p><p>Den enkleste form for betingelse er en&nbsp;<em>if-else</em><strong>&nbsp;</strong>sp&oslash;rring. Denne evaluerer et uttrykk til sant eller usant, og velger en programflyt avhengig av dette. I figuren under ser du et eksempel p&aring; en slik sp&oslash;rring, som er et forenklet sekvensdiagram for kj&oslash;ring av Java-programmer. Det er prosessen &quot;Run java program&quot; som er&nbsp;<em>if-</em>delen av betingelsen, og &quot;Give error message&quot; som er&nbsp;<em>else</em>-delen av betingelsen.&nbsp;</p><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[start
+ 
+if (If...) then (Java is installed)
+	:Run java \nprogram;
+else (Java is <b>not</b> installed)
+	:Give error \nmessage;
+endif
+ 
+stop]]></ac:plain-text-body></ac:macro><p><span style="font-size: 10.0pt;line-height: 13.0pt;"><br /></span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Noen ganger &oslash;nsker man &aring; velge mellom flere enn to kodeblokker. Dette kan gj&oslash;res med en n&oslash;stet&nbsp;</span><em style="font-size: 10.0pt;line-height: 13.0pt;">if</em><span style="font-size: 10.0pt;line-height: 13.0pt;">. Man tar f&oslash;rst et valg mellom to kodeblokker, og den <em>else-</em>kodeblokken inneholder en ny betingelse. Se p&aring; et eksempel der en fagl&aelig;rer gir inn poengsum (<strong>score</strong>), og f&aring;r ut en bokstavkarakter (<strong>grade</strong>):</span></p><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[start
+if (score > 90) then (true)
+	:grade = A;
+else (false)
+	if (score > 80) then (true)
+		:grade = B;
+	else (false)
+		if (score > 60) then (true)
+			:grade = C;
+		else (false)
+			if (score > 50) then (true)
+				:grade = D;
+			else (false)
+				if (score > 40) then (true)
+					:grade = E;
+				else (false)
+					:grade = F;
+				endif
+			endif
+		endif
+	endif
+endif
+stop]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p>Noen ganger blir det mange slike sp&oslash;rringer n&oslash;stet, og det blir fort forvirrende. En bedre l&oslash;sning er da &aring; bruke&nbsp;<em>elseif</em><em>-</em>strukturen. Her kan man evaluere flere uttrykk, og man vil kj&oslash;re&nbsp;<u>den f&oslash;rste</u> kodeblokken som passer sp&oslash;rringen. I diagrammet nedenfor kan man tenke seg at man g&aring;r fra venstre mot h&oslash;yre, og f&oslash;lger den f&oslash;rste pilen som passer.&nbsp;</p><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[(*) --> "If.."
+"If.." -->[score > 90] "grade = A"
+--> (*)
+"If.." -->[score > 80] "grade = B"
+--> (*)
+"If.." -->[score > 60] "grade = C"
+--> (*)
+"If.." -->[score > 50] "grade = D"
+--> (*)
+"If.." -->[score > 40] "grade = E"
+-->(*)
+"If.." -->[else] "grade = F"
+--> (*)]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p><span style="font-size: 18.0pt;font-weight: bold;line-height: normal;">L&oslash;kker</span></p><p>L&oslash;kker er kode som utf&oslash;res flere ganger. Det er vanlig &aring; skille mellom&nbsp;<em>while</em>-l&oslash;kker og&nbsp;<em>for-</em>l&oslash;kker. En&nbsp;<em>while</em>-l&oslash;kke sjekker en betingelse, og gjennomf&oslash;rer koden i l&oslash;kkekroppen s&aring; lenge denne betingelsen er sann. Man m&aring; v&aelig;re forsiktig n&aring;r man skriver&nbsp;<em>while-</em>l&oslash;kker; dersom ikke betingelsen er formulert riktig kan man ende opp med det som kalles en &quot;uendelig l&oslash;kke&quot;. N&aring;r man leser inn data fra en tekstfil, kan det se omtrent slik ut:</p><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[start
+ 
+while (lines to read?) is (true)
+  :read next line;
+endwhile (false)
+:close file;
+ 
+stop]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p>En&nbsp;<em>for</em>-l&oslash;kke er et spesialtilfelle av en&nbsp;<em>while</em>-l&oslash;kke, og brukes dersom man vet hvor mange ganger l&oslash;kkekroppen skal utf&oslash;res. Man har en tellevariabel som endres hver gang l&oslash;kken har kj&oslash;rt, og til slutt er tellevariabelen s&aring; stor eller liten at l&oslash;kken er ferdig. Det er ogs&aring; mulig &aring; f&aring;&nbsp;<em>for</em>-l&oslash;kker til &aring; kj&oslash;re uendelig, s&aring; v&aelig;r forsiktig med bruken av denne ogs&aring;. For &aring; implementere en <em>for</em>-l&oslash;kke trenger man (1) en startverdi for tellevariabelen, (2) en sluttverdi for tellevariabelen, og (3) hvor mye man &oslash;nsker &aring; endre tellevariabelen etter hver l&oslash;kke. En standard bruk av&nbsp;slike l&oslash;kker er &aring; bla gjennom en liste, og gj&oslash;re noe med hvert element i listen.&nbsp;</p><p>To sentrale stikkord n&aring;r man arbeider med l&oslash;kker er&nbsp;<em>break</em><strong>&nbsp;</strong>og&nbsp;<em>continue</em>. Break betyr at man avbryter l&oslash;kken, og fortsetter &aring; kj&oslash;re koden som st&aring;r under l&oslash;kkekroppen. Continue betyr at man starter l&oslash;kken p&aring; nytt uten &aring; utf&oslash;re resten av koden innenfor l&oslash;kkekroppen. I for-l&oslash;kker vil tellevariabelen oppdateres n&aring;r man bruker conti</p><p><span style="font-size: 18.0pt;font-weight: bold;line-height: normal;">Unntaksh&aring;ndtering</span></p><p>Unntak er hendelser i et program som <strong>helst ikke&nbsp;</strong>skal skje. Dersom man har en liste med 4 elementer, &nbsp;og man sp&oslash;r om hva som er det 5. elementet vil det i de fleste programmeringsspr&aring;k oppst&aring; et unntak. Det er god programmering &aring; skrive kode slik at man i h&oslash;yest mulig grad unng&aring;r unntak. I eksempelet over betyr det &aring; sjekke om listen inneholder 5 elementer&nbsp;<strong>f&oslash;r&nbsp;</strong>man sp&oslash;r etter det 5. elementet.</p><p>Det finnes ogs&aring; mekanismer som&nbsp;<strong>fanger opp</strong> unntak og behandler disse. Dette kan ses p&aring; som en spesiell betingelse:&nbsp;<strong>hvis&nbsp;</strong>et unntak oppst&aring;r,&nbsp;<strong>s&aring;&nbsp;</strong>kj&oslash;r denne koden. Unntak kan ogs&aring; n&oslash;stes, slik at man har en blokk tilh&oslash;rende ethvert unntak som kan oppst&aring;.&nbsp;</p>

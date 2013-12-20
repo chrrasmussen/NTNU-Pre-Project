@@ -1,0 +1,43 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | eksempel |
+|| Dekningsgrad | 50 |
+|| Omfang | 25 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Kopier koden og test den i Eclipse. Man vil raskt se at selv om alle taxiene &quot;kj&oslash;rer&quot; 4 km, utf&oslash;res ikke koden fullstendig for hver taxi f&oslash;r den neste f&aring;r starte. Taxiene &quot;sover&quot; ogs&aring; en tilfeldig tid mellom hver km, s&aring; det er ikke gitt at den som starter f&oslash;rst, kommer fram f&oslash;rst.</span><span style="font-size: 10.0pt;line-height: 13.0pt;">&nbsp;</span></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Taxi-threads</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Taxi extends Thread {
+	
+	public static int instances;
+	private int taxinr;  
+	
+	public Taxi() {
+		taxinr = Taxi.instances++;
+	}
+	
+	public void run() {
+		
+		int initialwait = (int) (Math.random()*1000);
+		
+		try {
+			Thread.sleep(initialwait);
+		} catch (InterruptedException e1) {
+			// nix
+		}
+	
+		for (int i = 1; i < 5 ; i++) {
+			
+			System.out.println("Taxi " + taxinr + " has drived " + i + " km");
+		
+			int tempwait =(int) (Math.random()*1000);
+			
+			try {
+				Thread.sleep(tempwait);
+			} catch (InterruptedException e) {
+				// nix 
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		
+		for (int i = 0; i < 5; i++) {
+			(new Taxi()).start();			
+		}
+	}
+}]]></ac:plain-text-body></ac:macro>

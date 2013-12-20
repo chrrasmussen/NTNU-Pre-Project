@@ -1,0 +1,120 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 100 |
+|| Omfang | 50 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p><span style="font-size: 10.0pt;line-height: 13.0pt;">En anonym klasse deklareres og instansieres i et uttrykk, og er&nbsp;</span><strong style="font-size: 10.0pt;line-height: 13.0pt;">enten</strong><span style="font-size: 10.0pt;line-height: 13.0pt;">&nbsp;en&nbsp;</span><em style="font-size: 10.0pt;line-height: 13.0pt;">subklasse</em><span style="font-size: 10.0pt;line-height: 13.0pt;">&nbsp;av en annen klasse&nbsp;</span><strong style="font-size: 10.0pt;line-height: 13.0pt;">eller</strong><span style="font-size: 10.0pt;line-height: 13.0pt;"> s&aring; implementerer den et (og bare ett) grensesnitt. Hensikten med en anonym klasse vil ofte v&aelig;re en &quot;quick-fix&quot;/hurtig-implementasjon av en instans som implementerer et grensesnitt eller en klasse man vil gj&oslash;re forandringer p&aring;. Dette blir forh&aring;pentligvis litt mer begripelig med noen eksempler.</span></p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Syntax Subclassing</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// Usual instantiation of class
+SomeClass instanceOfSomeClass = new SomeClass();
+ 
+// Instantiation and declaration of 
+// an anonymous class
+SomeClass myAnonymousClass = new SomeClass() {
+	
+	private int newField;
+ 
+	@Override
+	public void someMethod() { ... }
+ 
+	public void newMethod() { ... }
+ 
+};
+ 
+// myAnonymousClass is a subclass of SomeClass]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Syntax interface</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// Usual usage of interface
+ 
+public class SomeClass implements SomeInterface { ... }
+ 
+SomeInterface instance = new SomeClass();
+ 
+// Instantiation and declaration of an anonymous class
+ 
+SomeInterface myAnonymousClass = new SomeInterface() {
+	
+	@Override
+	public void requiredMethod1 { ... }
+	@Override
+	public void requiredMethod2 { ... }		
+};
+ 
+// myAnonymousClass implements the required methods
+// without beeing an instance of another class ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><h2>Anonyme klasser til h&aring;ndtering av hendelser</h2><p>Dersom man har behov for &aring; knytte en&nbsp;<em>lytter&nbsp;</em>til et objekt som produserer/sender ut <em>eventer</em> kan en anonym klasse brukes.&nbsp;<br />Dette gjelder spesielt dersom man ikke &oslash;nsker &aring; spesifisere en helt ny klasse til &aring; h&aring;ndtere eventene en&nbsp;<em>spesiell&nbsp;</em>knapp sender ut.</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Special ActionListener</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// NOT USE OF ANONYMOUS CLASS
+ 
+public class MySpecialActionListener implements ActionListener {
+	
+	public void actionPerformed(ActionEvent e) {
+		// Do something special	
+	}
+}
+ 
+public class SomeClass implements ActionListener {
+	
+	button1.addActionListener(this);
+	button2.addActionListener(this);
+	specialButton.addActionListener(new MySpecialActionListener());
+ 
+	public void actionPerformed(ActionEvent e) {
+		// Do something
+	}
+}]]></ac:plain-text-body></ac:macro><p>Eksempel v1</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Anonymous ActionListener</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// USE OF ANONYMOUS CLASS
+ 
+public class SomeClass implements ActionListener {
+ 
+	button1.addActionListener(this);
+	button2.addActionListener(this);
+	
+	ActionListener actList = new ActionListener() { 
+			
+			public void actionPerformed(ActionEvent e) {
+		        // Do something special
+    		}
+	};
+ 
+	// actList is now an anonymous class
+	
+	specialButton.addActionListener(actList);
+	
+	public void actionPerformed(ActionEvent e) {
+		// Do something
+	}
+}
+ 
+ ]]></ac:plain-text-body></ac:macro><p>Eksempel v2</p></th></tr></tbody></table><p>I <em>v2</em> ser vi hvordan en anonym klasse kan deklareres og instansieres som en del av et uttrykk.&nbsp;Det er viktig &aring; merke seg at det finnes flere &quot;workarounds&quot; for eksempelet ovenfor med hensyn p&aring; en knapp med en spesiell <strong>actionPerformed-</strong>metode, men her brukes anonyme klasser som en mulig l&oslash;sning.</p><h2>Inline&nbsp;<span style="color: rgb(34,34,34);">implementasjon av grensesnitt</span></h2><p>Deklarasjonen (og instansieringen) av den nye <em>actionlisteneren</em>&nbsp;p&aring; linje 8-13<em>&nbsp;</em>i v2 av eksempelet ovenfor kan kalles en&nbsp;<em>inline implementasjon&nbsp;</em>av <strong>ActionListener-</strong>grensesnittet.<br />Om man vil deklarere en ny klasse som skal implementere et enkelt grensesnitt trenger man ikke n&oslash;dvendigvis lage en egen klasse, men heller bruke en anonym klasse p&aring; samme m&aring;te som ovenfor.</p><p>Et annet eksempel:</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Runnable</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class SuperfastRunnable implements Runnable {
+	
+	// Required to implement
+	 public void run() {
+		 // Do something
+	 }
+}
+public static void main(String[] args) {
+	
+	// code..
+	
+	SuperfastRunnable sfr = new SuperfastRunnable();
+	
+	// code..
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Anonymous Runnable</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public static void main(String[] args) {
+	 	
+	// code..	
+
+	Runnable r = new Runnable() {
+		
+		// Required to implement
+		public void run() {
+			// Do something
+		}
+	};
+ 
+	// code..
+} ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Igjen kan man spare seg for bryet med &aring; lage en ny klasse om man bare trenger &eacute;n instans av den p&aring; et/f&aring; sted(er) i koden. Pass dog p&aring;; mange anonyme klasser kan fort gj&oslash;re koden uoversiktlig.</span></p><h2>Inline <em>overriding</em> av metoder ved arv</h2><p>P&aring; samme m&aring;te som med implementasjon av grensesnitt, kan man ogs&aring;&nbsp;<strong>arve&nbsp;</strong>klasser&nbsp;<em>inline</em> ved &aring; lage en anonym klasse. Dette kan v&aelig;re s&aelig;rlig nyttig dersom man f.eks. &oslash;nsker &aring; lage &eacute;n instans av en klasse, som skal <em>override</em> en eller f&aring; metoder. Se eksempel under.</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Subclass TextField</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[TextField sum = new TextField() {
+	@Override
+	public void replaceText(int start, int end, String text) {
+		if (!text.matches("[a-z, A-Z]")) {
+			super.replaceText(start, end, text);                     
+		}
+		label.setText("Enter a numeric value");
+		}
+ 
+	@Override
+	public void replaceSelection(String text) {
+		if (!text.matches("[a-z, A-Z]")) {
+			super.replaceSelection(text);
+		}
+	}
+};]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><p>Eksempelet ovenfor viser hvordan en instans,&nbsp;<strong>sum,&nbsp;</strong><em>subklasser</em>&nbsp;<strong>TextField&nbsp;</strong>og&nbsp;<em>inline&nbsp;</em>skriver over metodene&nbsp;<strong>replaceText&nbsp;</strong>og&nbsp;<strong>replaceSelection.</strong>&nbsp;Tekstfeltet&nbsp;<em>sum&nbsp;</em>er ment som et felt som bare vil ha input i form av numeriske verdier, og metoden som setter teksten forandres slik at den varsler dersom noen skriver tekst i feltet.</p>

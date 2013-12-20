@@ -1,0 +1,90 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><h2>Generelt</h2><p>Swing er et &quot;lettvekter&quot; API til &aring; lage GUI for java. Swing har en arkitektur som gj&oslash;r det mulig &aring; legge grafikk til kode, uten &aring; forandre alt for mye p&aring; applikasjonen.<br /><br />Med swing kan man enkelt lage&nbsp;butto<span>ns, tekstfelt, check bo</span>xes, labels,&nbsp;tabeller&nbsp;og lister, i tillegg til en rekke andre komponenter.<br />For mer om komponentene og hvordan de virker, se&nbsp;<a href="http://docs.oracle.com/javase/tutorial/uiswing/components/">Swing komponenter</a>.&nbsp;</p><h2>Basic komponentbruk og oppbygning</h2><p>En vanlig m&aring;te &aring; bygge opp en GUI-applikasjon med swing er &aring; bruke klassene JFrame og JPanel etter et bestemt m&oslash;nster.<br /><span style="font-size: 10.0pt;line-height: 13.0pt;"><br />Konseptet handler&nbsp;om &aring; ha en klasse A, som subklasser (arver) JPanel. A fyller seg selv med komponenter (tekst, buttons, osv.) og danner hele (eller deler) av et vindu.<br />Merk at en instans av JPanel, et panel, er en komponent p&aring; lik linje med et tekstfelt.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">En instans av A, <em>a</em>, er alts&aring; en komponent utformet slik man &oslash;nsker at vinduet sitt skal se ut, men&nbsp;<em>a</em>&nbsp;vil ikke opprette noe vindu som vi kan se og r&oslash;re ved. Her kommer JFrame inn.&nbsp;En instans av JFrame representeres som et faktisk vindu p&aring; skjermen v&aring;r. I dette vinduet kan man legge komponenter p&aring; lik linje som et&nbsp;<em>panel</em>, men for &aring; skape en struktur fyller vi hele vinduet eller&nbsp;<strong>framen</strong><strong>&nbsp;</strong>med panelet <em>a.</em>&nbsp;Dersom man &oslash;nsker en button nederst i vinduet sitt, legges dette alts&aring; til i panelet&nbsp;<em>a, ikke</em> i&nbsp;<strong>framen</strong>.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Forklaring<em> til denne strukturen</em>:<br /><br /><span style="color: rgb(34,34,34);">Det er vanlig &aring; strukturere koden slik at klassen tilsvarende et vindu eller panel, typisk en subklasse av JPanel, selv fyller seg med innhold og reagerer p&aring; brukerens interaksjon med innholdet (<em>forklares senere</em>).</span><br /><span style="color: rgb(34,34,34);font-size: 10.0pt;line-height: 13.0pt;">For mindre applikasjoner uten menylinje er det uvanlig &aring; subklasse JFrame, fordi denne er mindre vanlig &aring; gjenbruke. Istedenfor subklasses JPanel som instansieres i en main-metode sammen med en JFrame og settes som JFramens contentPane.</span></span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;"><span style="color: rgb(34,34,34);font-size: 10.0pt;line-height: 13.0pt;">Eksempelet under viser hvordan man lager et panel (JPanel) som fyller seg selv med komponenter. Dersom applikasjonen har main-metoden (JFrame) som vist under, vil det skapes et vindu som fylles med panelet MySimplePanel.<br />OBS! Juster st&oslash;rrelsen p&aring; vinduet n<span style="color: rgb(34,34,34);">&aring;r du tester koden. Dette med&nbsp;<strong>layout</strong> (BorderLayout) kan du lese mer om&nbsp;<em><a href="http://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html">her</a></em><em>.</em></span><br />&nbsp;</span></span></p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">JPanel</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[import java.awt.BorderLayout;
+
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+public class MySimplePanel extends JPanel {
+	
+	JTextArea inputText = new JTextArea("Skriv litt tekst her da vel...");
+	JTextArea text = new JTextArea("Dette er South i layouten :)");
+	
+	JLabel label = new JLabel("Jeg gleder meg til UKA!");
+ 
+	public MySimplePanel () {	
+		this.createGUI();
+	}
+	
+	private void createGUI() {
+		setLayout(new BorderLayout());
+		
+		add(inputText, BorderLayout.NORTH);
+		add(label, BorderLayout.WEST);
+		add(text, BorderLayout.SOUTH);
+		
+		text.setEditable(false);
+	}
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">JFrame</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[import javax.swing.JFrame;
+ 
+public static void main(String[] args) {
+		
+	JFrame frame = new JFrame();
+		
+	MySimplePanel panel = new MySimplePanel();
+		
+	frame.setContentPane(panel);
+	frame.setTitle("YOLO");
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.pack();
+	frame.setVisible(true);
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><h2>Hendelsestyrte programmer</h2><p>Dersom man lager en applikasjon som skal ta i mot brukerinteraksjon (trykking p&aring; knapper, tasting p&aring; tastatur, museklikk, valg i menyer, osv.), bygger dette videre p&aring; strukturen for oppbygning forklart ovenfor.&nbsp;<br />Vi &oslash;nsker &aring; holde interaksjonen i&nbsp;<strong>panelet,&nbsp;</strong>ikke i&nbsp;<strong>framen</strong>.<br /><br />Prinsippet bak brukerinteraksjon bygger p&aring; at man setter lyttere p&aring; komponenter p&aring; panelet sitt. Det vil si at n&aring;r en knapp, tast, el. trykkes p&aring;, oppfattes dette av lytteren til denne komponenten (anse dette som automagisk inntil videre) som gir beskjed til panelet om at noe har skjedd, og hva som skjedde.&nbsp;<br /><br />For at lytteren skal kunne gi beskjed til panelet, <em>m&aring;</em> det ha en metode som lytteren vet om. Panelet m&aring; derfor implementere ActionListener-interfacet, som inneb&aelig;rer at panelet garantert har metoden <strong>void actionPerformed(ActionEvent e)</strong>.<br /><br />OBS! Kj&oslash;r koden, og se under for beskrivelse av sentrale kodelinjer&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">JPanel with ActionListener</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
+public class MySimplePanel2 extends JPanel implements ActionListener  {
+	
+	JTextArea inputText = new JTextArea("Skriv litt tekst her da vel...");
+	
+	JButton btn1 = new JButton("Does nothing");
+	JButton btn2 = new JButton("Blanks text");
+	
+	public MySimplePanel () {
+		
+		btn1.addActionListener(this);
+		btn2.addActionListener(this);
+		
+		this.createGUI();
+	}
+	
+	private void createGUI() {
+		setLayout(new BorderLayout());
+		
+		JTextArea text = new JTextArea("Dette er South i layouten og bare til info :)");
+		
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BorderLayout());
+		panel1.add(btn2,BorderLayout.WEST);
+		panel1.add(btn1, BorderLayout.EAST);
+		
+		add(panel1,BorderLayout.NORTH);
+		add(inputText, BorderLayout.CENTER);
+		add(text,BorderLayout.SOUTH);
+		
+		text.setEditable(false);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		
+		if (e.getSource() == btn1) {
+			JOptionPane.showMessageDialog(null, "Did nothing!");
+		}
+		if (e.getSource() == btn2) {
+			inputText.setText("");
+		}
+	}
+}]]></ac:plain-text-body></ac:macro><p>NB! Linjenummer i fullskjermvisning<br /><br /><u>Linje 8-11</u>: Oppretter globale komponenter som vi m&aring; kunne n&aring; fra hele klassen.<br /><u>Linje 15-16</u>:&nbsp;Etter vi har opprettet knappene&nbsp;<strong>btn1&amp;2</strong>&nbsp;setter vi en lytter p&aring; de. Uten denne lytteren vil det ikke sendes noen beskjed om at knappene har blitt trykket p&aring;. Parameteren her angir hvem som skal varsles om hendelsen.<br /><u>Linje 24:</u> Oppretter en komponent som ikke trenger &aring; v&aelig;re global.<br /><u>Linje 26-31:</u> Oppretter ett &quot;subpanel&quot; og legger to knapper til &Oslash;st og Vest p&aring; dette panelet. Deretter legges &quot;subpanelet&quot; til helt &oslash;verst p&aring; hovedpanelet. Dvs; de to knappene vil ligge &oslash;verst p&aring; hovedpanelet, og dernest til h&oslash;yre og venstre.<br /><u>Linje 38</u>: Funksjonen som lytterne kaller n&aring;r brukerinteraksjoner foretas. Parameteren e er et Action-objekt som b&aelig;rer info om hendelsen som har funnet sted.<br /><u>Linje 40-42</u>: Dersom kilden til hendelsen er&nbsp;<strong>btn1</strong> skal det dukke opp et dialogvindu med tekst.<br /><u>Linje 43-45</u>: Dersom&nbsp;kilden til hendelsen er&nbsp;<strong>btn2</strong>&nbsp;skal teksten i til&nbsp;<strong>inputText</strong> settes blank.</p>

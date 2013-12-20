@@ -1,0 +1,17 @@
+<p>Variabler er plassholdere for verdier som er ukjente n&aring;r man skriver programmet, eller som kan endres underveis. Se p&aring; et eksempel der man skriver kode for en nettbutikk. N&aring;r man skriver programmet vet man ikke hvor mye kunden kommer til &aring; handle for, men man m&aring; fortsatt kunne vise denne summen p&aring; skjermen. Da bruker man en variabel for &aring; kunne programmere dette, slik at hver kunde kan se sin egen sum.</p><p>I noen programmeringsspr&aring;k m&aring; man&nbsp;<strong>deklarere</strong> variablene f&oslash;r man bruker de. Man forteller kompilatoren hva man kaller variabelen, og hva slags&nbsp;<ac:link><ri:page ri:content-title="Datatyper" /><ac:plain-text-link-body><![CDATA[datatype]]></ac:plain-text-link-body></ac:link> den skal v&aelig;re.&nbsp;<span style="font-size: 10.0pt;line-height: 13.0pt;">Etter variablene er deklarert m&aring; man&nbsp;</span><strong style="font-size: 10.0pt;line-height: 13.0pt;">initialisere</strong><span style="font-size: 10.0pt;line-height: 13.0pt;"> de. Det betyr &aring; gi de en verdi slik at de kan brukes. Etter at en variabel er initialisert kan man&nbsp;<strong>tilordne&nbsp;</strong>de ulike verdier. For mange nybegynnere kan dette se ut som samme prosess, men i kodeeksempelet nedenfor er de ulike forskjellene forklart.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Java er et eksempel p&aring; et spr&aring;k der variablene m&aring; deklareres. N&aring;r de er deklarert blir de ogs&aring; initialisert til en standard verdi, som er enten&nbsp;<em>0</em>, <em>false</em>, eller <em>null</em>. Python er et eksempel p&aring; et spr&aring;k der man ikke deklarerer variablene. De blir da automatisk deklarert f&oslash;rste gang man tilordner de en verdi.</span></p><table><tbody><tr><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Deklarasjon i Java</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// Her skal vi bruke en heltallsvariabel, og den kaller vi alder
+// Dette er deklarasjonen. Java sørger for at den også initialiseres til 0
+int alder;
+
+// alder er nå deklarert og initialisert. Nå kan man bruke den i tilordninger.
+alder = 18;
+ 
+// Man kan også gjennomføre alle tre prosedyrene samtidig
+int aar = 2013;]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Deklarasjon i Python</ac:parameter><ac:parameter ac:name="language">python</ac:parameter><ac:plain-text-body><![CDATA[# I python deklarerer og initialiserer man variabelen 
+# ved første tilordning
+alder = 18
+ 
+# Merk at variabler i python må initialiseres før de
+# kan brukes i tilordninger av typen nedenfor
+alder += 1
+ 
+ ]]></ac:plain-text-body></ac:macro></td></tr></tbody></table>

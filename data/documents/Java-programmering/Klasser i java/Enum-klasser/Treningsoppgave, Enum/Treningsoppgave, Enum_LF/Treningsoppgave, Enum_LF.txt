@@ -1,0 +1,23 @@
+<table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Suit-enum</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public enum Suit {
+	
+	HEARTS(CardColor.RED, "Hearts"), DIAMONDS(CardColor.RED, "Diamonds"),
+	SPADES(CardColor.BLACK, "Spades"), CLUBS(CardColor.BLACK, "Clubs");
+	
+	private final CardColor color;
+	private final String text;
+	
+	private Suit (CardColor c, String suitText) {
+		this.color = c;
+		this.text = suitText;
+	}
+	
+	public CardColor getCardColor() {
+		return this.color;
+	}
+	
+	public String getSuitAsText() {
+		return text;
+	}
+} ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">CardColor-enum</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public enum CardColor {
+	RED, BLACK;
+}]]></ac:plain-text-body></ac:macro><p><br />Kommentar:<br /><br />For &aring; vise hvordan man kan legge flere verdier til en enum-konstant<br />er feltet <em>text</em> og metoden <em>getSuitAsText()</em> tatt med.<br />Egentlig kan vi benytte oss av metoden <em>name()</em> for &aring; hente<br />konstantene som tekst.&nbsp;</p><p>&nbsp;</p></th></tr></tbody></table><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro>

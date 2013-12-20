@@ -1,0 +1,52 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Den tredje versjonen av Memory-eksemplet implementerer et enkelt grafisk brukergrensesnitt mot <strong>Memory</strong>-klassen fra <ac:link><ri:page ri:content-title="Memory-eksempel versjon 2" /><ac:plain-text-link-body><![CDATA[versjon 2]]></ac:plain-text-link-body></ac:link>, basert p&aring; <ac:link><ri:page ri:content-title="JavaFX" /></ac:link>.</p></ac:rich-text-body></ac:macro><p>Som i den f&oslash;rste versjonen har vi ett program-objekt som h&aring;ndterer interaksjon med brukeren og som samhandler med ett Memory-objekt. Siden dette program-objektet skal v&aelig;re en JavaFX-applikasjon, s&aring; m&aring; den bygge p&aring; <strong>Application</strong>-klassen (i javafx.application-pakken), slik at den f&aring;r en del ferdiglagd oppf&oslash;rsel. Interaksjonen vi skal implementere er ikke s&aring; ulik den fra versjon 1 og 2, ved at applikasjon gir tekstlige meldinger til brukeren, og brukeren svarer ved &aring; skrive inn tekst. Dette betyr at vi m&aring; ha referanser til to JavaFX-objekter av typene <strong>Text</strong> (i javafx.scene.text-pakken) for tekstlig output og <strong>TextField</strong> (i javafx.scene.control-pakken) for tekstlig input. I tillegg m&aring; vi som i versjon 1 og 2 ha et <strong>Memory</strong>-objekt. Dette gir f&oslash;lgende klasse- og objektdiagrammer:</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[abstract class Application {
+	+abstract void start(Stage)
+}
+class MemoryApp {
+	+void start(Stage)
+}
+class Memory<Integer> {
+	+Integer nextItem()
+	+acceptItem(Integer)
+}
+
+class Text {
+	+setText(String)	
+}
+class TextField {
+	+getText()
+}
+Application <|- MemoryApp
+MemoryApp --> Memory: memory
+MemoryApp --> Text: systemOutput
+MemoryApp --> TextField: userInput]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[object MemoryApp {
+}
+object Memory {
+}
+
+object Text {
+}
+object TextField {
+}
+MemoryApp --> Memory: memory
+MemoryApp --> Text: systemOutput
+MemoryApp --> TextField: userInput
+
+]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[MemoryApp -> Memory: nextItem()
+Memory -> MemoryApp: 3
+MemoryApp -> Text: setText("Element nr. 1 er 3")
+participant TextField
+actor bruker
+Text -> bruker: "Element nr. 1 er 3"
+MemoryApp -> Text: setText("Gjenta element nr. 1 av 1")
+Text -> bruker: "Gjenta element nr. 1 av 1"
+bruker --> TextField: 3
+TextField -> MemoryApp: handleSubmitUserInputAction()
+MemoryApp -> TextField: getText()
+TextField --> MemoryApp: "3"
+MemoryApp -> Memory: acceptItem(3)
+Memory --> MemoryApp: Boolean.TRUE
+MemoryApp -> Memory: nextItem()
+ ]]></ac:plain-text-body></ac:macro></td><td><p>Sekvensdiagrammet viser hvordan <strong>Text</strong>- og <strong>TextField</strong>-objektene samhandler med <strong>MemoryApp</strong>- og <strong>Memory</strong>-objektene.&nbsp;Sekvensen er omtrent som i versjon 1, med noen viktige forskjeller:</p><ul><li><strong>Text</strong>-objektet har tatt rollen til <strong>System.out</strong> og tar imot meldinger til brukeren.</li><li>Istedenfor at <strong>MemoryApp</strong> leser input fra <strong>System.in</strong> med&nbsp;<strong>Scanner.nextLine()</strong>-metoden, s&aring; er det <strong>TextField</strong>-objektet som kaller <strong>handleSubmitUserInputAction(...)</strong>-metoden p&aring; <strong>MemoryApp</strong>-objektet n&aring;r brukeren har (skrevet inn et tall og) trykket return-tasten.</li></ul><p>Det at program-objektet ikke aktivt henter input, men venter p&aring; at et interaktivt JavaFX-objekt sier fra om input er typisk for hendelsesstyrte programmer. P&aring; en m&aring;te venter program-objektet p&aring; alle mulige input p&aring; en gang, og m&aring; reagere p&aring; det som kommer. I dette tilfellet er det jo bare ett interaktivt JavaFX-objekt, men i st&oslash;rre programmer er det mye som kan skje p&aring; en gang.</p><p>&nbsp;</p></td></tr></tbody></table><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | eksempel |
+|| Ferdig | 25 |
+|| Dekningsgrad | 25 |
+|| Omfang | 25 |]]></ac:plain-text-body></ac:macro>

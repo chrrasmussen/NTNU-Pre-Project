@@ -1,0 +1,25 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Swing har en spesiell timer, som egner seg til bruk mot GUI. Veldig enkelt forklart kan man bruke en swingtimer til &aring; utf&oslash;re kode med faste intervaller, i den hensikt &aring; f&aring; en applikasjon til &aring; leve helt/delvis p&aring; egen h&aring;nd, etter bestemte premisser.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Dette bygger videre p&aring;&nbsp;</span><ac:link><ri:page ri:content-title="Swing" /><ac:plain-text-link-body><![CDATA[Hendelsestyrte programmer]]></ac:plain-text-link-body></ac:link><span style="font-size: 10.0pt;line-height: 13.0pt;"> i swing, men i tillegg/i stedet for brukerinteraksjon vil hendelsene v&aelig;re trigget av en timer.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Ett veldig simpelt eksempel kan v&aelig;re hvordan en nettleser oppdaterer en nettside. N&aring;r applikasjonen (nettleseren) bes&oslash;ker et nytt nettsted, starter timeren. Timeren vil kalle en funksjon i applikasjonen hvert halve minutt, som bruker n&aring;v&aelig;rende adresse, og sp&oslash;r om siden p&aring; nytt.<br /><span style="font-size: 10.0pt;line-height: 13.0pt;"><br />Timeren fungerer slik at vi forteller den hvor ofte den skal &quot;pipe&quot; og hvem den skal &quot;pipe&quot; til, som heretter kalles timerens&nbsp;</span><em style="font-size: 10.0pt;line-height: 13.0pt;">mottaker</em><span style="font-size: 10.0pt;line-height: 13.0pt;">.&nbsp;<br /></span></span><span style="font-size: 10.0pt;line-height: 13.0pt;">Mottakeren har en metode som timeren kjenner til, og for hvert intervall kalles denne metoden hos mottakeren (kall av denne metoden blir alts&aring; et &quot;pip&quot;).&nbsp;</span></p><ac:macro ac:name="code"><ac:parameter ac:name="title">Swing Timer</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+
+// Siden klassen SwingExample skal være mottaker for timeren, må den implementere interfacet ActionListner
+// som vil si at klassen lover å ha metoden "actionPerformed". Timeren vil da kalle på denne metoden som et "pip"
+
+public class SwingExample implements ActionListener {
+ 
+	Timer timer = new Timer(100, this); // Intervallet skal være på 100 ms, og klassen er selv mottaker
+	
+    public SwingExample() {
+    	timer.start();  // Timeren må startes
+	}
+ 
+	// For hvert intervall kalles denne metoden, og innholdet i metoden avgjør funksjonaliteten.
+	
+	public void actionPerformed(ActionEvent ae) {
+		// Oppdatere komponenter, hente ny info, slette gammel info. 
+		// Kan brukes til å oppdatere en klokke grafisk.
+		// Kan brukes til animasjon ved popups eller zooming
+	}]]></ac:plain-text-body></ac:macro><h2>Timere med spillgrafikk</h2><p>Dersom vi lager et GUI best&aring;ende av figurer som vi &oslash;nsker skal bevege seg etter gitte betingelser, kan timeren ogs&aring; brukes til dette.&nbsp;<br />Et slikt GUI kan for eksempel v&aelig;re grafikken i spillet Packman, hvor man styrer en figur som jages av sp&oslash;kelse-figurer. Av og til f&aring;r figurene &oslash;kt eller redusert hastighet.<br /><span style="font-size: 10.0pt;line-height: 13.0pt;"><br />En m&aring;te &aring; l&oslash;se dette p&aring; kan v&aelig;re som f&oslash;lgende:<br /></span></p><ul style="list-style-type: square;"><li>Spillbrettet deles opp som et rutenett i X og Y-koordinater</li><li>Hver figur er et objekt med en hastighet i&nbsp;X-retning og en hastighet i Y-retning&nbsp;(et forholdsmessig tall)&nbsp;</li><li>Objektenes hastighet kan reduseres eller &oslash;kes</li><li>Din figur har i utgangspunktet&nbsp;<em>ingen&nbsp;</em>hastighet, men f&aring;r det gjennom &aring; styres med piltasten</li></ul><p>Hastigheten vil bare v&aelig;re et tall og kan ikke i seg selv flytte objektet, men:</p><ul style="list-style-type: square;"><li>For hver event fra timeren, (f.eks. hvert 100 ms) flyttes objektet med hastigheten sin, i hver av retningene.</li></ul><p>Dersom timeren &quot;piper&quot; ofte nok og stegene til objektene ikke er for store, vil objektene flytte seg rundt og se&nbsp;<em>levende&nbsp;</em>ut for &oslash;yet v&aring;rt.&nbsp;<br /><span style="font-size: 10.0pt;line-height: 13.0pt;">I packman-eksempelet er all logikk knyttet til oppf&oslash;rselen til objektene helt utelatt, dette for &aring; tydeliggj&oslash;re hvilken funksjon timeren har.&nbsp;</span></p>

@@ -1,0 +1,68 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>Tilstanden til et objekt er verdien av alle attributtene. En viktig del av <ac:link><ri:page ri:content-title="Tilstand og oppf&oslash;rsel" /><ac:plain-text-link-body><![CDATA[oppførselen til et objekt]]></ac:plain-text-link-body></ac:link> er &aring; sikre at tilstanden til objektet alltid er <em>gyldig</em>, dvs. at alle attributtene har gyldige/konsistente verdier.</p></ac:rich-text-body></ac:macro><h2>Gyldighet av enkelt-attributter</h2><p>Ofte finnes det naturlige regler for hva som er gyldige verdier for hvert attributt. F.eks. er det naturlig at attributter som representerer lengder ikke er negative eller at attributter som representerer person-navn ikke inneholder spesialtegn som $ og #. Dette h&aring;ndteres jo delvis av hvilken datatype vi velger, men ikke alle programmeringsspr&aring;k har egne typer for positive heltall eller tekstverdier med begrensninger p&aring; hvilke bokstaver de kan inneholde. Derfor m&aring; vi selv kode slike begrensninger inn i koden v&aring;r.</p><p>Den enkleste teknikken er &aring; lage en s&aring;kalt <em>setter</em>-metode, som er en operasjon som kun har som form&aring;l &aring; sette ett enkelt attributt. I denne kan vi s&aring; legge inn en test p&aring; om verdien er gyldig f&oslash;r attributtet evt. settes. Et <strong>length</strong>-attributt og en tilh&oslash;rende setter-metode kan kodes slik:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">length-attributt og tilh&oslash;rende setter-metode</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[int length;
+
+void setLength(int length) {
+	if (length >= 0) {
+		this.length = length;
+	}
+}]]></ac:plain-text-body></ac:macro><p>Vi bruker her konvensjonene til Java, som sier at metoden m&aring; hete <strong>set&lt;attributtnavn med stor forbokstav&gt;</strong>, at den m&aring; skal returnere noen verdi (void) og m&aring; ta inn ett parameter av samme type som attributtet. Dersom koden er som over, er vi sikret at <strong>length</strong> aldri kan bli negativ. En annen variant er &aring; utl&oslash;se et unntak, som f&oslash;lger:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">setter-metode som utl&oslash;ser unntak</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[void setLength(int length) {
+	if (length < 0) {
+		throw new IllegalArgumentException("Length must be zero or positive, but was " + length);
+	}
+	this.length = length;
+}]]></ac:plain-text-body></ac:macro><p>Her snur vi testen og utl&oslash;ser et passende unntak, som b&aring;de sier hva vi pr&oslash;vde &aring; gj&oslash;re og hva som var galt. Dersom testen ikke sl&aring;r til, s&aring; kan vi trygt sette attributtet.</p><p>Dersom koden for &aring; teste verdien er litt mer komplisert, s&aring; kan det v&aelig;re greit &aring; lage en egen validerings-metode som kalles fra setter-metoden:</p><ac:macro ac:name="code"><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[String name;
+
+boolean isValidName(String name) {
+	... check the validity of name, return true of valid or false if not ...;
+}
+
+void setName(String name) {
+	if (! isValidName(name)) {
+		throw new IllegalArgumentException(... a suitable message ...);
+	}
+	this.name = name;
+}]]></ac:plain-text-body></ac:macro><p>Fordelen med denne teknikken er at koden blir ryddigere og at <em>andre klasser</em> kan sjekke gyldigheten p&aring; forh&aring;nd. Det finnes andre varianter ogs&aring;, se egen side om <ac:link><ri:page ri:content-title="Koding av valideringsmetoder" /><ac:plain-text-link-body><![CDATA[koding av valideringsmetoder]]></ac:plain-text-link-body></ac:link>.</p><h2>Konsistens mellom attributter</h2><p>I mange tilfeller finnes det avhengigheter mellom attributter, slik at en ikke bare har krav til gydlighet for hvert attributt med ytterlige regler for hvilke kombinasjoner av verdier som er gyldige. Slike avhengigheter mellom flere verdier, kalles gjerne <em>konsistens</em>. Eksempler p&aring; dette er datoer og personnumre. &Oslash;vre grense for antall dager varierer ikke bare med m&aring;neden, men ogs&aring; med om det er skudd&aring;r. For personnumre kreves det at de f&oslash;rste seks sifrene er en gyldig dato og at det midterste av de fem siste sifrene er et partall for kvinner og oddetall for menn.</p><p>Koding av valideringsmetoder for &aring; sjekke konsistens mellom flere verdier, er mer komplisert, ikke bare fordi reglene ofte er mer kompliserte, men fordi det er flere valg &aring; ta om n&aring;r og hvordan testen utf&oslash;res. Ta datoen som eksempel: Dersom en har en setter-metode for hver av dag, m&aring;ned og &aring;r, s&aring; m&aring; hver av disse validere den nye verdien mot de som allerede er satt:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Dato-objekt med enkle setter-metoder</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[int day, month, year;
+
+boolean isValidDate(int day, int month, int year) {
+	... check validity ...
+}
+
+void setDay(int day) {
+	// check new day and existing month and year
+	if (! isValidDate(day, this.month, this.year)) {
+		throw new IllegalArgumentException(... appropriate message ...);
+	}
+	this.day = day;
+}
+
+void setMonth(int month) {
+	// check new month and existing day and year
+	if (! isValidDate(this.day, month, this.year)) {
+		throw new IllegalArgumentException(... appropriate message ...);
+	}
+	this.month = month;
+}
+
+void setYear(int year) {
+	// check new year and existing day and month
+	if (! isValidDate(this.day, this.month, year)) {
+		throw new IllegalArgumentException(... appropriate message ...);
+	}
+	this.year = year;
+}]]></ac:plain-text-body></ac:macro><p>Problemet oppst&aring;r n&aring;r en skal pr&oslash;ve &aring; endre datoen i to trinn og potensielt m&aring; g&aring; via en ugyldig mellom-tilstand, f.eks. fra 31. januar til 1. februar. Dersom en f&oslash;rst setter dagen til med setDay og s&aring; m&aring;neden med setMonth, s&aring; g&aring;r det greit, men dersom en pr&oslash;ver p&aring; motsatt rekkef&oslash;lge vil unntaket bli utl&oslash;st idet m&aring;neden settes til februar (verdien 2) og valideringsmetoden sier at 31. februar er en ugyldig dato.</p><p>Et alternativ er &aring; ha &eacute;n kompleks setter-metode, som krever at alle verdiene m&aring; settes samtidig:</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Dato-objekt med kompleks setter-metode</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[int day, month, year;
+
+boolean isValidDate(int day, int month, int year) {
+	... check validity ...
+}
+
+void setDate(int day, int month, int year) {
+	// check new day, month and year
+	if (! isValidDate(day, month, year)) {
+		throw new IllegalArgumentException(... appropriate message ...);
+	}
+	this.day = day;
+	this.month = month;
+	this.year = year;
+}]]></ac:plain-text-body></ac:macro><p>Dette sikrer konsistens, men gj&oslash;r bruken av objektet mer komplisert i de tilfellene hvor en ikke &oslash;nsker &aring; endre alle attributtene.</p><h2>Ressurskrevende regler for konsistens</h2><p>Noen regler for konsistens handler ikke bare om enkle tester p&aring; flere attributt-verdier i ett objekt, men kan kreve komplekse beregninger basert p&aring; flere attributt-verdier i mange, sammenkoblete objekter. I slike tilfeller kan det rett og slett bli for ressurskrevende &aring; sjekke konsistens i hver enkelt setter-metode eller for tungvint &aring; ha &eacute;n samlet setter-metode for alle avhengige verdier. L&oslash;sningen da kan v&aelig;re &aring; beholde valideringsmetoden(e), men utelate bruken av dem i setter-metoden(e) og heller la det v&aelig;re opp til brukeren av klassen &aring; kalle dem n&aring;r det er n&oslash;dvendig.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 95 |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>

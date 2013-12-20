@@ -1,0 +1,27 @@
+<p><strong>Refactoring</strong> er enkelt sagt &quot;ordning av kode&quot;. Dette inneb&aelig;rer &aring; endre den <strong>interne virkem&aring;ten&nbsp;</strong>for en metode, klasse eller et helt prosjekt uten &aring; endre oppf&oslash;rselen til koden. Det finnes flere grunner for &aring; refactore, men et par vanlige eksempler er (1) man &oslash;nsker &aring; gj&oslash;re koden lettere &aring; lese eller (2) at man &oslash;nsker &aring; forbedre ytelsen.</p><h2>Generell refactoring av kode</h2><p>Et (overdrevet) d&aring;rlig eksempel kan ses nedenfor til venstre. Her er det f&oslash;rst og fremst formateringen (innrykk og parenteser) og d&aring;rlig navngiving som st&aring;r frem. Selv om personen som har skrevet koden vet at den fungerer vil det bli d&aring;rlig stemning dersom noen andre skal ta over, og forst&aring; hva som skjer! Kodeblokken til h&oslash;yre er derfor bedre, selv om de gj&oslash;r akkurat det samme.</p><table><tbody><tr><td><ac:macro ac:name="code"><ac:parameter ac:name="theme">Eclipse</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public static int bar(int[] asd) {
+int foo = 0;	
+for (int i = 0; i < asd.length; i++) {
+if (asd[i] > asd[foo]) {foo = i;}
+}
+return asd[foo]; 
+}]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="code"><ac:parameter ac:name="theme">Eclipse</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[// Metode som finner det største tallet i en liste med heltall
+public static int getMax(int[] list) {
+
+ 
+	// Før vi starter er det største tallet vi har funnet
+	// det første tallet i listen
+	int maxFound = list[0];
+	
+	// Bla gjennom listen...
+	for (int i = 1; i < list.length; i++) {
+		
+		// ... dersom elementet på plass i er større enn det
+		// største så langt, ta vare på det til senere 
+		if (list[i] > maxFound) {
+			maxFound = list[i];
+		}
+	}
+	
+	// Returner det største tallet vi fant
+	return maxFound;
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>I koden til h&oslash;yre er det flere elementer som gj&oslash;r den &quot;bedre&quot;:</p><ul><li>Det er brukt fornuftige navn p&aring; metoder og variabler</li><li>Koden er pent formatert med innrykk</li><li>Kommentarer i koden forteller hva som skjer</li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Man er konsekvent med plassering av { og }</span></li><li>I blokken til venstre tar man vare p&aring;&nbsp;<strong>indeksen</strong> til det st&oslash;rste elementet, og returnerer s&aring; elementet i lista p&aring; den plasseringen. Dette kan l&oslash;ses bedre ved &aring; ta vare p&aring; det st&oslash;rste tallet direkte, og s&aring; returnere dette.</li></ul><h2>Refactoring i Eclipse</h2><p>Eclipse har innebygd st&oslash;tte for &aring; hjelpe deg med mange av mekanismene over. I tillegg finnes det langt mer avanserte funksjoner som du kan f&aring; bruk for i et st&oslash;rre program. Ved &aring; h&oslash;yreklikke p&aring; ulike elementer vil du f&aring; opp en meny, der du kan velge &quot;Refactor&quot;. Hvilke valg som dukker opp p&aring; denne menyen vil v&aelig;re avhengig av <strong>hva</strong> du trykker p&aring;. Pr&oslash;v et prosjekt eller en klasse i Explorer-vinduet, og se hvordan det varierer. Du kan ogs&aring; velge et metodenavn, felt eller variabel i editoren. Dette gir igjen ulike valg.</p><p>Det &aring; endre navn p&aring; et element er en av de nyttigste funksjonene. Dersom du endrer navnet p&aring; en metode ved hjelp av refactoring vil Eclipse endre alle referanser i <strong>hele prosjektet</strong> du arbeider i.&nbsp;</p><p>En annen god funksjon som kan brukes i dette faget er &aring; flytte elementer. Du kan flytte en metode til en annen klasse, eller flytte en klasse mellom pakker. Velg &quot;Refactor&quot; -&gt; &quot;Move&quot; og bruk pop-up vinduet til &aring; flytte elementet dit du vil ha det.&nbsp;</p><p><span style="font-size: 16.0pt;font-weight: bold;line-height: normal;">Videre lesing</span></p><p>P&aring;&nbsp;<a href="http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2Freference%2Fref-menu-refactor.htm">hjemmesidene til Eclipse</a> finner du mer om refactoring.</p>

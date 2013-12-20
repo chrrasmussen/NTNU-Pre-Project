@@ -1,0 +1,96 @@
+<ac:macro ac:name="excerpt"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:rich-text-body><p>En valideringsmetode har som form&aring;l &aring; sjekke om en eller flere verdier er gyldige, slik at dette kan sjekkes av f.eks. setter-metoder f&oslash;r tilsvarende attributter evt. settes.</p></ac:rich-text-body></ac:macro><p>Det finnes en rekke ulike m&aring;ter &aring; kode disse p&aring;, med ulike fordeler og ulemper.</p><p>Ta som eksempel et attributt for et person-navn, som skal v&aelig;re p&aring; minst 2 tegn og bare skal kunne inneholde bokstaver, mellomrom og bindestreker (eng: hyphen). Dette kan sjekkes med en valideringsmetode som returnerer en logisk verdi, <strong>true</strong> for gyldige verdier og <strong>false</strong> for ugyldige:</p><table><tbody><tr><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Valideringsmetode som returnerer en logisk verdi</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[String name;
+
+boolean isValidName(String name) {
+	// no name can be less than two characters
+	if (name.length < 2) {
+		return false;
+	}
+	// a name can only contain letters, spaces and hyphens
+	for (int i = 0; i < name.length(); i++) {
+		char c = name.charAt(i);
+		if (! (Character.isLetter(c) || c == ' ' || c == '-')) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void setName(String name) throws IllegalArgumentException {
+	if (! isValidName(name)) {
+		throw new IllegalArgumentException("A name must be at least two characters and can only contain letters, space or hyphens, but was " + name);
+	}
+	this.name = name;
+}]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	String name
+	boolean isValidName(String)
+	void setName(String) throws IllegalArgumentException
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>Problemet med validering er alts&aring; delt i to: Valideringsmetoden sjekker gydlighet og setteren kaller valideringsmetoden og utl&oslash;ser et evt. unntaket. Ulempen med denne arbeidsfordelingen er at setteren m&aring; angi en melding til unntaksobjektet uten spesifikk kunnskap om hvorfor valideringsmetoden returnerte false. Dermed m&aring; feilmelding v&aelig;re generell istedenfor spesfikk for feilen. Et alternativ er derfor &aring; utl&oslash;se unntaket i valideringsmetoden, istedenfor &aring; returnere <strong>true</strong> eller <strong>false</strong>:</p><table><tbody><tr><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Valideringsmetode som utl&oslash;ser unntak</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[String name;
+
+void checkName(String name) throws IllegalArgumentException {
+	// no name can be less than two characters
+	if (name.length < 2) {
+		throw new IllegalArgumentException("The name is too short, it must be at least two characters");
+	}
+	// a name can only contain letters, spaces and hyphens
+	for (int i = 0; i < name.length(); i++) {
+		char c = name.charAt(i);
+		if (! (Character.isLetter(c) || c == ' ' || c == '-')) {
+			throw new IllegalArgumentException("'" + c + "' is an illegal character, a name can only contain letters, space or hyphens");
+		}
+	}
+}
+
+void setName(String name) {
+	checkName(name);
+	this.name = name;
+}]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Person {
+	String name
+	void checkName(String) throws IllegalArgumentException
+	void setName(String)
+}]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>&nbsp;</p><p>Siden valideringsmetoden ikke lenger returnerer <strong>boolean</strong>, har vi endre navnet fra &aring; begynne med &quot;is&quot;, s&aring; n&aring; heter den <strong>checkName</strong>. Og siden den utl&oslash;ser unntaket, kan setteren forenkles: If'en er un&oslash;dvendig, dersom checkName utl&oslash;ser unntaket vil ikke tilordningen bli utf&oslash;rt og vi trenger ingen if-setning. Ulempen med denne varianten er at det kompliserer andre klasser, siden de ikke kan sjekke verdien gyldigheten av et navn uten &aring; m&aring;tte bruke <strong>try/catch</strong>. Under vises to varianter som l&oslash;ser dette problemet. Den venstre varianten lar valideringsmetoden returnere en meldingstekst eller null, dersom alt er ok. Den h&oslash;yre varianten lar valideringsmetoden ta et ekstra argument som angir om true/false skal returneres istedenfor &aring; utl&oslash;se et unntak.</p><table><tbody><tr><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Valideringsmetode som returnerer unntaksmelding</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[String validateName(String name) {
+	// no name can be less than two characters
+	if (name.length < 2) {
+		return "The name is too short, it must be at least two characters";
+	}
+	// a name can only contain letters, spaces and hyphens
+	for (int i = 0; i < name.length(); i++) {
+		char c = name.charAt(i);
+		if (! (Character.isLetter(c) || c == ' ' || c == '-')) {
+			return "'" + c + "' is an illegal character, a name can only contain letters, space or hyphens";
+		}
+	}
+}
+
+void setName(String name) {
+	String message = validateName(name);
+	if (message != null) {
+		throw new IllegalArgumentException(message);
+	}
+	this.name = name;
+}]]></ac:plain-text-body></ac:macro><p>Kode som kaller valideringsmetoden m&aring; huske meldingen, siden den skal brukes hvis den ikke er <strong>null</strong>.</p></td><td><ac:macro ac:name="code"><ac:parameter ac:name="title">Valideringsmetode med argument som avgj&oslash;r om evt. unntak skal utl&oslash;ses</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[boolean validateName(String name, boolean throwException) {
+	// no name can be less than two characters
+	if (name.length < 2) {
+		if (throwException) {
+			throw new IllegalArgumentException("The name is too short, it must be at least two characters");
+		}
+		return false;
+	}
+	// a name can only contain letters, spaces and hyphens
+	for (int i = 0; i < name.length(); i++) {
+		char c = name.charAt(i);
+		if (! (Character.isLetter(c) || c == ' ' || c == '-')) {
+			if (throwException) {
+				throw new IllegalArgumentException("'" + c + "' is an illegal character, a name can only contain letters, space or hyphens");
+			}
+			return false;
+		}
+	return true;
+}
+
+void setName(String name) {
+	validateName(name, true);
+	this.name = name;
+}]]></ac:plain-text-body></ac:macro><p>Setteren blir enkel, og koden utenfor klassen som ikke &oslash;nsker at unntak skal utl&oslash;ses, kaller valideringsmetoden med <strong>false</strong> som andre argument.</p></td></tr></tbody></table><h3>Sp&oslash;rsm&aring;l til ettertanke</h3><ul style="list-style-type: square;"><li>Hva er det som avgj&oslash;r hvilken av de ulike variantene en b&oslash;r velge?</li><li>Hvilket hensyn er viktigst, &aring; gj&oslash;re koden enkel i klassen en skriver eller &aring; gj&oslash;re det enkelt for andre klasser &aring; bruke den?</li></ul><p>&nbsp;</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 95 |
+|| Dekningsgrad | 75 |
+|| Omfang | 75 |]]></ac:plain-text-body></ac:macro>

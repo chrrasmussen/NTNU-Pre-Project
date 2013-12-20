@@ -1,0 +1,14 @@
+<h3>Uttrykk</h3>
+
+<p>Et uttrykk er en bit Java-kode som ligner p&aring; en matematisk formel, ved at det beregnes en verdi fra det n&aring;r programmet utf&oslash;res. N&aring;r verdien beregnes sier vi at uttrykket <em>evalueres</em> til en verdi. Et uttrykk v&aelig;re en enkel variabel-referanse, en matematisk beregning med tall og operatorer (+, -, ...), metodekall med uttrykk som argumenter eller kombinasjoner av alt dette.</p>
+
+<p>I koden under inneholder av kallene til <code>System.out.println(...)</code> et uttrykk (i parentesen). N&aring;r <code>println</code>-kallet utf&oslash;res, s&aring; evalueres f&oslash;rst uttrykket inni kallet og s&aring; gis verdien som argument til <code>println</code>-metoden. Beregning av verdien til et sammensatt uttrykk skjer innenfra og ut, ved at de innerste uttrykkene evalueres f&oslash;rst og s&aring; brukes verdien i den videre evalueringen av uttrykket utenfor. Dette er fors&oslash;kt illustrert i kommentarene bak <code>println</code>-kallene. '=&gt;'-tegnet leses som &quot;evalueres til&quot;, f.eks. leses &quot;a =&gt; 0&quot; som &quot;a evalueres til 0&quot;. </p>
+
+<ac:macro ac:name="code"><ac:default-parameter>java</ac:default-parameter><ac:plain-text-body><![CDATA[
+int a = 0;
+System.out.println(a); // enkel variabelreferanse: a => 0
+System.out.println(a + 1); // matematisk beregning: a => 0, 0 + 1 => 1
+System.out.println("uttrykk".substring((a + 1) * 2)); // metodekall med matematisk beregning: a => 0, 0 + 1 => 1, 1 * 2 => 2, "uttrykk".substring(2) => "trykk"
+]]></ac:plain-text-body></ac:macro>
+
+<p>N&aring;r en lager sammensatte uttrykk, er det viktig at (typen til) verdien til de indre uttrykkene passer til bruken i uttrykket utenfor. En kan f.eks. ikke skrive <code>&quot;uttrykk&quot;.substring(&quot;2&quot;)</code> fordi <code>substring</code>-metoden forventer et heltall som argument og uttrykket &quot;2&quot; evaluerer til en <code>String</code>. Siden Java er s&aring;kalt statisk typet, dvs. typen til et uttrykk kan leses direkte fra koden uten &aring; utf&oslash;re den, s&aring; vil editoren eller kompilatoren si fra om slike feil. Selv om slik typesjekk skjer automatisk, er det viktig at vi som programmerere vet hvordan beregning av typen til et uttrykk foreg&aring;r. Dette kommer vil tilbake til n&aring;r vi g&aring;r gjennom hvilke typer uttrykk som finnes.</p>

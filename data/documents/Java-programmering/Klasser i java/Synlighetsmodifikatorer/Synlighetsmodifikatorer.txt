@@ -1,0 +1,155 @@
+<ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Dekningsgrad | 75 |
+|| Omfang | 50 |
+|| Ferdig | 95 |]]></ac:plain-text-body></ac:macro><p>I java finnes det flere s<em>ynlighetsmodifikatorer</em> som gir mulighet til &aring; styre &quot;tilgangen&quot; til klasser, variabler, metoder og konstrukt&oslash;rer. For mer om&nbsp;<em>hvorfor&nbsp;</em>vi &oslash;nsker &aring; styre denne &quot;tilgangen&quot;, se&nbsp;<ac:link><ri:page ri:content-title="Innkapsling" /></ac:link>.<br /><span style="font-size: 10.0pt;line-height: 13.0pt;"><br />Vi har fire niv&aring;er for tilgjengelighet:<br /></span></p><ul style="list-style-type: square;"><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Synlig i pakken (package) er standardverdi og trenger ingen&nbsp;</span>modifikator</li><li>Synlig kun i klassen,&nbsp;<em>private</em></li><li>Synlig for alle,&nbsp;<em>public</em></li><li>Synlig&nbsp;i pakken og for subklasser,&nbsp;<em>protected</em></li></ul><h2>Public&nbsp;</h2><p>Dersom man deklarerer et felt, en metode etc. som&nbsp;<em>public,&nbsp;</em>er det mulig for alle som vet om ressursen &aring; hente/forandre/kalle p&aring; den.</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Public modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Room {
+	
+	int size;
+	String color;
+	
+	public Room(int size, String color) {
+		this.size = size;
+		this.color = color;
+	}
+
+	int getSize() { 
+		// Dette er en getter
+		return this.size;
+	}
+	
+	public String setColor(String color) {
+		this.color = color;
+	}
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Public modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class RoomPainter {
+ 
+	private String paintcolor;
+	private Room room;	
+ 
+	// Settere
+	public void setPaintcolor(String color) {
+		this.paintcolor = color;
+	}
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+	
+	// "Arbeidsmetode"
+	public void paint() {
+		this.room.color = this.paintcolor; // UGYLDIG KODE!
+		// Siden Roompainter og Room IKKE er i samme package,
+		// må Room-feltet color være public for at linjen over
+		// skal være gyldig. Skriver i stedet:
+
+		this.room.setColor(this.paintcolor);
+		// Her sender vi heller paintcolor til setteren for 
+		// color, som vi kan bruke fordi den er public
+	}	
+} ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><h2>Private</h2><p>Dersom man deklarerer et felt, en metode etc. som&nbsp;<em>private,&nbsp;</em>er det kun mulig &aring; hente/forandre/kalle p&aring; denne ressursen&nbsp;<strong>direkte&nbsp;</strong>i klassen.<br />Merk at verdiene til <em>private</em>&nbsp;felt fortsatt kan hentes gjennom en <em>getter</em> eller forandres med en <em>setter</em>.&nbsp;</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Private modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class Room {
+	
+	private int size;
+	private String color;
+	private House house;
+	
+	public Room(int size, String color) {
+		this.size = size;
+		this.color = color;
+	}
+	private void setHouse(House h) { 
+		// Dette er en setter
+		
+		this.house = h;
+	}
+	
+	int getSize() { 
+		// Dette er en getter
+		
+		return this.size;
+	}
+	
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Private modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[public class House {
+	
+	Room[] rooms;
+	int size;
+	
+	public House (Room[] rooms) {
+		this.rooms = rooms;
+		
+		for (int i = 0; i < rooms.length; i++) {
+			
+			this.size += rooms[i].getSize(); 
+			// Her må vi bruke getteren. Vi får ikke tilgang
+			// til feltet "size" om vi prøver rooms[i].size
+			
+			rooms[i].setHouse(this); // UGYLDIG KODE!
+			// setHouse er nå private, og vi kan ikke bruke
+			// metoden i House-klassen.
+		}
+	}
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p><p>&nbsp;</p></th></tr></tbody></table><h2>Defaut</h2><p>Dersom man deklarerer et felt, en metode etc. uten synlighetsmodifikator, tildeles standardverdien. Dette gj&oslash;r ressursen tilgjengelig for alle klasser som ligger i samme&nbsp;<em>package</em>.</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Default modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[package constructions;
+
+public class Room {
+	
+	int size;
+	String color;
+	House house; // Om man vil hente huset hvor rommet befinner seg
+	
+	public Room(int size, String color) {
+		this.size = size;
+		this.color = color;
+	}
+
+	void setHouse(House h) {
+		
+		this.house = h;
+	}
+}]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Default modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[package constructions; // House og Room ligger i samme pakke
+
+public class House {
+	
+	Room[] rooms;
+	int size;
+	
+	public House (Room[] rooms) {
+		this.rooms = rooms;
+		
+		for (int i = 0; i < rooms.length; i++) {
+			
+			this.size += rooms[i].size; 
+			// Får tilgang til å hente size til hvert rom
+			
+			rooms[i].setHouse(this);
+			// Får tilgang til å sette hvilket hus rommet er i
+		}
+	}
+}
+]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><h2>Protected</h2><p>Dersom man deklarerer et felt, en metode etc. som&nbsp;<em>protected,&nbsp;</em>er det mulig &aring; hente/forandre/kalle p&aring; ressursen dersom kallet kommer fra samme&nbsp;<em>package&nbsp;</em>eller fra en&nbsp;<em>subklasse</em> av klassen hvor ressursen er definert.</p><p>Eksempelet under krever kjennskap til&nbsp;<em><ac:link><ri:page ri:content-title="Arv" /><ac:plain-text-link-body><![CDATA[arv]]></ac:plain-text-link-body></ac:link>.</em><br />&nbsp;</p><table><tbody><tr><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Protected modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[package workers;
+
+public class Painter {
+	
+	protected String paintcolor;
+	
+	
+	public void setPaintcolor(String color) {
+		this.paintcolor = color;
+	}
+	
+	public String getPaintcolor() {
+		return this.paintcolor;
+	}
+} ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th><th><p>&nbsp;</p><ac:macro ac:name="code"><ac:parameter ac:name="title">Protected modifier</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">java</ac:parameter><ac:plain-text-body><![CDATA[package painter;
+
+public class Roompainter extends Painter{
+ 
+	private Room room;	
+ 
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+	
+	// "Arbeidsmetode"
+	public void paint() {
+		this.room.setColor(this.paintcolor);
+		// Her kan vi hente paintcolor uten getteren selv om
+		// Roompainter ikke er i samme package som Painter
+		// fordi Roompainter arver dette feltet.
+	}	
+}  ]]></ac:plain-text-body></ac:macro><p>&nbsp;</p></th></tr></tbody></table><p>Dersom <em>Painter</em> har et default felt,metode,etc. her, vil ikke&nbsp;<em>Roompainter</em> kunne n&aring; denne ressursen, fordi klassene ikke er i samme <em>package.</em>&nbsp;</p><p><u><br />Synlighet ved arv</u></p><p>Det finnes i java et sett med regler for synlighet ved arv</p><ul style="list-style-type: square;"><li><span>Metoder som deklareres som&nbsp;<em>public&nbsp;</em>i superklassen, m&aring; ogs&aring; v&aelig;re&nbsp;<em>public</em> i subklasser</span></li><li><p style="text-align: justify;"><span><span>Metoder som deklareres som&nbsp;<em>protected&nbsp;</em>i en superklasse m&aring; enten v&aelig;re&nbsp;<em>protected</em> eller&nbsp;<em>public&nbsp;</em>i subklasser; det er ikke mulig &aring; redusere synlighet til private.</span></span></p></li><li><p style="text-align: justify;"><span><span>Metoder deklarert uten synlighetsmodifikator (default)&nbsp;<strong>kan&nbsp;</strong>deklareres mer skjult i subklasser</span></span></p></li><li>Metoder som deklareres private arves ikke i det hele tatt, s&aring; det er ingen regler for disse.</li></ul>

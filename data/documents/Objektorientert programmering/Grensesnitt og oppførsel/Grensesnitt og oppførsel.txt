@@ -1,0 +1,38 @@
+<h2>Grensesnitt</h2><p>De fleste objekter har en tilstand, og n&aring;r en skal forklare oppf&oslash;rselen til objektet, dvs. hva operasjonene til objektet gj&oslash;r, s&aring; er det naturlig &aring; referere til hvordan disse leser og endrer tilstanden. Ta som eksempel et teller-objekt med metodene <strong>void count()</strong> og <strong>int getCounter()</strong>. Hvis oppf&oslash;rselen skal forklares er det naturlig &aring; si at <strong>count()</strong> &oslash;ker telleren og at <strong>getCounter()</strong> returnerer tellerverdien, alts&aring; en beskrivelse basert p&aring; objektets interne tilstand. Bildet vi gir av objektet er en kombinasjon av tilstand (attributter) og oppf&oslash;rsel (operasjoner), som vist til venstre i figuren under. Dette lekker p&aring; en m&aring;te informasjon om hvordan oppf&oslash;rselen er realisert, og bryter prinsippet om innkapsling, hvor kun operasjonene skal v&aelig;re offentlig kjent. En innkapslet versjon av telleren er vist i midten, og her f&aring;r en frem at det kun er operasjonene som er ment &aring; v&aelig;re kjent. Men for at innkapslingen skal v&aelig;re effektiv som skjuling av informasjon om intern tilstand og implementasjonsdetaljer, &oslash;nsker en egentlig kun &aring; fokusere p&aring; objektets <em>grensesnitt</em> mot utenomverdenen, som er de operasjonene og attributtene med offentlig synlighet (se figur til h&oslash;yre og fotnote om notasjonen).</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Counter {
+	int counter
+	int getCounter()
+	void count()
+}]]></ac:plain-text-body></ac:macro><p style="text-align: center;">Attributter og operasjoner</p></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[class Counter {
+	-int counter
+	+int getCounter()
+	+void count()
+}]]></ac:plain-text-body></ac:macro><p style="text-align: center;">Innkapsling av tilstand vha. synlighet</p></td><td colspan="1"><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[interface Counter {
+	int getCounter()
+	void count()
+}]]></ac:plain-text-body></ac:macro><p style="text-align: center;">Grensesnitt, bare operasjoner</p></td></tr></tbody></table><h2>Grensesnitt-oppf&oslash;rsel</h2><p>Grensesnittet til et objekt best&aring;r alts&aring; av det som er &aring;pent tilgjengelig, og ved beskrivelse av oppf&oslash;rselen &oslash;nsker en &aring; unng&aring; &aring; trekke inn en evt. intern tilstand, siden denne uansett er ment &aring; v&aelig;re skjult. Dersom vi fors&oslash;ker &aring; gj&oslash;re dette for <strong>Counter</strong>, s&aring; ser vi at oppf&oslash;rselen til <strong>count()</strong> og <strong>getCounter()</strong> er koblet, s&aring; beskrivelsen av <strong>count()</strong> m&aring; referere til <strong>getCounter()</strong>: Dersom <strong>getCounter()</strong> returnerer <strong>n</strong>, s&aring; vil et kall til <strong>count()</strong> gj&oslash;re at <strong>getCounter()</strong> returnerer <strong>n+1</strong>. Dette er typisk for operasjoner som leser og endrer samme underliggende tilstand, slik tilfellet er for getter- og setter-par: <strong>getX()</strong> returnerer argument-verdien til siste kall til <strong>setX(...)</strong>.</p><p>I praksis er det ofte enklest &aring; beskrive oppf&oslash;rselen med et kode-eksempel med konkrete verdier, som vist under. Dette er spesielt nyttig n&aring;r en &oslash;nsker &aring; <ac:link><ri:page ri:content-title="Oppf&oslash;rsel og enhetstesting" /><ac:plain-text-link-body><![CDATA[teste om oppførselen er korrekt implementert]]></ac:plain-text-link-body></ac:link>.</p><ac:macro ac:name="code"><ac:plain-text-body><![CDATA[Counter counter = ... // getCounter() => 1
+counter.count(); // getCounter() => 2
+counter.count(); // getCounter() => 3 osv.
+
+Person p = ...
+p.setName("Hallvard"); // getName() => "Hallvard"]]></ac:plain-text-body></ac:macro><h2>Eksplisitt grensesnitt</h2><p>Alle objekter/klasser har alts&aring; et grensesnitt, som er de offentlig kjente operasjonene som tilbys andre objekter/klasser og den oppf&oslash;rselen som disse implementerer. Dette grensesnittet kan det v&aelig;re nyttig &aring; gj&oslash;re eksplisitt, uavhengig av om det er implementert (enn&aring; i noen spesifikk klasse). For det f&oslash;rste er det jo dette andre klasser er interessert i og som disse m&aring; kode mot. Ved &aring; gj&oslash;re grensesnittet eksplisitt kan en ta det i bruk uavhengig av og kanskje f&oslash;r implementasjonen er klar. For det andre fungerer grensesnittet og spesielt beskrivelsen av oppf&oslash;rselen som en spesifikasjon for implementasjonen, og den er det alltid greit &aring; ha klar p&aring; forh&aring;nd f&oslash;r en begynner p&aring; implementasjonen. For det tredje kan det v&aelig;re aktuelt med flere implementasjoner, med ulike egenskaper og variasjoner innenfor rammen av den foreskrevne oppf&oslash;rselen.</p><table><tbody><tr><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[interface Counter {
+	int getCounter()
+	void count()
+}
+class CounterImpl {
+	CounterImpl(int start, int end)
+}
+Counter <|.. CounterImpl]]></ac:plain-text-body></ac:macro></td><td><ac:macro ac:name="plantuml"><ac:parameter ac:name="atlassian-macro-output-type">BLOCK</ac:parameter><ac:plain-text-body><![CDATA[interface Counter {
+	int getCounter()
+	void count()
+}
+class UpCounter {
+	UpCounter(int start, int end)
+}
+class DownCounter {
+	DownCounter(int end, int start)
+}
+Counter <|.. UpCounter
+Counter <|.. DownCounter]]></ac:plain-text-body></ac:macro></td></tr></tbody></table><p>Figuren over viser hvordan forholdet mellom et (eksplisitt) grensesnitt og en klasse som implementerer grensesnittet illustreres. Til venstre vises hvordan Counter-grensesnittet er implementert av CounterImpl-klassen. Til h&oslash;yre vises hvordan to ulike klasser kan implementerer samme grensesnitt (se fotnote om notasjonen), og navnene indikerer at de representerer ulike varianter av en overordnet oppf&oslash;rsel, nemlig &aring; telle fra et tall (i retning av og) til et annet.</p><p>Merk at det i dette tilfellet er viktig at de to klassene ikke bare har de n&oslash;dvendige metodene, men implementerer oppf&oslash;rselen i henhold til kravene.</p><h2>Sp&oslash;rsm&aring;l til refleksjon</h2><ul><li>Pr&oslash;v &aring; beskrive grensesnittet til en stabel (eng: stack), med metodene <strong>push()</strong>, <strong>peek()</strong>, <strong>pop()</strong> og <strong>isEmpty()</strong></li></ul><hr /><p>1) I-symbolet st&aring;r for <em>interface</em>, som er det engelske begrepet, mens C'en st&aring;r for <em>class</em>. En bruker en stiplet pil fra en den implementerende klassen til grensesnittet, for &aring; skille det fra arv mellom grensesnitt.</p><ac:macro ac:name="metadata-list"><ac:parameter ac:name="orientation">horizontal</ac:parameter><ac:plain-text-body><![CDATA[|| Sidetype | teori |
+|| Ferdig | 95 |
+|| Dekningsgrad | 50 |
+|| Omfang | 50 |]]></ac:plain-text-body></ac:macro>
